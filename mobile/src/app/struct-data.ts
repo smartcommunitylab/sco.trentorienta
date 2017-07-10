@@ -8,3 +8,8 @@ export class eventType {
   themes: string;
   created: string;
 }
+
+export class occurenciesType {
+  name: string;
+  count: number;
+}

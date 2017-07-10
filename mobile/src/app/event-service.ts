@@ -4,6 +4,7 @@ import { Headers, Http } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 
 import { eventType } from './struct-data';
+import { occurenciesType } from './struct-data';
 
 @Injectable()
 export class EventService {
@@ -18,7 +19,7 @@ export class EventService {
 
     return this.http.get(this.eventsUrl)
             .toPromise()
-            .then(response => response.json().data as eventType[]).slice(from, to + 1)
+            .then(response => (response.json().data as eventType[]).slice(from, to + 1))
             .catch(this.handleError);
   }
 
@@ -30,59 +31,83 @@ export class EventService {
   }
 
   // Returns all events filtered by tag
-  getEventsByTag(filterTag: string): Promise<eventType[]> {
+  getEventsByTag(filterTag: string, from = 0, to = 65535): Promise<eventType[]> {
     return this.http.get(this.eventsUrl)
                 .toPromise()
                 .then(response => (response.json().data as eventType[]).filter
-                    (function(value:eventType) {return value.tags.localeCompare(filterTag) == 0 }))
+                    (function(value:eventType) {return value.tags.localeCompare(filterTag) == 0 })
+                    .slice(from, to + 1))
                 .catch(this.handleError);
   }
 
   // Returns all events filtered by source
-  getEventsBySource(filterSource: string): Promise<eventType[]> {
+  getEventsBySource(filterSource: string, from = 0, to = 65535): Promise<eventType[]> {
     return this.http.get(this.eventsUrl)
                 .toPromise()
                 .then(response => (response.json().data as eventType[]).filter
-                    (function(value:eventType) {return value.source.localeCompare(filterSource) == 0 }))
+                    (function(value:eventType) {return value.source.localeCompare(filterSource) == 0 })
+                    .slice(from, to + 1))
                 .catch(this.handleError);
   }
 
   // Returns all events filtered by theme
-  getEventsByTheme(filterTheme: string): Promise<eventType[]> {
+  getEventsByTheme(filterTheme: string, from = 0, to = 65535): Promise<eventType[]> {
     return this.http.get(this.eventsUrl)
                 .toPromise()
                 .then(response => (response.json().data as eventType[]).filter
-                    (function(value:eventType) {return value.themes.localeCompare(filterTheme) == 0 }))
+                    (function(value:eventType) {return value.themes.localeCompare(filterTheme) == 0 })
+                    .slice(from, to + 1))
                 .catch(this.handleError);
   }
 
   // Returns all available tags
-  getTagsList(): Promise<string[]> {
+  getTagsList(): Promise<occurenciesType[]> {
     return this.http.get(this.eventsUrl)
-                .toPromise()
-                .then(response => (response.json().data as eventType[])
-                    .map(function(e: eventType) {return e.tags;})
-                    .filter(function (value, index, self) { return self.indexOf(value) === index; } ))
+            .toPromise()
+            .then(response => (response.json().data as eventType[])
+                .map(function(e: eventType) {return e.tags;})  // Per avere la lista delle etichette
+                .reduce(function (acc, curr) {   // per contare le occorrenze
+                if (typeof acc[curr] == 'undefined') {
+                    acc[curr] = 1;
+                } else {
+                    acc[curr] += 1;
+                }
+                return acc;
+                }, {}))
                 .catch(this.handleError);
   }
 
   // Returns all available themes
-  getThemesList(): Promise<string[]> {
+  getThemesList(): Promise<occurenciesType[]> {
     return this.http.get(this.eventsUrl)
                 .toPromise()
                 .then(response => (response.json().data as eventType[])
                     .map(function(e: eventType) {return e.themes;})
-                    .filter(function (value, index, self) { return self.indexOf(value) === index; } ))
+                    .reduce(function (acc, curr) {   // per contare le occorrenze
+                        if (typeof acc[curr] == 'undefined') {
+                            acc[curr] = 1;
+                        } else {
+                            acc[curr] += 1;
+                        }
+                        return acc;
+                    }, {}))
                 .catch(this.handleError);
   }
 
   // Returns all available sources
-  getSourcesList(): Promise<string[]> {
+  getSourcesList(): Promise<occurenciesType[]> {
     return this.http.get(this.eventsUrl)
                 .toPromise()
                 .then(response => (response.json().data as eventType[])
                     .map(function(e: eventType) {return e.source;})
-                    .filter(function (value, index, self) { return self.indexOf(value) === index; } ))
+                    .reduce(function (acc, curr) {   // per contare le occorrenze
+                        if (typeof acc[curr] == 'undefined') {
+                            acc[curr] = 1;
+                        } else {
+                            acc[curr] += 1;
+                        }
+                        return acc;
+                    }, {}))
                 .catch(this.handleError);
   }
 
