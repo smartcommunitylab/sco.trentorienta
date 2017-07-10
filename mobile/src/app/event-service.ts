@@ -13,20 +13,13 @@ export class EventService {
 
   constructor(private http: Http) { }
 
-  // Returns all events in an array
-  getEvents(): Promise<eventType[]> {
-    return this.http.get(this.eventsUrl)
-               .toPromise()
-               .then(response => response.json().data as eventType[])
-               .catch(this.handleError);
-  }
+  // Returns all events in an array (optional from - to for pages)
+  getEvents(from=0, to=65535): Promise<eventType[]> {
 
-  // Returns all events from n-th to n-th in an array
-  getEventsPage(from: number, to:number): Promise<eventType[]> {
-      return this.http.get(this.eventsUrl)
-                .toPromise()
-                .then(response => (response.json().data as eventType[]).slice(from, to+1))
-                .catch(this.handleError);
+    return this.http.get(this.eventsUrl)
+            .toPromise()
+            .then(response => response.json().data as eventType[]).slice(from, to + 1)
+            .catch(this.handleError);
   }
 
   // Retreive number of events
