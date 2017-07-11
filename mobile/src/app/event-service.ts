@@ -16,11 +16,20 @@ export class EventService {
 
   // Returns all events in an array (optional from - to for pages)
   getEvents(from=0, to=65535): Promise<eventType[]> {
-
     return this.http.get(this.eventsUrl)
             .toPromise()
-            .then(response => (response.json().data as eventType[]).slice(from, to + 1))
+            .then(response => (response.json().data as eventType[]).slice(from, to + 1)
+                )
             .catch(this.handleError);
+  }
+
+
+  getEvent(id: number): Promise<eventType> {
+    const url = `${this.eventsUrl}/${id}`;
+    return this.http.get(url)
+    .toPromise()
+    .then(response => response.json().data as eventType)
+    .catch(this.handleError);
   }
 
   // Retreive number of events
@@ -35,7 +44,7 @@ export class EventService {
     return this.http.get(this.eventsUrl)
                 .toPromise()
                 .then(response => (response.json().data as eventType[]).filter
-                    (function(value:eventType) {return value.tags.localeCompare(filterTag) == 0 })
+                    (function(value:eventType) {return value.tags.indexOf(filterTag) >= 0 })
                     .slice(from, to + 1))
                 .catch(this.handleError);
   }
@@ -55,7 +64,7 @@ export class EventService {
     return this.http.get(this.eventsUrl)
                 .toPromise()
                 .then(response => (response.json().data as eventType[]).filter
-                    (function(value:eventType) {return value.themes.localeCompare(filterTheme) == 0 })
+                    (function(value:eventType) {return value.themes.indexOf(filterTheme) >= 0 })
                     .slice(from, to + 1))
                 .catch(this.handleError);
   }
@@ -67,11 +76,13 @@ export class EventService {
             .then(response => (response.json().data as eventType[])
                 .map(function(e: eventType) {return e.tags;})  // Per avere la lista delle etichette
                 .reduce(function (acc, curr) {   // per contare le occorrenze
-                if (typeof acc[curr] == 'undefined') {
-                    acc[curr] = 1;
-                } else {
-                    acc[curr] += 1;
-                }
+                curr.forEach(t => {
+                    if (typeof acc[t] == 'undefined') {
+                        acc[t] = 1;
+                    } else {
+                        acc[t] += 1;
+                    }
+                });
                 return acc;
                 }, {}))
                 .catch(this.handleError);
@@ -84,11 +95,13 @@ export class EventService {
                 .then(response => (response.json().data as eventType[])
                     .map(function(e: eventType) {return e.themes;})
                     .reduce(function (acc, curr) {   // per contare le occorrenze
-                        if (typeof acc[curr] == 'undefined') {
-                            acc[curr] = 1;
-                        } else {
-                            acc[curr] += 1;
-                        }
+                        curr.forEach(t => {
+                            if (typeof acc[t] == 'undefined') {
+                                acc[t] = 1;
+                            } else {
+                                acc[t] += 1;
+                            }
+                        });
                         return acc;
                     }, {}))
                 .catch(this.handleError);

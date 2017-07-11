@@ -11,24 +11,30 @@
 <ion-content>
     <div [ngSwitch]="elementList">
         <ion-list *ngSwitchCase="'lista'">
-            <ion-card>
-                <ion-card-content>
-                    <div>
-                        <img src="{{notizia.notiziaNome}}">
-                    </div>
-                     -- {{notizia.commento}}
-                </ion-card-content>
-            </ion-card>
+            <ion-item *ngFor="let event of mainEvents" (click)="onSelect(event)">
+                <ion-thumbnail item-start>
+                    <img src={{event.image}}>
+                </ion-thumbnail>
+                <h2>{{event.title}}</h2>
+                <p>{{event.description}}</p>
+            </ion-item>
         </ion-list>
+        <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
+            <ion-infinite-scroll-content 
+                loadingSpinner = "bubbles" 
+                loadingText = "Caricamento">
+            </ion-infinite-scroll-content>
+        </ion-infinite-scroll>
+
 
         <ion-list *ngSwitchCase="'mappa'">
-            <h1>KYA</h1>
-            <h1>Aasd</h1>
+            <h1>TESTO DI PROVA</h1>
+            <h1>Mappa</h1>
         </ion-list>
 
         <ion-list *ngSwitchCase="'calendario'">
-            <h1>KYA</h1>
-            <h1>Asd</h1>
+            <h1>TESTO DI PROVA</h1>
+            <h1>Calendario</h1>
         </ion-list>
     </div>
 </ion-content>

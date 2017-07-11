@@ -17,6 +17,8 @@ import { TagPage } from '../pages/tag/tag';
 import { FavoritesPage } from '../pages/favorites/favorites';
 import { CreditsPage } from '../pages/credits/credits';
 import { ElementListPage } from '../pages/elementList/elementList';
+import { ElementDetailsPage } from '../pages/elementDetails/elementDetails';
+
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
@@ -31,6 +33,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     FavoritesPage,
     CreditsPage,
     ElementListPage,
+    ElementDetailsPage,
   ],
   imports: [
     BrowserModule,
@@ -48,7 +51,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     TagPage,
     FavoritesPage,
     CreditsPage,
-    ElementListPage
+    ElementListPage,
+    ElementDetailsPage
   ],
   providers: [
     StatusBar,

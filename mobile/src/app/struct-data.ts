@@ -3,9 +3,9 @@ export class eventType {
   title: string;
   description: string;
   image: string;
-  tags: string;
+  tags: string [];
   source: string;
-  themes: string;
+  themes: string [];
   created: string;
 }
 

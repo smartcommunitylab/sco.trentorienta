@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 
+import { EventService } from '../../app/event-service';
 import { ElementListPage } from '../elementList/elementList';
 
 
@@ -11,5 +12,5 @@ import { ElementListPage } from '../elementList/elementList';
 export class HomePage extends ElementListPage{
     title =  "Home";
 
-  
+    
 }
