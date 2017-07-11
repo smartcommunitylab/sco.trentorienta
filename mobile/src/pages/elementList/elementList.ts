@@ -23,10 +23,7 @@ export class ElementListPage implements OnInit{
 
     doInfinite(infiniteScroll) {
         console.log('Begin async operation');
-        this.getEvents(this.mainEvents.length, this.mainEvents.length+4, infiniteScroll);
-        if(this.mainEvents[this.mainEvents.length] == null){
-            this.hasMore=false;
-        }
+        this.getEvents(this.mainEvents.length, this.mainEvents.length + 10, infiniteScroll);
     }
 
     getEvents(from: number, to: number, infiniteScroll: any): void {
@@ -38,6 +35,9 @@ export class ElementListPage implements OnInit{
                     if (infiniteScroll != null) {
                         infiniteScroll.complete();
                     }
+                    if(mainEvents == null || mainEvents.length == 0){
+                        this.hasMore = false;
+                    }                    
                 });
         } else {
             infiniteScroll.complete();
@@ -45,7 +45,7 @@ export class ElementListPage implements OnInit{
     }
 
     ngOnInit(): void{
-        this.getEvents(0, 4, null);
+        this.getEvents(0, 10, null);
     }
 
     onSelect(event: eventType): void{
