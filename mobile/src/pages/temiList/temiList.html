@@ -1,0 +1,56 @@
+<ion-header>
+    <ion-navbar>
+        <button ion-button menuToggle>
+            <ion-icon name="menu"></ion-icon>
+        </button>
+        <ion-title class="titolo">{{this.navParams.get('name')}}</ion-title>
+    </ion-navbar>
+</ion-header>
+
+
+<ion-content>
+    <div [ngSwitch]="view">
+        <ion-list *ngSwitchCase="'lista'">
+            <ion-item *ngFor="let event of mainEvents" (click)="onSelect(event)">
+                <ion-thumbnail item-start>
+                    <img src={{event.image}}>
+                </ion-thumbnail>
+                <h2>{{event.title}}</h2>
+                <p>{{event.description}}</p>
+            </ion-item>
+        </ion-list>
+        <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
+            <ion-infinite-scroll-content 
+                loadingSpinner = "bubbles" 
+                loadingText = "Caricamento">
+            </ion-infinite-scroll-content>
+        </ion-infinite-scroll>
+
+
+        <ion-list *ngSwitchCase="'mappa'">
+            <h1>TESTO DI PROVA</h1>
+            <h1>Mappa</h1>
+        </ion-list>
+
+        <ion-list *ngSwitchCase="'calendario'">
+            <h1>TESTO DI PROVA</h1>
+            <h1>Calendario</h1>
+        </ion-list>
+    </div>
+</ion-content>
+
+<ion-footer>
+    <ion-toolbar no-border-top>
+        <ion-segment [(ngModel)]="view">
+            <ion-segment-button value="lista">
+                Lista
+            </ion-segment-button>
+            <ion-segment-button value="mappa">
+                Mappa
+            </ion-segment-button>
+            <ion-segment-button value="calendario">
+                Calendario
+            </ion-segment-button>
+        </ion-segment>
+    </ion-toolbar>
+</ion-footer>

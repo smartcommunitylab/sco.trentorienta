@@ -92,7 +92,8 @@ export class EventService {
   getThemesList(): Promise<occurenciesType[]> {
     return this.http.get(this.eventsUrl)
                 .toPromise()
-                .then(response => (response.json().data as eventType[])
+                .then(response => {
+                    let map = (response.json().data as eventType[])
                     .map(function(e: eventType) {return e.themes;})
                     .reduce(function (acc, curr) {   // per contare le occorrenze
                         curr.forEach(t => {
@@ -103,7 +104,13 @@ export class EventService {
                             }
                         });
                         return acc;
-                    }, {}))
+                    }, {});
+                    let res: occurenciesType[] = [];
+                    for (let key in map) {
+                        res.push({name: key, count: map[key]});
+                    }
+                    return res;
+                })
                 .catch(this.handleError);
   }
 

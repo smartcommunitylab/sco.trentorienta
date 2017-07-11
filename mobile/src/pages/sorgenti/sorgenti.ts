@@ -7,7 +7,7 @@ import { NavController } from 'ionic-angular';
 })
 
 export class SorgentiPage {
-
+  title:string = 'Sorgenti';
   
 
 }

@@ -22,6 +22,7 @@ export abstract class ElementListPage implements OnInit{
     readonly PAGE_SIZE = 10;
 
     constructor(protected eventService: EventService, public navCtrl: NavController){
+        
     }
 
     doInfinite(infiniteScroll) {
