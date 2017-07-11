@@ -16,7 +16,6 @@ import { SorgentiPage } from '../pages/sorgenti/sorgenti';
 import { TagPage } from '../pages/tag/tag';
 import { FavoritesPage } from '../pages/favorites/favorites';
 import { CreditsPage } from '../pages/credits/credits';
-import { ElementListPage } from '../pages/elementList/elementList';
 import { ElementDetailsPage } from '../pages/elementDetails/elementDetails';
 
 import { StatusBar } from '@ionic-native/status-bar';
@@ -32,7 +31,6 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     TagPage,
     FavoritesPage,
     CreditsPage,
-    ElementListPage,
     ElementDetailsPage,
   ],
   imports: [
@@ -51,7 +49,6 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     TagPage,
     FavoritesPage,
     CreditsPage,
-    ElementListPage,
     ElementDetailsPage
   ],
   providers: [

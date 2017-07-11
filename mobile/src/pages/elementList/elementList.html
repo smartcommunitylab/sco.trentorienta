@@ -9,7 +9,7 @@
 
 
 <ion-content>
-    <div [ngSwitch]="elementList">
+    <div [ngSwitch]="view">
         <ion-list *ngSwitchCase="'lista'">
             <ion-item *ngFor="let event of mainEvents" (click)="onSelect(event)">
                 <ion-thumbnail item-start>
@@ -41,7 +41,7 @@
 
 <ion-footer>
     <ion-toolbar no-border-top>
-        <ion-segment [(ngModel)]="elementList">
+        <ion-segment [(ngModel)]="view">
             <ion-segment-button value="lista">
                 Lista
             </ion-segment-button>

@@ -13,39 +13,39 @@ import { ElementDetailsPage } from '../elementDetails/elementDetails';
   providers: [EventService]
 })
 
-export class ElementListPage implements OnInit{
-    elementList: string = "lista";
+export abstract class ElementListPage implements OnInit{
+    view: string = "lista";
     mainEvents : eventType[] = [];
     selectedEvent : eventType;
-    hasMore : boolean = true;
-    constructor(private eventService: EventService, public navCtrl: NavController){
+
+    // size of a chunk of data to load
+    readonly PAGE_SIZE = 10;
+
+    constructor(protected eventService: EventService, public navCtrl: NavController){
     }
 
     doInfinite(infiniteScroll) {
         console.log('Begin async operation');
-        this.getEvents(this.mainEvents.length, this.mainEvents.length + 10, infiniteScroll);
+        this.getEvents(infiniteScroll);
     }
 
-    getEvents(from: number, to: number, infiniteScroll: any): void {
-        if(this.hasMore){
-            this.eventService
-                .getEvents(from ,to)
+    abstract getData(from: number, to: number): Promise<eventType[]>;
+
+    getEvents(infiniteScroll?: any): void {
+            this.getData(this.mainEvents.length,this.mainEvents.length + this.PAGE_SIZE)
                 .then(mainEvents => {
                     this.mainEvents = this.mainEvents.concat(mainEvents);
                     if (infiniteScroll != null) {
+                        if(mainEvents == null || mainEvents.length == 0){
+                            infiniteScroll.enable(false);
+                        }
                         infiniteScroll.complete();
-                    }
-                    if(mainEvents == null || mainEvents.length == 0){
-                        this.hasMore = false;
                     }                    
                 });
-        } else {
-            infiniteScroll.complete();
-        }
     }
 
     ngOnInit(): void{
-        this.getEvents(0, 10, null);
+        this.getEvents();
     }
 
     onSelect(event: eventType): void{
