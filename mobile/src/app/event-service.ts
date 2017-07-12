@@ -73,18 +73,25 @@ export class EventService {
   getTagsList(): Promise<occurenciesType[]> {
     return this.http.get(this.eventsUrl)
             .toPromise()
-            .then(response => (response.json().data as eventType[])
-                .map(function(e: eventType) {return e.tags;})  // Per avere la lista delle etichette
-                .reduce(function (acc, curr) {   // per contare le occorrenze
-                curr.forEach(t => {
-                    if (typeof acc[t] == 'undefined') {
-                        acc[t] = 1;
-                    } else {
-                        acc[t] += 1;
+            .then(response => {
+                    let map = (response.json().data as eventType[])
+                    .map(function(e: eventType) {return e.tags;})
+                    .reduce(function (acc, curr) {   // per contare le occorrenze
+                        curr.forEach(t => {
+                            if (typeof acc[t] == 'undefined') {
+                                acc[t] = 1;
+                            } else {
+                                acc[t] += 1;
+                            }
+                        });
+                        return acc;
+                    }, {});
+                    let res: occurenciesType[] = [];
+                    for (let key in map) {
+                        res.push({name: key, count: map[key]});
                     }
-                });
-                return acc;
-                }, {}))
+                    return res;
+                })
                 .catch(this.handleError);
   }
 
@@ -118,7 +125,8 @@ export class EventService {
   getSourcesList(): Promise<occurenciesType[]> {
     return this.http.get(this.eventsUrl)
                 .toPromise()
-                .then(response => (response.json().data as eventType[])
+                .then(response => {
+                    let map = (response.json().data as eventType[])
                     .map(function(e: eventType) {return e.source;})
                     .reduce(function (acc, curr) {   // per contare le occorrenze
                         if (typeof acc[curr] == 'undefined') {
@@ -127,7 +135,13 @@ export class EventService {
                             acc[curr] += 1;
                         }
                         return acc;
-                    }, {}))
+                    }, {});
+                    let res: occurenciesType[] = [];
+                    for (let key in map) {
+                        res.push({name: key, count: map[key]});
+                    }
+                    return res;
+                })
                 .catch(this.handleError);
   }
 

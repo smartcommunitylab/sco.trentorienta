@@ -6,12 +6,12 @@ import { eventType } from '../../app/struct-data';
 import { ElementListPage } from '../elementList/elementList';
 
 @Component({
-  selector: 'page-temiList',
-  templateUrl: 'temiList.html',
+  selector: 'page-sorgentiList',
+  templateUrl: 'sorgentiList.html',
   providers: [EventService]
 })
 
-export class TemiListPage extends ElementListPage implements OnInit{
+export class SorgentiListPage extends ElementListPage implements OnInit{
 
     constructor(protected eventService: EventService, public navCtrl: NavController, public navParams: NavParams){
         super(eventService, navCtrl);
@@ -32,7 +32,7 @@ export class TemiListPage extends ElementListPage implements OnInit{
     }
 
     getData(from: number, to: number): Promise<eventType[]> {
-        return this.eventService.getEventsByTheme(this.navParams.get('name'),from ,to);
+        return this.eventService.getEventsBySource(this.navParams.get('name'),from ,to);
     }
 
     ngOnInit(): void{

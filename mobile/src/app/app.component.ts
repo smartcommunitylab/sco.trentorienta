@@ -30,7 +30,7 @@ export class MyApp {
       { title: 'Temi', component: TemiPage },
       { title: 'Sorgenti', component: SorgentiPage },
       { title: 'Tag', component: TagPage },
-      { title: 'Favorites', component: FavoritesPage },
+      { title: 'Preferiti', component: FavoritesPage },
       { title: 'Credits', component: CreditsPage },
     ];
 

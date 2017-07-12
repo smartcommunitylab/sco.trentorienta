@@ -2,8 +2,8 @@ import { InMemoryDbService } from 'angular-in-memory-web-api';
 export class InMemoryDataService implements InMemoryDbService {
   createDb() {
     const mainEvents = [
-      { id: 1,  title: 'Evento 1', description: 'Descrizione 1', image:'test1.jpg', tags:['party'], source:'comunetn', themes: ['cultura'], created: '20170705110001' },
-      { id: 2,  title: 'Evento 2', description: 'Descrizione 2', image:'test2.jpg', tags:['exhibition','party'], source:'comunetn', themes: ['cultura'], created: '20170705110002' },
+      { id: 1,  title: 'Evento 1', description: 'Descrizione 1', image:'test1.jpg', tags:['party'], source:'comunetn', themes: ['cultura','prova'], created: '20170705110001' },
+      { id: 2,  title: 'Evento 2', description: 'Descrizione 2', image:'test2.jpg', tags:['exhibition','memes'], source:'comunetn', themes: ['cultura'], created: '20170705110002' },
       { id: 3,  title: 'Evento 3', description: 'Descrizione 3', image:'test3.jpg', tags:['match'], source:'asis', themes: ['sport'], created: '20170705110003' },
       { id: 4,  title: 'Evento 4', description: 'Descrizione 4', image:'test4.jpg', tags:['music'], source:'socialstone', themes: ['cultura'], created: '20170705110004' },
       { id: 5,  title: 'Evento 5', description: 'Descrizione 5', image:'test5.jpg', tags:['party'], source:'socialstone', themes: ['cultura'], created: '20170705110005' },
