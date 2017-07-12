@@ -6,3 +6,12 @@
         <ion-title>{{title}}</ion-title>
     </ion-navbar>
 </ion-header>
+
+
+<ion-content>
+    <ion-list>
+      <button ion-item *ngFor="let source of sourceType" (click)="onSelect(source)">
+        {{source.name}}
+      </button>  
+    </ion-list>
+</ion-content>

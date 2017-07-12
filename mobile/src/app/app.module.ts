@@ -18,6 +18,8 @@ import { FavoritesPage } from '../pages/favorites/favorites';
 import { CreditsPage } from '../pages/credits/credits';
 import { ElementDetailsPage } from '../pages/elementDetails/elementDetails';
 import { TemiListPage } from '../pages/temiList/temiList';
+import { TagListPage } from '../pages/tagList/tagList';
+import { SorgentiListPage } from '../pages/sorgentiList/sorgentiList';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -42,6 +44,8 @@ import {TranslateModule, TranslateLoader} from "@ngx-translate/core";
     CreditsPage,
     ElementDetailsPage,
     TemiListPage,
+    TagListPage,
+    SorgentiListPage,
   ],
   imports: [
     BrowserModule,
@@ -68,6 +72,8 @@ import {TranslateModule, TranslateLoader} from "@ngx-translate/core";
     CreditsPage,
     ElementDetailsPage,
     TemiListPage,
+    TagListPage,
+    SorgentiListPage,
   ],
   providers: [
     StatusBar,

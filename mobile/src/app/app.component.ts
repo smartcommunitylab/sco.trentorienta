@@ -55,7 +55,7 @@ export class MyApp {
       { title: 'Themes', component: TemiPage },
       { title: 'Sources', component: SorgentiPage },
       { title: 'Tag', component: TagPage },
-      { title: 'Favorites', component: FavoritesPage },
+      { title: 'Preferiti', component: FavoritesPage },
       { title: 'Credits', component: CreditsPage },
     ];
 
