@@ -7,7 +7,7 @@ import { NavController } from 'ionic-angular';
 })
 
 export class FavoritesPage {
-  title:string = 'Preferiti';
+  title:string = 'Favorites';
   
 
 }
