@@ -1,6 +1,8 @@
 import { Injectable }    from '@angular/core';
 import { Headers, Http } from '@angular/http';
 
+import { Observable }     from 'rxjs/Observable';
+import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 
 import { eventType } from './struct-data';
@@ -67,6 +69,20 @@ export class EventService {
                     (function(value:eventType) {return value.themes.indexOf(filterTheme) >= 0 })
                     .slice(from, to + 1))
                 .catch(this.handleError);
+  }
+
+  searchEvents(filter: string, from = 0, to = 65535, theme?: string, tag?: string, source?: string): Promise<eventType[]> {
+      return this.http.get(this.eventsUrl)
+                .toPromise()
+                .then(response => (response.json().data as eventType[])
+                    .filter(value => {
+                        return (filter ? value.title.match(filter) : true) 
+                            && (theme ? value.themes.indexOf(theme) >= 0 : true) 
+                            && (tag ? value.tags.indexOf(tag) >= 0 : true) 
+                            && (source ? value.source.localeCompare(source) == 0 : true) 
+                    })
+                    .slice(from, to + 1))
+                .catch(this.handleError);    
   }
 
   // Returns all available tags

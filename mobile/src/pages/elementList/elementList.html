@@ -4,7 +4,7 @@
             <ion-icon name="menu"></ion-icon>
         </button>
         <ion-title>
-            <ion-icon name="home"></ion-icon> {{title}}
+            {{title}}
         </ion-title>
     </ion-navbar>
 </ion-header>
@@ -12,22 +12,24 @@
 
 <ion-content>
     <div [ngSwitch]="view">
-        <ion-list *ngSwitchCase="'lista'">
-            <ion-item *ngFor="let event of mainEvents" (click)="onSelect(event)">
-                <ion-thumbnail item-start>
-                    <img src={{event.image}}>
-                </ion-thumbnail>
-                <h2>{{event.title}}</h2>
-                <p>{{event.description}}</p>
-            </ion-item>
-        </ion-list>
-        <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
-            <ion-infinite-scroll-content 
-                loadingSpinner = "bubbles" 
-                loadingText = "Caricamento">
-            </ion-infinite-scroll-content>
-        </ion-infinite-scroll>
-
+        <div>
+            <ion-searchbar #searchBox (ionInput)="search(searchBox.value)"></ion-searchbar>
+            <ion-list *ngSwitchCase="'lista'">
+                <ion-item *ngFor="let event of mainEvents" (click)="onSelect(event)">
+                    <ion-thumbnail item-start>
+                        <img src={{event.image}}>
+                    </ion-thumbnail>
+                    <h2>{{event.title}}</h2>
+                    <p>{{event.description}}</p>
+                </ion-item>
+            </ion-list>
+            <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
+                <ion-infinite-scroll-content 
+                    loadingSpinner = "bubbles" 
+                    loadingText = "Caricamento">
+                </ion-infinite-scroll-content>
+            </ion-infinite-scroll>
+        </div>    
 
         <ion-list *ngSwitchCase="'mappa'">
             <h1>TESTO DI PROVA</h1>

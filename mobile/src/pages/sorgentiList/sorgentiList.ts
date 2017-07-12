@@ -7,35 +7,18 @@ import { ElementListPage } from '../elementList/elementList';
 
 @Component({
   selector: 'page-sorgentiList',
-  templateUrl: 'sorgentiList.html',
+  templateUrl: '../elementList/elementList.html',
   providers: [EventService]
 })
 
-export class SorgentiListPage extends ElementListPage implements OnInit{
+export class SorgentiListPage extends ElementListPage {
 
     constructor(protected eventService: EventService, public navCtrl: NavController, public navParams: NavParams){
         super(eventService, navCtrl);
-
+        this.title = this.navParams.get('name');
     }
 
-    getEvents(infiniteScroll?: any): void {
-            this.getData(this.mainEvents.length,this.mainEvents.length + this.PAGE_SIZE)
-                .then(mainEvents => {
-                    this.mainEvents = this.mainEvents.concat(mainEvents);
-                    if (infiniteScroll != null) {
-                        if(mainEvents == null || mainEvents.length == 0){
-                            infiniteScroll.enable(false);
-                        }
-                        infiniteScroll.complete();
-                    }                                
-                });
-    }
-
-    getData(from: number, to: number): Promise<eventType[]> {
-        return this.eventService.getEventsBySource(this.navParams.get('name'),from ,to);
-    }
-
-    ngOnInit(): void{
-        this.getEvents();
+    getData(from: number, to: number, filter: string): Promise<eventType[]> {
+        return this.eventService.searchEvents(filter, from, to, null, null, this.navParams.get('name'));
     }
 }

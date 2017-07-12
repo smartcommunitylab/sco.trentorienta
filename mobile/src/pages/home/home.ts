@@ -13,7 +13,7 @@ import { eventType } from '../../app/struct-data';
 export class HomePage extends ElementListPage {
     title =  "Home";
 
-    getData(from: number, to: number): Promise<eventType[]> {
-      return this.eventService.getEvents(from ,to);
+    getData(from: number, to: number, filter: string): Promise<eventType[]> {
+      return this.eventService.searchEvents(filter, from ,to);
     }
 }
