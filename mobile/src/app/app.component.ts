@@ -31,7 +31,7 @@ export class MyApp {
     translate.setTranslation('en', {
         Home: 'Home',
         Credits: "Credits",
-        Favorites: 'Favorites',
+        Preferiti: 'Favorites',
         Themes: 'Themes',
         Sources: "Sources",
         Tag: 'Tag',
