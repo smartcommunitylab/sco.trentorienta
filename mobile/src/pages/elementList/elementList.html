@@ -4,17 +4,20 @@
             <ion-icon name="menu"></ion-icon>
         </button>
         <ion-title>
-            {{title}}
+            <button ion-button searchToggle (click)='toggleSearch()' item-end>
+                <ion-icon name="search"></ion-icon>
+            </button>
+            {{title}}        
         </ion-title>
     </ion-navbar>
+    <ion-searchbar #searchBox *ngIf="searching" (ionInput)="search(searchBox.value)"></ion-searchbar>
 </ion-header>
 
 
 <ion-content>
     <div [ngSwitch]="view">
-        <div>
-            <ion-searchbar #searchBox (ionInput)="search(searchBox.value)"></ion-searchbar>
-            <ion-list *ngSwitchCase="'lista'">
+        <div *ngSwitchCase="'lista'">
+            <ion-list>
                 <ion-item *ngFor="let event of mainEvents" (click)="onSelect(event)">
                     <ion-thumbnail item-start>
                         <img src={{event.image}}>
@@ -31,15 +34,21 @@
             </ion-infinite-scroll>
         </div>    
 
-        <ion-list *ngSwitchCase="'mappa'">
-            <h1>TESTO DI PROVA</h1>
-            <h1>Mappa</h1>
-        </ion-list>
+        <div *ngSwitchCase="'mappa'">
+            <ion-list>
+                <h1>TESTO DI PROVA</h1>
+                <h1>Mappa</h1>
+            </ion-list>
+        </div>
 
-        <ion-list *ngSwitchCase="'calendario'">
-            <h1>TESTO DI PROVA</h1>
-            <h1>Calendario</h1>
-        </ion-list>
+        <div *ngSwitchCase="'calendario'">
+            <ion-list>
+                <ion-item-divider>Oggi</ion-item-divider>
+                    <ion-item>Testo</ion-item>
+                    <ion-item>Di</ion-item>
+                    <ion-item>Prova</ion-item>
+            </ion-list>
+        </div>
     </div>
 </ion-content>
 

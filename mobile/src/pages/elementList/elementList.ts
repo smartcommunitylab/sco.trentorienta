@@ -27,6 +27,7 @@ export abstract class ElementListPage implements OnInit{
     view: string = "lista";
     mainEvents : eventType[] = [];
     selectedEvent : eventType;
+    searching: boolean = false;
     private searchTerms = new Subject<string>();
     private termsObs: Observable<string>;
     private searchValue: string = null;
@@ -61,6 +62,10 @@ export abstract class ElementListPage implements OnInit{
             });
     }
  
+    toggleSearch():void{
+        this.searching= !this.searching;
+    }
+
     search(filter: string): void {
         this.searchTerms.next(filter);
     }
