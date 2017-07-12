@@ -9,6 +9,7 @@ export class eventType {
   created: string;
 }
 
+// simple struct
 export class occurenciesType {
   name: string;
   count: number;
