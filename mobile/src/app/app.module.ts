@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
-import { HttpModule }    from '@angular/http';
+import { HttpModule, Http }    from '@angular/http';
 
 // Imports for loading & configuring the in-memory web api
 import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
@@ -22,6 +22,14 @@ import { TemiListPage } from '../pages/temiList/temiList';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
+import {TranslateModule, TranslateLoader} from "@ngx-translate/core";
+// import {TranslateHttpLoader} from "@ngx-translate/http-loader";
+
+// AoT requires an exported function for factories
+// export function HttpLoaderFactory(http: Http) {
+    //return new TranslateHttpLoader(http, "/i18n/", ".json");
+//}
+
 @NgModule({
   declarations: [
     MyApp,
@@ -40,7 +48,14 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     IonicModule.forRoot(MyApp),
     HttpModule,
     InMemoryWebApiModule.forRoot(InMemoryDataService),
-  ],
+    TranslateModule.forRoot({
+          //loader: {
+          //  provide: TranslateLoader,
+          //  useFactory: HttpLoaderFactory,
+          // deps: [Http]
+          //}
+    }),
+   ],
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,

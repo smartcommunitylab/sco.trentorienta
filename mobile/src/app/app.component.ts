@@ -9,6 +9,7 @@ import { SorgentiPage } from '../pages/sorgenti/sorgenti';
 import { TagPage } from '../pages/tag/tag';
 import { FavoritesPage } from '../pages/favorites/favorites';
 import { CreditsPage } from '../pages/credits/credits';
+import {TranslateService} from '@ngx-translate/core';
 
 
 @Component({
@@ -21,18 +22,43 @@ export class MyApp {
 
   pages: Array<{title: string, component: any}>;
 
-  constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen) {
+  constructor(private translate: TranslateService, public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen) {
     this.initializeApp();
+
+    translate.addLangs(["it", "en"]);
+    translate.setDefaultLang('it');
+
+    translate.setTranslation('en', {
+        Home: 'Home',
+        Credits: "Credits",
+        Favorites: 'Favorites',
+        Themes: 'Themes',
+        Sources: "Sources",
+        Tag: 'Tag',
+    });
+    translate.setTranslation('it', {
+        Home: 'Home (it)',
+        Credits: 'Referenze',
+        Favorites: 'Preferiti',
+        Themes: 'Temi',
+        Sources: "Sorgenti",
+        Tag: 'Etichette',
+    });
+
+
+    let browserLang = translate.getBrowserLang();
+    translate.use(browserLang.match(/it|en/) ? browserLang : 'en');
 
     // used for an example of ngFor and navigation
     this.pages = [
       { title: 'Home', component: HomePage },
-      { title: 'Temi', component: TemiPage },
-      { title: 'Sorgenti', component: SorgentiPage },
+      { title: 'Themes', component: TemiPage },
+      { title: 'Sources', component: SorgentiPage },
       { title: 'Tag', component: TagPage },
       { title: 'Favorites', component: FavoritesPage },
       { title: 'Credits', component: CreditsPage },
     ];
+
 
   }
 

@@ -4,7 +4,7 @@ export class InMemoryDataService implements InMemoryDbService {
     const mainEvents = [
       { id: 1,  title: 'Evento 1', description: 'Descrizione 1', image:'test1.jpg', tags:['party'], source:'comunetn', themes: ['cultura'], created: '20170705110001' },
       { id: 2,  title: 'Evento 2', description: 'Descrizione 2', image:'test2.jpg', tags:['exhibition','party'], source:'comunetn', themes: ['cultura'], created: '20170705110002' },
-      { id: 3,  title: 'Evento 3', description: 'Descrizione 3', image:'test3.jpg', tags:['match'], source:'asis', themes: ['sport'], created: '20170705110003' },
+      { id: 3,  title: 'Evento 3c', description: 'Descrizione 3', image:'test3.jpg', tags:['match'], source:'asis', themes: ['sport'], created: '20170705110003' },
       { id: 4,  title: 'Evento 4', description: 'Descrizione 4', image:'test4.jpg', tags:['music'], source:'socialstone', themes: ['cultura'], created: '20170705110004' },
       { id: 5,  title: 'Evento 5', description: 'Descrizione 5', image:'test5.jpg', tags:['party'], source:'socialstone', themes: ['cultura'], created: '20170705110005' },
       { id: 6,  title: 'Evento 6', description: 'Descrizione 6', image:'test6.jpg', tags:['race'], source:'comunetn', themes: ['sport'], created: '20170705110006' },
