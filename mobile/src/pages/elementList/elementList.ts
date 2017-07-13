@@ -154,14 +154,61 @@ export abstract class ElementListPage implements OnInit{
         this.navCtrl.push(ElementDetailsPage, {id: this.selectedEvent.id} )
     }
 
-    switchSegment() {
+    map: L.Map; // points to leaflet map
+
+    // onMapReady: called when leaflet map is drawn.
+    // Resolves a bug vith gray maps (when I change segment page...)
+    onMapReady(map: L.Map) {
+        // remvoe ALL layers
+        map.eachLayer(layer => (map.removeLayer(layer)));
+
+        // re-add the background layer
+        map.addLayer (this.options.layers[1]);
+
+        // I create a group of markers, so I can view all markers in the map
+        var group = L.featureGroup();
+
+        for (var i = 0; i < this.mainEvents.length; i++) {
+            var evento = this.mainEvents[i];
+            if (evento)  {
+                let marker = L.marker([ evento.coordX, evento.coordY ], {
+                    icon: L.icon({
+                        iconSize: [ 25, 41 ],
+                        iconAnchor: [ 13, 41 ],
+                        iconUrl: 'assets/icon/marker.png',
+                        // shadowUrl: '44a526eed258222515aa21eaffd14a96.png'
+                    })
+                });
+
+                map.addLayer (
+                    marker
+                );
+
+                group.addLayer (
+                    marker
+                );
+            }
+        }
+        // zoom to all visible markers...
+        map.fitBounds (group.getBounds());
+    }
+
+    switchSegment(segmentName: string) {
         // Mappa Leaflet
         // set up the map
 	    // var map = new L.Map('map');
     
-        // create the tile layer with correct attribution
-		this.zoom = this.model.zoom;
-		this.center = L.latLng([ this.model.latitude, this.model.longitude]);
+        if (segmentName == "mappa") {
+            // create the tile layer with correct attribution
+            // this.zoom = this.model.zoom;
+            
+            
+                
+            // }
+
+
+            
+        }
 
 		return false;
     }

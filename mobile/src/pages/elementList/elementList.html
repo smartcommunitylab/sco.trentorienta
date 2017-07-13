@@ -15,8 +15,8 @@
 
 
 <ion-content>
-    <div [ngSwitch]="view">
-        <div *ngSwitchCase="'lista'">
+    <div [ngSwitch]="view" style="height: 100%; width: 100%">
+        <div *ngSwitchCase="'lista'" style="height: 100%; width: 100%">
             <ion-list>
                 <ion-item *ngFor="let event of mainEvents" (click)="onSelect(event)">
                     <ion-thumbnail item-start>
@@ -34,10 +34,11 @@
             </ion-infinite-scroll>
         </div>    
 
-        <div *ngSwitchCase="'mappa'">
-            <div leaflet style="height: 300px"
+        <div *ngSwitchCase="'mappa'" style="height: 100%; width: 100%">
+            <div leaflet style="height: 100%; width: 100%"
                 [leafletOptions]="options"
-                [leafletLayers]="layers">
+                [leafletLayers]="layers"
+                (leafletMapReady)="onMapReady($event)" >
             </div>
         </div>
 
@@ -54,7 +55,7 @@
 
 <ion-footer>
     <ion-toolbar no-border-top>
-        <ion-segment [(ngModel)]="view" (ionChange)="switchSegment()">
+        <ion-segment [(ngModel)]="view" (ionChange)="switchSegment(view)">
             <ion-segment-button value="lista">
                 Lista
             </ion-segment-button>
