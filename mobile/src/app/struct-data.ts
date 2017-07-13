@@ -6,6 +6,8 @@ export class eventType {
   tags: string [];
   source: string;
   themes: string [];
+  coordX: number;
+  coordY: number;
   created: string;
 }
 
