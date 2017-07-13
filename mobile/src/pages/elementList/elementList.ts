@@ -178,7 +178,13 @@ export abstract class ElementListPage implements OnInit{
                         iconUrl: 'assets/icon/marker.png',
                         // shadowUrl: '44a526eed258222515aa21eaffd14a96.png'
                     })
-                });
+                }).bindTooltip(
+                    "<h2>"+evento.title+"</h2><p>"+
+                    evento.description,
+                    {
+                        offset: new L.Point(-5, -28)
+                    }
+                );
 
                 map.addLayer (
                     marker
