@@ -76,7 +76,7 @@ export class EventService {
                 .toPromise()
                 .then(response => (response.json().data as eventType[])
                     .filter(value => {
-                        return (filter ? value.title.match(filter) : true) 
+                        return (filter ? value.title.toLowerCase().match(filter.toLowerCase()) : true) 
                             && (theme ? value.themes.indexOf(theme) >= 0 : true) 
                             && (tag ? value.tags.indexOf(tag) >= 0 : true) 
                             && (source ? value.source.localeCompare(source) == 0 : true) 
