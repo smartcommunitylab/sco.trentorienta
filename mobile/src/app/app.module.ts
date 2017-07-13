@@ -20,6 +20,7 @@ import { ElementDetailsPage } from '../pages/elementDetails/elementDetails';
 import { TemiListPage } from '../pages/temiList/temiList';
 import { TagListPage } from '../pages/tagList/tagList';
 import { SorgentiListPage } from '../pages/sorgentiList/sorgentiList';
+import { ObjNgFor } from '../pages/elementList/elementList';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -48,6 +49,7 @@ import { LeafletModule } from '@asymmetrik/angular2-leaflet';
     TemiListPage,
     TagListPage,
     SorgentiListPage,
+    ObjNgFor,
   ],
   imports: [
     BrowserModule,

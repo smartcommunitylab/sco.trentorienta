@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
+import * as moment from 'moment';
 
 import { EventService } from '../../app/event-service';
 import { eventType } from '../../app/struct-data';
@@ -11,12 +12,15 @@ import { eventType } from '../../app/struct-data';
 })
 
 export class ElementDetailsPage implements OnInit{
-    event: eventType = new eventType();//{id: 0,  title: '', description: '', image:'', tags:[''], source:'', themes: [''], created: ''};
+    event: eventType = new eventType();
+    dateEvent: any;
     constructor(private eventService: EventService, public navParams: NavParams){
 
     }
     ngOnInit(): void{
         this.eventService.getEvent(this.navParams.get('id'))
-                        .then(event => {this.event = event});
+                        .then(event => {this.event = event;
+                            this.dateEvent = moment(this.event.eventDate,'YYYYMMDDHHmmss').format('DD.MM.YYYY');
+                        });
     }
 }

@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Pipe, PipeTransform} from '@angular/core';
 import { NavController } from 'ionic-angular';
+import * as moment from 'moment';
 
 import { EventService } from '../../app/event-service';
 import { eventType } from '../../app/struct-data';
@@ -17,6 +18,13 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
 
+@Pipe({ name: 'ObjNgFor',  pure: false })
+export class ObjNgFor implements PipeTransform {
+    transform(value: any, args: any[] = null): any {
+        return Object.keys(value)//.map(key => value[key]);
+    }
+}
+
 @Component({
   selector: 'page-elementList',
   templateUrl: 'elementList.html',
@@ -25,7 +33,10 @@ import 'rxjs/add/operator/distinctUntilChanged';
 
 export abstract class ElementListPage implements OnInit{
     view: string = "lista";
+
     mainEvents : eventType[] = [];
+    calendarEvents = null;
+    
     selectedEvent : eventType;
     searching: boolean = false;
     private searchTerms = new Subject<string>();
@@ -129,6 +140,23 @@ export abstract class ElementListPage implements OnInit{
             });
     }
  
+    loadCalendar(): void{
+        if (this.calendarEvents == null) {
+            this.calendarEvents = {};
+            this.eventService.calendarEvents(0, 10)
+                .then(events => {
+                    events.forEach(event => {
+                        var date = moment(event.eventDate, "YYYYMMDDHHmmss").format("DD.MM.YYYY");
+                        if (this.calendarEvents[date]) {
+                            this.calendarEvents[date].push(event);
+                        } else {
+                            this.calendarEvents[date] = [event];
+                        }
+                    });
+                });
+        }
+    }
+
     toggleSearch():void{
         this.searching= !this.searching;
     }

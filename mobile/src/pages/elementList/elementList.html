@@ -4,11 +4,14 @@
             <ion-icon name="menu"></ion-icon>
         </button>
         <ion-title>
-            <button ion-button searchToggle (click)='toggleSearch()' item-end>
-                <ion-icon name="search"></ion-icon>
-            </button>
             {{title}}        
         </ion-title>
+        <ion-buttons end>
+            <button ion-button (click)='toggleSearch()'>
+                <ion-icon *ngIf="!searching" name="search"></ion-icon>
+                <ion-icon *ngIf="searching" name="close-circle"></ion-icon>
+            </button>
+        </ion-buttons>
     </ion-navbar>
     <ion-searchbar #searchBox *ngIf="searching" (ionInput)="search(searchBox.value)"></ion-searchbar>
     </ion-header>
@@ -44,10 +47,12 @@
 
         <div *ngSwitchCase="'calendario'">
             <ion-list>
-                <ion-item-divider>Oggi</ion-item-divider>
-                    <ion-item>Testo</ion-item>
-                    <ion-item>Di</ion-item>
-                    <ion-item>Prova</ion-item>
+                <ion-item-divider *ngFor="let key of calendarEvents | ObjNgFor">
+                    {{key}}
+                    <ion-item>
+                        
+                    </ion-item>
+                </ion-item-divider>  
             </ion-list>
         </div>
     </div>
@@ -62,7 +67,7 @@
             <ion-segment-button value="mappa">
                 Mappa
             </ion-segment-button>
-            <ion-segment-button value="calendario">
+            <ion-segment-button value="calendario" (click)='loadCalendar()'>
                 Calendario
             </ion-segment-button>
         </ion-segment>

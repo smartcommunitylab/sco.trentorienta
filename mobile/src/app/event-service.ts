@@ -161,6 +161,18 @@ export class EventService {
                 .catch(this.handleError);
   }
 
+  calendarEvents(from=0, to=65535, theme?: string, tag?: string, source?: string):Promise<eventType[]>{
+      return this.searchEvents(null, 0, 65535, theme, tag, source).then(events => {
+          return events.sort((a,b) => {return parseInt(a.eventDate) - parseInt(b.eventDate);}).splice(from, to+1);
+      });
+    // return this.http.get(this.eventsUrl)
+    //             .toPromise()
+    //             .then(response => (response.json().data as eventType[])
+    //             .sort((a,b) => {return parseInt(a.eventDate) - parseInt(b.eventDate);})
+    //             )
+    //             .catch(this.handleError)
+  }
+
   private handleError(error: any): Promise<any> {
     console.error('An error occurred', error); // for demo purposes only
     return Promise.reject(error.message || error);
