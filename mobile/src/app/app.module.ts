@@ -32,6 +32,8 @@ import {TranslateModule, TranslateLoader} from "@ngx-translate/core";
     //return new TranslateHttpLoader(http, "/i18n/", ".json");
 //}
 
+import { LeafletModule } from '@asymmetrik/angular2-leaflet';
+
 @NgModule({
   declarations: [
     MyApp,
@@ -59,6 +61,7 @@ import {TranslateModule, TranslateLoader} from "@ngx-translate/core";
           // deps: [Http]
           //}
     }),
+    LeafletModule,
    ],
   bootstrap: [IonicApp],
   entryComponents: [

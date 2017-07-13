@@ -11,7 +11,7 @@
         </ion-title>
     </ion-navbar>
     <ion-searchbar #searchBox *ngIf="searching" (ionInput)="search(searchBox.value)"></ion-searchbar>
-</ion-header>
+    </ion-header>
 
 
 <ion-content>
@@ -35,10 +35,10 @@
         </div>    
 
         <div *ngSwitchCase="'mappa'">
-            <ion-list>
-                <h1>TESTO DI PROVA</h1>
-                <h1>Mappa</h1>
-            </ion-list>
+            <div leaflet style="height: 300px"
+                [leafletOptions]="options"
+                [leafletLayers]="layers">
+            </div>
         </div>
 
         <div *ngSwitchCase="'calendario'">
@@ -54,7 +54,7 @@
 
 <ion-footer>
     <ion-toolbar no-border-top>
-        <ion-segment [(ngModel)]="view">
+        <ion-segment [(ngModel)]="view" (ionChange)="switchSegment()">
             <ion-segment-button value="lista">
                 Lista
             </ion-segment-button>
