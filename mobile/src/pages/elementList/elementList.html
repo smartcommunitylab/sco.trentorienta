@@ -49,8 +49,12 @@
             <ion-list>
                 <ion-item-divider *ngFor="let key of calendarEvents | ObjNgFor">
                     {{key}}
-                    <ion-item>
-                        
+                    <ion-item *ngFor="let event of calendarEvents[key]" (click)="onSelect(event)">
+                        <ion-thumbnail item-start>
+                            <img src={{event.image}}>
+                        </ion-thumbnail>
+                        <h2>{{event.title}}</h2>
+                        <p>{{event.description}}</p>
                     </ion-item>
                 </ion-item-divider>  
             </ion-list>
