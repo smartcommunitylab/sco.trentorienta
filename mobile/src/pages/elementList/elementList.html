@@ -58,6 +58,12 @@
                     </ion-item>
                 </ion-item-divider>  
             </ion-list>
+            <ion-infinite-scroll (ionInfinite)="doInfiniteCal($event)">
+                <ion-infinite-scroll-content 
+                    loadingSpinner = "bubbles" 
+                    loadingText = "Caricamento">
+                </ion-infinite-scroll-content>
+            </ion-infinite-scroll>
         </div>
     </div>
 </ion-content>

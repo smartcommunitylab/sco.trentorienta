@@ -21,4 +21,8 @@ export class SorgentiListPage extends ElementListPage {
     getData(from: number, to: number, filter: string): Promise<eventType[]> {
         return this.eventService.searchEvents(filter, from, to, null, null, this.navParams.get('name'));
     }
+
+    getCalData(from: number, to: number): Promise<eventType[]> {
+      return this.eventService.calendarEvents(from ,to, null, null, this.navParams.get('name'));
+    }
 }

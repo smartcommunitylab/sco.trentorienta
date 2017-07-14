@@ -36,7 +36,7 @@ export abstract class ElementListPage implements OnInit{
 
     mainEvents : eventType[] = [];
     calendarEvents = null;
-    
+    calendarSize: number = 0;
     selectedEvent : eventType;
     searching: boolean = false;
     private searchTerms = new Subject<string>();
@@ -124,7 +124,14 @@ export abstract class ElementListPage implements OnInit{
         this.getEvents(false, infiniteScroll);
     }
 
+    doInfiniteCal(infiniteScroll) {
+        console.log('Begin async operation');
+        this.loadCalendar(infiniteScroll);
+    }
+
     abstract getData(from: number, to: number, filter: string): Promise<eventType[]>;
+
+    abstract getCalData(from:number, to:number): Promise<eventType[]>;
 
     getEvents(reset: boolean, infiniteScroll?: any): void {
         let from = reset ? 0 : this.mainEvents.length;
@@ -140,21 +147,32 @@ export abstract class ElementListPage implements OnInit{
             });
     }
  
-    loadCalendar(): void{
+    loadCalendar(infiniteScroll?: any): void{
         if (this.calendarEvents == null) {
             this.calendarEvents = {};
-            this.eventService.calendarEvents(0, 10)
-                .then(events => {
-                    events.forEach(event => {
-                        var date = moment(event.eventDate, "YYYYMMDDHHmmss").format("DD.MM.YYYY");
-                        if (this.calendarEvents[date]) {
-                            this.calendarEvents[date].push(event);
-                        } else {
-                            this.calendarEvents[date] = [event];
-                        }
-                    });
+        }   
+        let from = this.calendarSize;
+        this.getCalData(from,  from + this.PAGE_SIZE)
+            .then(events => {
+                this.calendarSize += events.length;
+                events.forEach(event => {
+                    var date = moment(event.eventDate, "YYYYMMDDHHmmss").format("DD.MM.YYYY");
+                    if (this.calendarEvents[date]) {
+                        this.calendarEvents[date].push(event);
+                    } else {
+                        this.calendarEvents[date] = [event];
+                    }
                 });
-        }
+                if (infiniteScroll != null) {
+                    if(events == null || events.length == 0){
+                        infiniteScroll.enable(false);
+                    }
+                    infiniteScroll.complete();
+                }
+            });
+        
+        
+        
     }
 
     toggleSearch():void{
