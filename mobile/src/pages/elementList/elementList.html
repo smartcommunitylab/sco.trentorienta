@@ -7,7 +7,7 @@
             {{title}}        
         </ion-title>
         <ion-buttons end>
-            <button ion-button (click)='toggleSearch()'>
+            <button ion-button *ngIf="view=='lista'" (click)='toggleSearch()'>
                 <ion-icon *ngIf="!searching" name="search"></ion-icon>
                 <ion-icon *ngIf="searching" name="close-circle"></ion-icon>
             </button>
