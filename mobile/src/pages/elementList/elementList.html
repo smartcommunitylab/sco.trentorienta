@@ -23,7 +23,8 @@
             <ion-list>
                 <ion-item *ngFor="let event of mainEvents" (click)="onSelect(event)">
                     <ion-thumbnail item-start>
-                        <img src={{event.image}}>
+                        <img *ngIf="event.image" src={{event.image}}>
+                        <img *ngIf="!event.image" src='assets/icon/comune.jpeg'>
                     </ion-thumbnail>
                     <h2>{{event.title}}</h2>
                     <p>{{event.description}}</p>
@@ -51,7 +52,8 @@
                     {{key}}
                     <ion-item *ngFor="let event of calendarEvents[key]" (click)="onSelect(event)">
                         <ion-thumbnail item-start>
-                            <img src={{event.image}}>
+                            <img *ngIf="event.image" src={{event.image}}>
+                            <img *ngIf="!event.image" src='assets/icon/comune.jpeg'>
                         </ion-thumbnail>
                         <h2>{{event.title}}</h2>
                         <p>{{event.description}}</p>

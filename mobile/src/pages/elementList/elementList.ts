@@ -205,7 +205,7 @@ export abstract class ElementListPage implements OnInit{
     // onMapReady: called when leaflet map is drawn.
     // Resolves a bug vith gray maps (when I change segment page...)
     onMapReady(map: L.Map) {
-        // remvoe ALL layers
+        // remove ALL layers
         map.eachLayer(layer => (map.removeLayer(layer)));
 
         // re-add the background layer
@@ -213,9 +213,25 @@ export abstract class ElementListPage implements OnInit{
 
         // I create a group of markers, so I can view all markers in the map
         var group = L.featureGroup();
-
+        
+        var commonPlace : {titles: string[], coordX: number, coordY: number} [] = [], c = 0, t;
         for (var i = 0; i < this.mainEvents.length; i++) {
             var evento = this.mainEvents[i];
+            t=0;
+            for(var j = i+1; j < this.mainEvents.length ; j++){
+                if((evento.coordX >= this.mainEvents[j].coordX - 0.001 && evento.coordX <= this.mainEvents[j].coordX + 0.001) && 
+                   (evento.coordY >= this.mainEvents[j].coordY - 0.001 && evento.coordY <= this.mainEvents[j].coordY + 0.001)) {
+                    commonPlace[c] = {titles:[evento.title,this.mainEvents[j].title], coordX: evento.coordX, coordY: evento.coordY}
+                    t++;
+                    if(t>1){
+                        commonPlace[c-1].titles[commonPlace[c-1].titles.length] = this.mainEvents[j].title;
+                        commonPlace.pop();
+                        c--;
+                    }
+                    c++;
+                }
+            }
+            console.log(commonPlace);
             if (evento)  {
                 let marker = L.marker([ evento.coordX, evento.coordY ], {
                     icon: L.icon({
