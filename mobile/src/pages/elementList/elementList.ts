@@ -175,6 +175,24 @@ export abstract class ElementListPage implements OnInit{
         
     }
 
+    distance(lat1: number,lon1: number,lat2: number,lon2: number):number {
+        var R = 6371; // Radius of the earth in km
+        var dLat = this.deg2rad(lat2-lat1);  // deg2rad below
+        var dLon = this.deg2rad(lon2-lon1); 
+        var a = 
+            Math.sin(dLat/2) * Math.sin(dLat/2) +
+            Math.cos(this.deg2rad(lat1)) * Math.cos(this.deg2rad(lat2)) * 
+            Math.sin(dLon/2) * Math.sin(dLon/2)
+            ; 
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+        var d = R * c; // Distance in km
+        return d*1000;
+    }
+
+    deg2rad(deg: number):number{
+        return deg * (Math.PI/180);
+    }
+
     toggleSearch():void{
         this.searching= !this.searching;
     }
@@ -195,11 +213,6 @@ export abstract class ElementListPage implements OnInit{
         });
     }
 
-    onSelect(event: eventType): void{
-        this.selectedEvent = event;
-        this.navCtrl.push(ElementDetailsPage, {id: this.selectedEvent.id} )
-    }
-
     map: L.Map; // points to leaflet map
 
     // onMapReady: called when leaflet map is drawn.
@@ -212,51 +225,53 @@ export abstract class ElementListPage implements OnInit{
         map.addLayer (this.options.layers[1]);
 
         // I create a group of markers, so I can view all markers in the map
-        var group = L.featureGroup();
+        let group = L.featureGroup();
         
-        var commonPlace : {titles: string[], coordX: number, coordY: number} [] = [], c = 0, t;
-        for (var i = 0; i < this.mainEvents.length; i++) {
-            var evento = this.mainEvents[i];
-            t=0;
-            for(var j = i+1; j < this.mainEvents.length ; j++){
-                if((evento.coordX >= this.mainEvents[j].coordX - 0.001 && evento.coordX <= this.mainEvents[j].coordX + 0.001) && 
-                   (evento.coordY >= this.mainEvents[j].coordY - 0.001 && evento.coordY <= this.mainEvents[j].coordY + 0.001)) {
-                    commonPlace[c] = {titles:[evento.title,this.mainEvents[j].title], coordX: evento.coordX, coordY: evento.coordY}
-                    t++;
-                    if(t>1){
-                        commonPlace[c-1].titles[commonPlace[c-1].titles.length] = this.mainEvents[j].title;
-                        commonPlace.pop();
-                        c--;
-                    }
-                    c++;
+        let indexMap = {};
+        let commonPlace = {};
+        for (let i = 0; i < this.mainEvents.length; i++) {
+            let evento = this.mainEvents[i];
+            for(let j = i + 1; j < this.mainEvents.length; j++){
+                let evento2 = this.mainEvents[j];
+                let dis = this.distance(evento.coordX, evento.coordY, evento2.coordX, evento2.coordY);
+                if(dis<=50){
+                    commonPlace[indexMap[i]].push(evento2);
+                    indexMap[j]=i;
+                } else {
+                    commonPlace[j]=[evento2];
+                    indexMap[j]=j;
                 }
+                //misura distanza tra j e indexmap[i]
+                //se la distanza e' piccola aggiungi j a commonplace[indexmap[i]]
+                //mappa j su indexmap[i]
+                //else
+                //aggiungi j a un nuovo indexmap e commonplace PROPRIO
             }
-            console.log(commonPlace);
-            if (evento)  {
-                let marker = L.marker([ evento.coordX, evento.coordY ], {
-                    icon: L.icon({
-                        iconSize: [ 25, 41 ],
-                        iconAnchor: [ 13, 41 ],
-                        iconUrl: 'assets/icon/marker.png',
-                        // shadowUrl: '44a526eed258222515aa21eaffd14a96.png'
-                    })
-                }).bindTooltip(
-                    "<h2>"+evento.title+"</h2><p>"+
-                    evento.description,
-                    {
-                        offset: new L.Point(-5, -28)
-                    }
-                );
+            let marker = L.marker([evento.coordX, evento.coordY ], {
+                icon: L.icon({
+                    iconSize: [ 25, 41 ],
+                    iconAnchor: [ 13, 41 ],
+                    iconUrl: 'assets/icon/marker.png',
+                    // shadowUrl: '44a526eed258222515aa21eaffd14a96.png'
+                })
+            }).bindTooltip(
+                '<h2 *ngFor="let evento of commonPlace[i]" onclick="this.onSelect(this.evento)">'+ evento.title +'</h2>',
+                {
+                    offset: new L.Point(-5, -28),
+                    interactive: true,
+                },
+            );
 
-                map.addLayer (
-                    marker
-                );
+            map.addLayer (
+                marker
+            );
 
-                group.addLayer (
-                    marker
-                );
-            }
+            group.addLayer (
+                marker
+            );
         }
+        console.log(indexMap);
+        console.log(commonPlace);
         // zoom to all visible markers...
         map.fitBounds (group.getBounds());
     }
@@ -280,7 +295,16 @@ export abstract class ElementListPage implements OnInit{
 
 		return false;
     }
+
+    onSelect(event: eventType): void{
+        this.selectedEvent = event;
+        this.navCtrl.push(ElementDetailsPage, {id: this.selectedEvent.id} )
+    }
+
 }
+
+    
+
 
 export class LeafletCoreDemoModel {
     
