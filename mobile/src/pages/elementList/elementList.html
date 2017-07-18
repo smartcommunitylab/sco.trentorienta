@@ -1,5 +1,5 @@
 <ion-header>
-    <ion-navbar>
+    <ion-navbar color="primary">
         <button ion-button menuToggle>
             <ion-icon name="menu"></ion-icon>
         </button>
@@ -27,7 +27,7 @@
                         <img *ngIf="!event.image" src='assets/icon/comune.jpeg'>
                     </ion-thumbnail>
                     <h2>{{event.title}}</h2>
-                    <p>{{event.description}}</p>
+                    <p>Pubblicato il: </p>
                 </ion-item>
             </ion-list>
             <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
@@ -48,7 +48,7 @@
 
         <div *ngSwitchCase="'calendario'">
             <ion-list>
-                <ion-item-divider *ngFor="let key of calendarEvents | ObjNgFor">
+                <ion-item-divider *ngFor="let key of calendarEvents | ObjNgFor" color="date">
                     {{key}}
                     <ion-item *ngFor="let event of calendarEvents[key]" (click)="onSelect(event)">
                         <ion-thumbnail item-start>
@@ -71,8 +71,8 @@
 </ion-content>
 
 <ion-footer>
-    <ion-toolbar no-border-top>
-        <ion-segment [(ngModel)]="view" (ionChange)="switchSegment(view)">
+    <ion-toolbar no-border-top color="primary">
+        <ion-segment [(ngModel)]="view" (ionChange)="switchSegment(view)"  color="light">
             <ion-segment-button value="lista">
                 Lista
             </ion-segment-button>
