@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, AlertController} from 'ionic-angular';
 
 import { EventService } from '../../app/event-service';
 import { eventType } from '../../app/struct-data';
@@ -13,8 +13,8 @@ import { ElementListPage } from '../elementList/elementList';
 
 export class SorgentiListPage extends ElementListPage {
 
-    constructor(protected eventService: EventService, public navCtrl: NavController, public navParams: NavParams){
-        super(eventService, navCtrl);
+    constructor(protected eventService: EventService, public navCtrl: NavController, public alertCtrl: AlertController, public navParams: NavParams){
+        super(eventService, navCtrl, alertCtrl);
         this.title = this.navParams.get('name');
     }
 

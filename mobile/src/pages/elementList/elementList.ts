@@ -1,5 +1,5 @@
 import { Component, OnInit, Pipe, PipeTransform} from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController, AlertController } from 'ionic-angular';
 import * as moment from 'moment';
 
 import { EventService } from '../../app/event-service';
@@ -115,7 +115,7 @@ export abstract class ElementListPage implements OnInit{
 
 
 
-    constructor(protected eventService: EventService, public navCtrl: NavController){
+    constructor(protected eventService: EventService, public navCtrl: NavController, public alertCtrl: AlertController){
         
     }
 
@@ -227,16 +227,18 @@ export abstract class ElementListPage implements OnInit{
         // I create a group of markers, so I can view all markers in the map
         let group = L.featureGroup();
         
-        let indexMap = {};
-        let commonPlace = {};
+        let indexMap = {0:0};
+        let commonPlace = {0:[this.mainEvents[0]]};
         for (let i = 0; i < this.mainEvents.length; i++) {
-            let evento = this.mainEvents[i];
+            let evento = this.mainEvents[indexMap[i]];
             for(let j = i + 1; j < this.mainEvents.length; j++){
+                // if (indexMap[j] != null) continue;
+                
                 let evento2 = this.mainEvents[j];
                 let dis = this.distance(evento.coordX, evento.coordY, evento2.coordX, evento2.coordY);
                 if(dis<=50){
                     commonPlace[indexMap[i]].push(evento2);
-                    indexMap[j]=i;
+                    indexMap[j]=indexMap[i];
                 } else {
                     commonPlace[j]=[evento2];
                     indexMap[j]=j;
@@ -247,28 +249,43 @@ export abstract class ElementListPage implements OnInit{
                 //else
                 //aggiungi j a un nuovo indexmap e commonplace PROPRIO
             }
-            let marker = L.marker([evento.coordX, evento.coordY ], {
+        }
+        for(let key in commonPlace){
+            let event = this.mainEvents[key];
+            let marker = L.marker([event.coordX, event.coordY ], {
                 icon: L.icon({
                     iconSize: [ 25, 41 ],
                     iconAnchor: [ 13, 41 ],
                     iconUrl: 'assets/icon/marker.png',
                     // shadowUrl: '44a526eed258222515aa21eaffd14a96.png'
                 })
-            }).bindTooltip(
-                '<h2 *ngFor="let evento of commonPlace[i]" onclick="this.onSelect(this.evento)">'+ evento.title +'</h2>',
-                {
-                    offset: new L.Point(-5, -28),
-                    interactive: true,
-                },
-            );
+            });
 
-            map.addLayer (
-                marker
-            );
+            if(commonPlace[key].length > 1){
+                map.addLayer (
+                    marker
+                );
 
-            group.addLayer (
-                marker
-            );
+                group.addLayer (
+                    marker
+                );
+            }
+
+            marker.addEventListener('click', evt => {
+                let alert = this.alertCtrl.create();
+                alert.setTitle('Eventi');
+                
+                for(let event of commonPlace[key]){
+                    alert.addButton({
+                        text: event.title,
+                        handler: (button) => {
+                            this.onSelect(event);
+                        }
+                    });
+                }
+
+                alert.present();
+            });
         }
         console.log(indexMap);
         console.log(commonPlace);
