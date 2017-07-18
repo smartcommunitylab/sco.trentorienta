@@ -227,27 +227,28 @@ export abstract class ElementListPage implements OnInit{
         // I create a group of markers, so I can view all markers in the map
         let group = L.featureGroup();
         
-        let indexMap = {0:0};
         let commonPlace = {0:[this.mainEvents[0]]};
         for (let i = 0; i < this.mainEvents.length; i++) {
-            let evento = this.mainEvents[indexMap[i]];
-            for(let j = i + 1; j < this.mainEvents.length; j++){
-                // if (indexMap[j] != null) continue;
-                
+            let evento = this.mainEvents[i];
+            let found = false;
+            for(let j = 0; j < i; j++){        
+                if (commonPlace[j] == null) continue;        
+
                 let evento2 = this.mainEvents[j];
                 let dis = this.distance(evento.coordX, evento.coordY, evento2.coordX, evento2.coordY);
                 if(dis<=50){
-                    commonPlace[indexMap[i]].push(evento2);
-                    indexMap[j]=indexMap[i];
-                } else {
-                    commonPlace[j]=[evento2];
-                    indexMap[j]=j;
+                    commonPlace[j].push(evento);
+                    found = true;
+                    break;
                 }
                 //misura distanza tra j e indexmap[i]
                 //se la distanza e' piccola aggiungi j a commonplace[indexmap[i]]
                 //mappa j su indexmap[i]
                 //else
                 //aggiungi j a un nuovo indexmap e commonplace PROPRIO
+            }
+            if (!found) {
+                commonPlace[i] = [evento];
             }
         }
         for(let key in commonPlace){
@@ -286,7 +287,6 @@ export abstract class ElementListPage implements OnInit{
                 alert.present();
             });
         }
-        console.log(indexMap);
         console.log(commonPlace);
         // zoom to all visible markers...
         map.fitBounds (group.getBounds());
