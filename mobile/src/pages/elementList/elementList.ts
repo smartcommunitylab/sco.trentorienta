@@ -261,15 +261,14 @@ export abstract class ElementListPage implements OnInit{
                 })
             });
 
-            if(commonPlace[key].length > 1){
-                map.addLayer (
-                    marker
-                );
+            map.addLayer (
+                marker
+            );
 
-                group.addLayer (
-                    marker
-                );
-            }
+            group.addLayer (
+                marker
+            );
+            
 
             marker.addEventListener('click', evt => {
                 let alert = this.alertCtrl.create();
