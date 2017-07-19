@@ -1,7 +1,7 @@
  <ion-menu [content]="content">  
 
   <ion-content class="prime">
-    <ion-list>
+    <ion-list mode="md">
       <button menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)" color="primary" class="pages">
         <ion-icon [name]="p.icon">
         </ion-icon>

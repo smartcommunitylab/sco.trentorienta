@@ -1,13 +1,17 @@
 <ion-header>
-    <ion-navbar>
-        <ion-title>{{event.title}}</ion-title>
+    <ion-navbar color="primary">
+        <ion-title>{{!!event ? event.title : ''}}</ion-title>
     </ion-navbar>
 </ion-header>
 
 <ion-content>
-    <p class="tag"><ion-icon name="bookmark"></ion-icon>{{event.tags}}</p>
-    <span class="source">da {{event.source}}</span>
-    <p>{{event.description}}</p>
-    {{dateEvent}}
-    
+  <div *ngIf="!!event">  
+    <img *ngIf="event.image" src={{event.image}} width="100%" height="auto">
+    <img *ngIf="!event.image" src='assets/icon/comune.jpeg' width="100%" height="auto">
+    <p class="pub">Pubblicato il: <span class="bla">{{createEvent}}</span></p>
+    <h2>{{event.title}}</h2>
+    <span class="gre">Data evento: <span class="bla">{{dateEvent | date: 'dd.MM.yyyy'}}</span> Ore: <span class="bla">{{dateEvent | date: 'HH.mm'}}</span></span>
+
+    <p class="des">{{event.description}}</p>    
+  </div>
 </ion-content>

@@ -16,7 +16,7 @@ export class TagListPage extends ElementListPage {
     constructor(protected eventService: EventService, public navCtrl: NavController, public alertCtrl: AlertController, public navParams: NavParams){
         super(eventService, navCtrl, alertCtrl);
         this.title = this.navParams.get('name');
-
+        this.tagging = true;
     }
 
     getData(from: number, to: number, filter: string): Promise<eventType[]> {

@@ -12,15 +12,17 @@ import { eventType } from '../../app/struct-data';
 })
 
 export class ElementDetailsPage implements OnInit{
-    event: eventType = new eventType();
+    event: eventType;
     dateEvent: any;
+    createEvent: any
     constructor(private eventService: EventService, public navParams: NavParams){
 
     }
     ngOnInit(): void{
         this.eventService.getEvent(this.navParams.get('id'))
                         .then(event => {this.event = event;
-                            this.dateEvent = moment(this.event.eventDate,'YYYYMMDDHHmmss').format('DD.MM.YYYY');
+                            this.dateEvent = moment(this.event.eventDate,'YYYYMMDDHHmmss');
+                            this.createEvent = moment(this.event.created,'YYYYMMDDHHmmss').format('DD.MM.YYYY');
                         });
     }
 }

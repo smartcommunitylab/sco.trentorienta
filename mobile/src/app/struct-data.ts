@@ -10,6 +10,8 @@ export class eventType {
   coordY: number;
   created: string;
   eventDate: string;
+  createdDate: any;
+  eventoDate: any;
 }
 
 // simple struct

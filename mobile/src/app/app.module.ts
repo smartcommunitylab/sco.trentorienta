@@ -10,7 +10,6 @@ import { EventService } from './event-service';
 
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
-import { ListPage } from '../pages/list/list';
 import { TemiPage } from '../pages/temi/temi';
 import { SorgentiPage } from '../pages/sorgenti/sorgenti';
 import { TagPage } from '../pages/tag/tag';
@@ -21,6 +20,8 @@ import { TemiListPage } from '../pages/temiList/temiList';
 import { TagListPage } from '../pages/tagList/tagList';
 import { SorgentiListPage } from '../pages/sorgentiList/sorgentiList';
 import { ObjNgFor } from '../pages/elementList/elementList';
+import { FilterPage } from '../pages/filter/filter';
+
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -39,7 +40,6 @@ import { LeafletModule } from '@asymmetrik/angular2-leaflet';
   declarations: [
     MyApp,
     HomePage,
-    ListPage,
     TemiPage,
     SorgentiPage,
     TagPage,
@@ -50,6 +50,7 @@ import { LeafletModule } from '@asymmetrik/angular2-leaflet';
     TagListPage,
     SorgentiListPage,
     ObjNgFor,
+    FilterPage,
   ],
   imports: [
     BrowserModule,
@@ -69,7 +70,6 @@ import { LeafletModule } from '@asymmetrik/angular2-leaflet';
   entryComponents: [
     MyApp,
     HomePage,
-    ListPage,
     TemiPage,
     SorgentiPage,
     TagPage,
@@ -79,6 +79,7 @@ import { LeafletModule } from '@asymmetrik/angular2-leaflet';
     TemiListPage,
     TagListPage,
     SorgentiListPage,
+    FilterPage,
   ],
   providers: [
     StatusBar,

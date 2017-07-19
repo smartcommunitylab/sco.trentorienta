@@ -7,6 +7,9 @@
             {{title}}        
         </ion-title>
         <ion-buttons end>
+            <button ion-button *ngIf="view=='lista'" (click)='toggleFilters()'>
+                <ion-icon name="funnel"></ion-icon>
+            </button>
             <button ion-button *ngIf="view=='lista'" (click)='toggleSearch()'>
                 <ion-icon *ngIf="!searching" name="search"></ion-icon>
                 <ion-icon *ngIf="searching" name="close-circle"></ion-icon>
@@ -20,14 +23,15 @@
 <ion-content>
     <div [ngSwitch]="view" style="height: 100%; width: 100%">
         <div *ngSwitchCase="'lista'" style="height: 100%; width: 100%">
-            <ion-list>
+            <ion-list mode="md">
                 <ion-item *ngFor="let event of mainEvents" (click)="onSelect(event)">
                     <ion-thumbnail item-start>
                         <img *ngIf="event.image" src={{event.image}}>
                         <img *ngIf="!event.image" src='assets/icon/comune.jpeg'>
                     </ion-thumbnail>
+                    <span *ngIf="tagging" item-end class="tags">{{event.tags}}</span>
                     <h2>{{event.title}}</h2>
-                    <p>Pubblicato il: </p>
+                    <p class="pubb">Pubblicato il: <span class="crea">{{event.createdDate | date: 'dd/MM/yyyy'}}</span></p>
                 </ion-item>
             </ion-list>
             <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
@@ -48,15 +52,15 @@
 
         <div *ngSwitchCase="'calendario'">
             <ion-list>
-                <ion-item-divider *ngFor="let key of calendarEvents | ObjNgFor" color="date">
+                <ion-item-divider *ngFor="let key of calendarEvents | ObjNgFor" color="date" mode="md">
                     {{key}}
-                    <ion-item *ngFor="let event of calendarEvents[key]" (click)="onSelect(event)">
+                    <ion-item *ngFor="let event of calendarEvents[key]" (click)="onSelect(event)" mode="md">
                         <ion-thumbnail item-start>
                             <img *ngIf="event.image" src={{event.image}}>
                             <img *ngIf="!event.image" src='assets/icon/comune.jpeg'>
                         </ion-thumbnail>
                         <h2>{{event.title}}</h2>
-                        <p>{{event.description}}</p>
+                        <span class="grey">Ore:</span> {{event.eventoDate | date: 'HH.mm'}}
                     </ion-item>
                 </ion-item-divider>  
             </ion-list>
@@ -72,7 +76,7 @@
 
 <ion-footer>
     <ion-toolbar no-border-top color="primary">
-        <ion-segment [(ngModel)]="view" (ionChange)="switchSegment(view)"  color="light">
+        <ion-segment [(ngModel)]="view" (ionChange)="switchSegment(view)"  color="light" mode="md">
             <ion-segment-button value="lista">
                 Lista
             </ion-segment-button>

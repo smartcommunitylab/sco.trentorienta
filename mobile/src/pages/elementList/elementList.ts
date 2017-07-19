@@ -3,8 +3,9 @@ import { NavController, AlertController } from 'ionic-angular';
 import * as moment from 'moment';
 
 import { EventService } from '../../app/event-service';
-import { eventType } from '../../app/struct-data';
+import { eventType, occurenciesType } from '../../app/struct-data';
 import { ElementDetailsPage } from '../elementDetails/elementDetails';
+import { FilterPage } from '../filter/filter';
 
 import { Observable }     from 'rxjs/Observable';
 import { Subject }           from 'rxjs/Subject';
@@ -39,6 +40,9 @@ export abstract class ElementListPage implements OnInit{
     calendarSize: number = 0;
     selectedEvent : eventType;
     searching: boolean = false;
+    tagging: boolean = false;
+    temList: occurenciesType[] = [];
+    sorList: occurenciesType[] = [];
     private searchTerms = new Subject<string>();
     private termsObs: Observable<string>;
     private searchValue: string = null;
@@ -137,6 +141,7 @@ export abstract class ElementListPage implements OnInit{
         let from = reset ? 0 : this.mainEvents.length;
         this.getData(from, from + this.PAGE_SIZE, this.searchValue)
             .then(mainEvents => {
+                mainEvents.forEach(e => e.createdDate = moment(e.created, 'YYYYMMDDHHmmss').toDate());
                 this.mainEvents = reset ? mainEvents : this.mainEvents.concat(mainEvents);
                 if (infiniteScroll != null) {
                     if(mainEvents == null || mainEvents.length == 0){
@@ -157,6 +162,7 @@ export abstract class ElementListPage implements OnInit{
                 this.calendarSize += events.length;
                 events.forEach(event => {
                     var date = moment(event.eventDate, "YYYYMMDDHHmmss").format("DD.MM.YYYY");
+                    event.eventoDate = moment(event.eventDate, 'YYYYMMDDHHmmss').toDate();
                     if (this.calendarEvents[date]) {
                         this.calendarEvents[date].push(event);
                     } else {
@@ -170,9 +176,6 @@ export abstract class ElementListPage implements OnInit{
                     infiniteScroll.complete();
                 }
             });
-        
-        
-        
     }
 
     distance(lat1: number,lon1: number,lat2: number,lon2: number):number {
@@ -195,7 +198,14 @@ export abstract class ElementListPage implements OnInit{
 
     toggleSearch():void{
         this.searching= !this.searching;
+        this.searchValue="";
+        this.searchTerms.next(this.searchValue);
     }
+
+    toggleFilters():void{
+        this.navCtrl.push(FilterPage);
+    }
+
 
     search(filter: string): void {
         this.searchTerms.next(filter);
@@ -273,7 +283,7 @@ export abstract class ElementListPage implements OnInit{
 
             marker.addEventListener('click', evt => {
                 let alert = this.alertCtrl.create();
-                alert.setTitle('Eventi');
+                alert.setTitle('Eventi in questa zona');
                 
                 for(let event of commonPlace[key]){
                     alert.addButton({
@@ -287,7 +297,6 @@ export abstract class ElementListPage implements OnInit{
                 alert.present();
             });
         }
-        console.log(commonPlace);
         // zoom to all visible markers...
         map.fitBounds (group.getBounds());
     }

@@ -1,13 +1,24 @@
-.tag{
-    font-style: italic;
-    font-size: 15px;
-    color: grey; 
+.pub{
+    text-align: right;
+    margin-right: 10px;
+    color: #bdbcbc;
 }
-.source{
-    font-style: italic;
-    font-size: 15px;
-    color: blue; 
+
+.bla{
+    color: #000;
+    padding-right: 5px;
 }
-p{
-    font-size:20px;
+
+.gre{
+    margin: 5px;
+    color: #bdbcbc;
+}
+
+h2{
+    margin: 5px;
+}
+
+.des{
+    margin-left: 5px;
+    font-size: 17.5px;
 }
