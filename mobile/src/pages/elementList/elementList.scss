@@ -73,6 +73,11 @@ p.pubb{
     font-weight: normal;
 }
 
+.alert-md .alert-message{
+    color: #ffffff;
+    background-color: #344294;
+}
+
 .alert-md .button-inner{
     display: block;
     text-align: center;
@@ -99,10 +104,18 @@ p.pubb{
     background-color: #344294;
     text-transform: uppercase;
     text-align: center;
+    padding: 20px 22px 10px;
+}
+
+.alert-wp .alert-message{
+    color: #ffffff;
+    background-color: #344294;
+    padding: 5px 16px 21px;
 }
 
 .alert-wp .alert-button{
     width: 100%;
+    color: #344294;
     background-color: #fcc010;
     font-weight: normal;
     margin-bottom: 5px;

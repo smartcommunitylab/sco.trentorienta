@@ -206,6 +206,10 @@ export abstract class ElementListPage implements OnInit{
         this.searchTerms.next(this.searchValue);
     }
 
+    goBack():void{
+        this.navCtrl.pop();
+    }
+
     toggleFilters():void{
         this.navCtrl.push(FilterPage);
     }

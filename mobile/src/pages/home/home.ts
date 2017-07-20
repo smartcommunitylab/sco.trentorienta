@@ -19,7 +19,7 @@ export class HomePage extends ElementListPage {
     }
 
     getData(from: number, to: number, filter: string): Promise<eventType[]> {
-        return this.eventService.searchEvents(filter, from ,to, this.navParams.get('temChosen'), null , this.navParams.get('sorChosen'));      
+        return this.eventService.searchEvents(filter, from ,to, this.navParams.get('temChosen'), null , this.navParams.get('sorChosen'));
     }
     
     getCalData(from: number, to: number): Promise<eventType[]> {
