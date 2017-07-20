@@ -7,7 +7,7 @@
             {{title}}        
         </ion-title>
         <ion-buttons end>
-            <button ion-button *ngIf="view=='lista'" (click)='toggleFilters()'>
+            <button ion-button *ngIf="view=='lista' && isHome" (click)='toggleFilters()'>
                 <ion-icon name="funnel"></ion-icon>
             </button>
             <button ion-button *ngIf="view=='lista'" (click)='toggleSearch()'>

@@ -71,18 +71,38 @@ export class EventService {
                 .catch(this.handleError);
   }
 
-  searchEvents(filter: string, from = 0, to = 65535, theme?: string, tag?: string, source?: string): Promise<eventType[]> {
+  intersect(a: string[], b: string[]): boolean{
+    for(let i = 0; i < a.length; i++){
+        for(let j = 0; j < b.length; j++){
+            if(a[i]==b[j]){
+                return true;
+            }
+        }
+    }
+    return false;
+  }
+
+  intersectSource(a: string, b: string[]): boolean{
+    for(let i = 0; i < b.length; i++){
+        if(a==b[i]){
+            return true;
+        }
+    }
+    return false;
+  }
+
+  searchEvents(filter: string, from = 0, to = 65535, theme?: string[], tag?: string, source?: string[]): Promise<eventType[]> {
       return this.http.get(this.eventsUrl)
                 .toPromise()
                 .then(response => (response.json().data as eventType[])
                     .filter(value => {
-                        return (filter ? value.title.toLowerCase().match(filter.toLowerCase()) : true) 
-                            && (theme ? value.themes.indexOf(theme) >= 0 : true) 
-                            && (tag ? value.tags.indexOf(tag) >= 0 : true) 
-                            && (source ? value.source.localeCompare(source) == 0 : true) 
+                        return (filter ? value.title.toLowerCase().match(filter.toLowerCase()) : true)
+                            && (theme ?  this.intersect(value.themes,theme) : true)
+                            && (tag ? value.tags.indexOf(tag) >= 0 : true)
+                            && (source ? this.intersectSource(value.source,source) : true)
                     })
                     .slice(from, to + 1))
-                .catch(this.handleError);    
+                    .catch(this.handleError);    
   }
 
   // Returns all available tags
@@ -161,7 +181,7 @@ export class EventService {
                 .catch(this.handleError);
   }
 
-  calendarEvents(from=0, to=65535, theme?: string, tag?: string, source?: string):Promise<eventType[]>{
+  calendarEvents(from=0, to=65535, theme?: string[], tag?: string, source?: string[]):Promise<eventType[]>{
       return this.searchEvents(null, 0, 65535, theme, tag, source).then(events => {
           return events.sort((a,b) => {return parseInt(a.eventDate) - parseInt(b.eventDate);}).splice(from, to+1);
       });

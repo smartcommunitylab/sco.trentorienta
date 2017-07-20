@@ -27,13 +27,50 @@ p.pubb{
     text-align: center;
 }
 
+.alert-ios .alert-wrapper{
+    border-radius: 0px;
+}
+
+.alert-ios .alert-head{
+    color: #ffffff;
+    background-color: #344294;
+    text-transform: uppercase;
+}
+
+.alert-ios .alert-title{
+    font-weight: normal;
+}
+
+.alert-ios .alert-message{
+    color: #ffffff;
+    background-color: #344294;
+}
+
 .alert-ios .alert-button:last-child{
     font-weight: normal;
 }
 
+.alert-ios .alert-button{
+    border-right: 0px;
+}
 
 .alert-ios .alert-button-group{
     display: grid;
+}
+
+.alert-md .alert-wrapper{
+    max-width: 100%;
+}
+
+.alert-md .alert-head{
+    color: #ffffff;
+    background-color: #344294;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.alert-md .alert-title{
+    font-weight: normal;
 }
 
 .alert-md .button-inner{
@@ -43,6 +80,9 @@ p.pubb{
 
 .alert-md .alert-button{
     width: 100%;
+    background-color: #fcc010;
+    font-weight: normal;
+    margin-bottom: 5px;
 }
 
 .alert-md .alert-button-group{
@@ -50,13 +90,27 @@ p.pubb{
     padding: 8px;
 }
 
+.alert-wp .alert-wrapper{
+    width: auto;
+}
+
+.alert-wp .alert-head{
+    color: #ffffff;
+    background-color: #344294;
+    text-transform: uppercase;
+    text-align: center;
+}
+
 .alert-wp .alert-button{
     width: 100%;
+    background-color: #fcc010;
+    font-weight: normal;
     margin-bottom: 5px;
 }
 
 .alert-wp .alert-button-group{
     display: block;
+    background-color: #ffffff;
 }
 
 .item-inner .badge{

@@ -1,1 +1,25 @@
-CIAO
+<ion-header>
+    <ion-navbar color="primary">
+        <ion-title>{{'Filtercontent' | translate}}</ion-title>
+    </ion-navbar>
+</ion-header>
+
+<ion-content>
+    <ion-list>
+        <ion-item>
+            <ion-label>Temi</ion-label>
+                <ion-select multiple="true" [(ngModel)]="temChose">
+                    <ion-option *ngFor="let theme of temList" value={{theme.name}}>{{theme.name}}</ion-option>
+                </ion-select>
+        </ion-item>
+        <ion-item>
+            <ion-label>Sorgenti</ion-label>
+                <ion-select multiple="true" [(ngModel)]="sorChose">
+                    <ion-option *ngFor="let source of sorList" value={{source.name}}>{{source.name}}</ion-option>
+                </ion-select>
+        </ion-item>
+    </ion-list>
+    <ion-buttons>
+        <button ion-button color="sbar" (click)="filter()">Filtra</button>
+    </ion-buttons>
+</ion-content>
