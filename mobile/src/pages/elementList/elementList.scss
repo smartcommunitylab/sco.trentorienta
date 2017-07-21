@@ -48,14 +48,19 @@ p.pubb{
 
 .alert-ios .alert-button:last-child{
     font-weight: normal;
+    margin-bottom: 0px;
 }
 
 .alert-ios .alert-button{
     border-right: 0px;
+    border-top: 0px;
+    margin-bottom: 5px;
+    background-color: #fcc010;
 }
 
 .alert-ios .alert-button-group{
     display: grid;
+    padding: 5px;
 }
 
 .alert-md .alert-wrapper{
@@ -83,6 +88,10 @@ p.pubb{
     text-align: center;
 }
 
+.alert-md .alert-button:last-child{
+    margin-bottom: 0px;
+}
+
 .alert-md .alert-button{
     width: 100%;
     background-color: #fcc010;
@@ -92,7 +101,7 @@ p.pubb{
 
 .alert-md .alert-button-group{
     display: block;
-    padding: 8px;
+    padding: 5px;
 }
 
 .alert-wp .alert-wrapper{
@@ -113,6 +122,10 @@ p.pubb{
     padding: 5px 16px 21px;
 }
 
+.alert-wp .alert-button:last-child{
+    margin-bottom: 0px;
+}
+
 .alert-wp .alert-button{
     width: 100%;
     color: #344294;
@@ -124,10 +137,35 @@ p.pubb{
 .alert-wp .alert-button-group{
     display: block;
     background-color: #ffffff;
+    padding: 5px;
 }
 
 .item-inner .badge{
     border-radius: 50%;
     font-weight: normal;
     padding: 3px 6px;
+}
+
+.error{
+    text-align: center;
+}
+.list .item .item-inner{
+    border-bottom: 0px;
+}
+
+.list .item{
+    border-bottom: 1px solid #dedede;
+}
+
+.list .noborder.item{
+    border-bottom: 0px;
+}
+
+.segment .segment-button.segment-activated{
+    border-bottom: 0px;
+    border-top: 2px solid #ffffff;
+}
+
+.segment .segment-button{
+    border-bottom: 0px;
 }

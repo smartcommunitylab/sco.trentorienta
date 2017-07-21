@@ -1,5 +1,5 @@
-import { Component, OnInit, Pipe, PipeTransform} from '@angular/core';
-import { NavController, AlertController } from 'ionic-angular';
+import { Component, OnInit, Pipe, PipeTransform, ViewChild } from '@angular/core';
+import { NavController, AlertController, Content } from 'ionic-angular';
 import * as moment from 'moment';
 
 import { EventService } from '../../app/event-service';
@@ -33,6 +33,8 @@ export class ObjNgFor implements PipeTransform {
 })
 
 export abstract class ElementListPage implements OnInit{
+    @ViewChild(Content) content: Content;
+
     view: string = "lista";
 
     mainEvents : eventType[] = [];
@@ -42,7 +44,13 @@ export abstract class ElementListPage implements OnInit{
     searching: boolean = false;
     tagging: boolean = false;
     isHome: boolean = false;
+    charged: boolean = false;
+
     data: string[] = [];
+    myDate: string;
+    currDate: string;
+    lastDate: string;
+    
     temList: occurenciesType[] = [];
     sorList: occurenciesType[] = [];
 
@@ -147,6 +155,7 @@ export abstract class ElementListPage implements OnInit{
             .then(mainEvents => {
                 mainEvents.forEach(e => e.createdDate = moment(e.created, 'YYYYMMDDHHmmss').toDate());
                 this.mainEvents = reset ? mainEvents : this.mainEvents.concat(mainEvents);
+                this.charged = true;
                 if (infiniteScroll != null) {
                     if(mainEvents == null || mainEvents.length == 0){
                         infiniteScroll.enable(false);
@@ -165,8 +174,10 @@ export abstract class ElementListPage implements OnInit{
             .then(events => {
                 this.calendarSize += events.length;
                 events.forEach(event => {
-                    var date = moment(event.eventDate, "YYYYMMDDHHmmss").format("DD.MM.YYYY");
+                    var date = moment(event.eventDate, "YYYYMMDDHHmmss").format("YYYY.MM.DD");
                     event.eventoDate = moment(event.eventDate, 'YYYYMMDDHHmmss').toDate();
+                    event.createdDate = moment(event.created, 'YYYYMMDDHHmmss').toDate();
+                    this.lastDate = moment(event.eventDate, 'YYYYMMDDHHmmss').format('YYYY-MM-DD');
                     if (this.calendarEvents[date]) {
                         this.calendarEvents[date].push(event);
                     } else {
@@ -219,8 +230,26 @@ export abstract class ElementListPage implements OnInit{
         this.searchTerms.next(filter);
     }
 
+    scrolling(date: string){
+        let scrollDate = moment(date).format('YYYY.MM.DD');
+        let last;
+        for(let key in this.calendarEvents){
+            last = key;
+            if(scrollDate == key){
+                let yOffset = document.getElementById(key).offsetTop;
+                console.log(yOffset);
+                this.content.scrollTo(0, yOffset);
+            }
+        }
+        if(scrollDate > last){
+            this.loadCalendar();
+        }
+    }
+
     ngOnInit(): void{
         this.getEvents(false);
+        this.myDate = new Date().toISOString();
+        this.currDate = moment(new Date()).format('YYYY-MM-DD');
         this.termsObs = this.searchTerms
             .debounceTime(300)        // wait 300ms after each keystroke before considering the term
             .distinctUntilChanged();
