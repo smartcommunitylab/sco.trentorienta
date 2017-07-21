@@ -11,18 +11,19 @@ import { ElementListPage } from '../elementList/elementList';
   providers: [EventService]
 })
 
-export class SorgentiListPage extends ElementListPage {
+export class SorgentiListPage extends ElementListPage{
 
     constructor(protected eventService: EventService, public navCtrl: NavController, public alertCtrl: AlertController, public navParams: NavParams){
         super(eventService, navCtrl, alertCtrl);
         this.title = this.navParams.get('name');
+        this.data[0] = this.navParams.get('name');
     }
 
     getData(from: number, to: number, filter: string): Promise<eventType[]> {
-        return this.eventService.searchEvents(filter, from, to, null, null, this.navParams.get('name'));
+        return this.eventService.searchEvents(filter, from, to, null, null, this.data);
     }
 
     getCalData(from: number, to: number): Promise<eventType[]> {
-      return this.eventService.calendarEvents(from ,to, null, null, this.navParams.get('name'));
+      return this.eventService.calendarEvents(from ,to, null, null, this.data);
     }
 }

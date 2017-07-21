@@ -35,6 +35,7 @@ export class MyApp {
         Themes: 'Themes',
         Sources: "Sources",
         Tag: 'Tag',
+        Filtercontent: 'Filter content',
     });
     translate.setTranslation('it', {
         Home: 'Home (it)',
@@ -43,6 +44,7 @@ export class MyApp {
         Themes: 'Temi',
         Sources: "Sorgenti",
         Tag: 'Etichette',
+        Filtercontent: 'Filtra contenuti',
     });
 
 

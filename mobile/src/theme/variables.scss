@@ -41,7 +41,8 @@ $colors: (
   dark:       #222,
   date:    (base:     #ffffff,
             contrast: #4053a0),
-  sbar:       #fcc010,
+  sbar:    (base:     #fcc010,
+            contrast: #ffffff),
 );
 
 

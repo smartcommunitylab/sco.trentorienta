@@ -20,7 +20,7 @@ export class TagListPage extends ElementListPage {
     }
 
     getData(from: number, to: number, filter: string): Promise<eventType[]> {
-        return this.eventService.searchEvents(filter, from, to, null, this.navParams.get('name'));
+        return this.eventService.searchEvents(filter, from, to, null , this.navParams.get('name'));
     }
 
     getCalData(from: number, to: number): Promise<eventType[]> {

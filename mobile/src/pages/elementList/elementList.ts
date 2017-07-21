@@ -41,8 +41,12 @@ export abstract class ElementListPage implements OnInit{
     selectedEvent : eventType;
     searching: boolean = false;
     tagging: boolean = false;
+    isHome: boolean = false;
+    data: string[] = [];
     temList: occurenciesType[] = [];
     sorList: occurenciesType[] = [];
+
+
     private searchTerms = new Subject<string>();
     private termsObs: Observable<string>;
     private searchValue: string = null;
@@ -200,6 +204,10 @@ export abstract class ElementListPage implements OnInit{
         this.searching= !this.searching;
         this.searchValue="";
         this.searchTerms.next(this.searchValue);
+    }
+
+    goBack():void{
+        this.navCtrl.pop();
     }
 
     toggleFilters():void{
