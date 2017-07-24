@@ -3,6 +3,27 @@
         <button ion-button menuToggle>
             <ion-icon name="menu"></ion-icon>
         </button>
-        <ion-title>{{title}}</ion-title>
+        <ion-title>{{title | translate}}</ion-title>
     </ion-navbar>
 </ion-header>
+
+<ion-content>
+    <ion-list>
+        <ion-item-sliding *ngFor="let event of favList">
+            <ion-item>
+                <ion-thumbnail item-start>
+                    <img *ngIf="event.image" src={{event.image}}>
+                    <img *ngIf="!event.image" src='assets/icon/comune.jpeg'>
+                </ion-thumbnail>
+                <h2>{{event.title}}</h2>
+                <p class="pubb">Pubblicato il: <span class="crea">{{event.createdDate | date: 'dd/MM/yyyy'}}</span></p>
+            </ion-item>
+            <ion-item-options>
+                <button ion-button color="danger">
+                    <ion-icon name="trash"></ion-icon>
+                    DELETE
+                </button>
+            </ion-item-options>
+        </ion-item-sliding>
+    </ion-list>
+</ion-content>

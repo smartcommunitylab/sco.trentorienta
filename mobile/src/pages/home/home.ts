@@ -22,8 +22,8 @@ export class HomePage extends ElementListPage {
         return this.eventService.searchEvents(filter, from ,to, this.navParams.get('temChosen'), null , this.navParams.get('sorChosen'));
     }
     
-    getCalData(from: number, to: number): Promise<eventType[]> {
-      return this.eventService.calendarEvents(from ,to, this.navParams.get('temChosen'), null , this.navParams.get('sorChosen'));
+    getCalData(from: number, to: number, data?: string): Promise<eventType[]> {
+      return this.eventService.calendarEvents(from ,to, this.navParams.get('temChosen'), null , this.navParams.get('sorChosen'), data);
     }
 
     

@@ -141,7 +141,6 @@ p.pubb{
 }
 
 .item-inner .badge{
-    border-radius: 50%;
     font-weight: normal;
     padding: 3px 6px;
 }
@@ -168,4 +167,39 @@ p.pubb{
 
 .segment .segment-button{
     border-bottom: 0px;
+}
+
+.select-alert.alert-md .alert-button:last-child{
+    margin-right: 0px;
+}
+
+.select-alert.alert-md .alert-button{
+    margin-bottom: 0px;
+}
+
+
+.select-alert.alert-ios .alert-button{
+    margin-right: 5px;
+    margin-bottom: 0px;
+}
+
+.select-alert.alert-ios .alert-button-group{
+    margin-right: 5px;
+}
+
+.select-alert.alert-wp .alert-button{
+    margin-bottom: 0px;
+    margin-right: 5px;
+}
+
+.select-alert.alert-wp .alert-button:last-child{
+    margin-right: 0px;
+}
+
+.select-alert.alert-wp .alert-button:first-child:not(:only-child){
+    margin-right: 5px;
+}
+
+.select-alert.alert-wp .alert-checkbox-group{
+    background-color: #ffffff;
 }

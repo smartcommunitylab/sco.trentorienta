@@ -41,15 +41,16 @@ export abstract class ElementListPage implements OnInit{
     calendarEvents = null;
     calendarSize: number = 0;
     selectedEvent : eventType;
+    
     searching: boolean = false;
     tagging: boolean = false;
     isHome: boolean = false;
     charged: boolean = false;
+    hasDate: boolean = false;
 
     data: string[] = [];
     myDate: string;
     currDate: string;
-    lastDate: string;
     
     temList: occurenciesType[] = [];
     sorList: occurenciesType[] = [];
@@ -145,15 +146,24 @@ export abstract class ElementListPage implements OnInit{
         this.loadCalendar(infiniteScroll);
     }
 
+    doInfiniteDate(infiniteScroll, date: string) {
+        console.log('Begin async operation');
+        let d = moment(date).format('YYYY.MM.DD');
+        console.log(d);
+        this.loadCalendar(infiniteScroll, d);
+    }
+
     abstract getData(from: number, to: number, filter: string): Promise<eventType[]>;
 
-    abstract getCalData(from:number, to:number): Promise<eventType[]>;
+    abstract getCalData(from:number, to:number, data?: string): Promise<eventType[]>;
 
     getEvents(reset: boolean, infiniteScroll?: any): void {
         let from = reset ? 0 : this.mainEvents.length;
         this.getData(from, from + this.PAGE_SIZE, this.searchValue)
             .then(mainEvents => {
-                mainEvents.forEach(e => e.createdDate = moment(e.created, 'YYYYMMDDHHmmss').toDate());
+                mainEvents.forEach(e => {
+                    e.createdDate = moment(e.created, 'YYYYMMDDHHmmss').toDate();
+                });
                 this.mainEvents = reset ? mainEvents : this.mainEvents.concat(mainEvents);
                 this.charged = true;
                 if (infiniteScroll != null) {
@@ -165,32 +175,46 @@ export abstract class ElementListPage implements OnInit{
             });
     }
  
-    loadCalendar(infiniteScroll?: any): void{
+    loadCalendar(infiniteScroll?: any, data?: string): void{
         if (this.calendarEvents == null) {
             this.calendarEvents = {};
         }   
-        let from = this.calendarSize;
-        this.getCalData(from,  from + this.PAGE_SIZE)
-            .then(events => {
-                this.calendarSize += events.length;
-                events.forEach(event => {
-                    var date = moment(event.eventDate, "YYYYMMDDHHmmss").format("YYYY.MM.DD");
-                    event.eventoDate = moment(event.eventDate, 'YYYYMMDDHHmmss').toDate();
-                    event.createdDate = moment(event.created, 'YYYYMMDDHHmmss').toDate();
-                    this.lastDate = moment(event.eventDate, 'YYYYMMDDHHmmss').format('YYYY-MM-DD');
-                    if (this.calendarEvents[date]) {
-                        this.calendarEvents[date].push(event);
-                    } else {
-                        this.calendarEvents[date] = [event];
+        let from;
+        if(data){
+            if(infiniteScroll == null){
+                from = 0;
+                this.calendarSize = 0;
+            } else {
+                from = this.calendarSize;
+            }
+            this.hasDate = true;
+        } else {
+            from = this.calendarSize;
+            this.hasDate = false;
+        }
+        this.getCalData(from,  from + this.PAGE_SIZE, data)
+                .then(events => {
+                    if(infiniteScroll == null && data){
+                        this.calendarEvents = {};
+                    }
+                    this.calendarSize += events.length;
+                    events.forEach(event => {
+                        var date = moment(event.eventDate, "YYYYMMDDHHmmss").format("YYYY.MM.DD");
+                        event.eventoDate = moment(event.eventDate, 'YYYYMMDDHHmmss').toDate();
+                        event.createdDate = moment(event.created, 'YYYYMMDDHHmmss').toDate();
+                        if (this.calendarEvents[date]) {
+                            this.calendarEvents[date].push(event);
+                        } else {
+                            this.calendarEvents[date] = [event];
+                        }
+                    });
+                    if (infiniteScroll != null) {
+                        if(events == null || events.length == 0){
+                            infiniteScroll.enable(false);
+                        }
+                        infiniteScroll.complete();
                     }
                 });
-                if (infiniteScroll != null) {
-                    if(events == null || events.length == 0){
-                        infiniteScroll.enable(false);
-                    }
-                    infiniteScroll.complete();
-                }
-            });
     }
 
     distance(lat1: number,lon1: number,lat2: number,lon2: number):number {
@@ -225,6 +249,11 @@ export abstract class ElementListPage implements OnInit{
         this.navCtrl.push(FilterPage);
     }
 
+    removeDate(): void{
+        this.calendarSize = 0;
+        this.calendarEvents = {};
+        this.loadCalendar();
+    }
 
     search(filter: string): void {
         this.searchTerms.next(filter);
@@ -232,18 +261,7 @@ export abstract class ElementListPage implements OnInit{
 
     scrolling(date: string){
         let scrollDate = moment(date).format('YYYY.MM.DD');
-        let last;
-        for(let key in this.calendarEvents){
-            last = key;
-            if(scrollDate == key){
-                let yOffset = document.getElementById(key).offsetTop;
-                console.log(yOffset);
-                this.content.scrollTo(0, yOffset);
-            }
-        }
-        if(scrollDate > last){
-            this.loadCalendar();
-        }
+        this.loadCalendar(null, scrollDate)
     }
 
     ngOnInit(): void{

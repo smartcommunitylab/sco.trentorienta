@@ -23,7 +23,7 @@ export class TemiListPage extends ElementListPage {
         return this.eventService.searchEvents(filter, from, to, this.data);
     }
 
-    getCalData(from: number, to: number): Promise<eventType[]> {
-        return this.eventService.calendarEvents(from, to, this.data);
+    getCalData(from: number, to: number, date?: string): Promise<eventType[]> {
+        return this.eventService.calendarEvents(from, to, this.data, null, null, date);
     }
 }

@@ -1,12 +1,13 @@
 import { Injectable }    from '@angular/core';
 import { Headers, Http } from '@angular/http';
+import { Storage } from '@ionic/storage';
+import * as moment from 'moment';
 
 import { Observable }     from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 
-import { eventType } from './struct-data';
-import { occurenciesType } from './struct-data';
+import { eventType, occurenciesType} from './struct-data';
 
 @Injectable()
 export class EventService {
@@ -14,7 +15,7 @@ export class EventService {
   private headers = new Headers({'Content-Type': 'application/json'});
   private eventsUrl = 'api/mainEvents';  // URL to web api
 
-  constructor(private http: Http) { }
+  constructor(private http: Http, public storage: Storage) { }
 
   // Returns all events in an array (optional from - to for pages)
   getEvents(from=0, to=65535): Promise<eventType[]> {
@@ -91,7 +92,16 @@ export class EventService {
     return false;
   }
 
-  searchEvents(filter: string, from = 0, to = 65535, theme?: string[], tag?: string, source?: string[]): Promise<eventType[]> {
+  intersectDate(a: string, b: string): boolean{
+    let c = moment(b,'YYYYMMDDHHmmss').format('YYYY.MM.DD');
+    if(a == c){
+        return true;
+    } else {
+        return false;
+    } 
+  }
+
+  searchEvents(filter: string, from = 0, to = 65535, theme?: string[], tag?: string, source?: string[], date?: string, fav?: boolean): Promise<eventType[]> {
       return this.http.get(this.eventsUrl)
                 .toPromise()
                 .then(response => (response.json().data as eventType[])
@@ -100,6 +110,8 @@ export class EventService {
                             && (theme ?  this.intersect(value.themes,theme) : true)
                             && (tag ? value.tags.indexOf(tag) >= 0 : true)
                             && (source ? this.intersectSource(value.source,source) : true)
+                            && (date ?  this.intersectDate(date, value.eventDate) : true)
+                            //&& (fav ?  -PRENDI IL VALORE DELLA CHIAVE DI VALUE.TITLE- : true)
                     })
                     .slice(from, to + 1))
                     .catch(this.handleError);    
@@ -181,8 +193,8 @@ export class EventService {
                 .catch(this.handleError);
   }
 
-  calendarEvents(from=0, to=65535, theme?: string[], tag?: string, source?: string[]):Promise<eventType[]>{
-      return this.searchEvents(null, 0, 65535, theme, tag, source).then(events => {
+  calendarEvents(from=0, to=65535, theme?: string[], tag?: string, source?: string[], date?: string):Promise<eventType[]>{
+      return this.searchEvents(null, 0, 65535, theme, tag, source, date).then(events => {
           return events.sort((a,b) => {return parseInt(a.eventDate) - parseInt(b.eventDate);}).splice(from, to+1);
       });
     // return this.http.get(this.eventsUrl)
@@ -191,6 +203,13 @@ export class EventService {
     //             .sort((a,b) => {return parseInt(a.eventDate) - parseInt(b.eventDate);})
     //             )
     //             .catch(this.handleError)
+  }
+
+  favoriteEvents(from=0, to=65535):Promise<eventType[]>{
+    return this.searchEvents(null, 0, 65535, null, null, null, null, true)
+            .then(events => {
+                return events.splice(from, to+1);
+            });
   }
 
   private handleError(error: any): Promise<any> {

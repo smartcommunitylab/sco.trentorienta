@@ -7,6 +7,10 @@
             {{title}}        
         </ion-title>
         <ion-buttons end>
+            <button ion-button *ngIf="view=='calendario' && hasDate" (click)='removeDate()'>
+                <ion-label>Rimuovi modifiche</ion-label>
+                <ion-icon name="close-circle"></ion-icon>
+            </button>
             <button ion-button icon-right *ngIf="view=='calendario'" (click)="picker.open()"> 
                 <ion-datetime #picker style="display:none" pickerFormat="DD.MM.YYYY" 
                                min='{{currDate}}' max='2050' [(ngModel)]="myDate" (ionChange)="scrolling(myDate)">
@@ -22,12 +26,12 @@
             </button>
         </ion-buttons>
     </ion-navbar>
-    <ion-searchbar #searchBox *ngIf="searching" (ionInput)="search(searchBox.value)"></ion-searchbar>
 </ion-header>
 
 
 <ion-content>
     <div [ngSwitch]="view" style="height: 100%; width: 100%">
+        <ion-searchbar #searchBox *ngIf="searching" (ionInput)="search(searchBox.value)"></ion-searchbar>
         <div *ngSwitchCase="'lista'" style="height: 100%; width: 100%">
             <div *ngIf="mainEvents.length==0 && charged" class="error"> 
                 <h2>Non sono stati trovati eventi corrispondenti ai tuoi filtri</h2>
@@ -82,7 +86,13 @@
                     </ion-item>
                 </ion-item-divider>  
             </ion-list>
-            <ion-infinite-scroll (ionInfinite)="doInfiniteCal($event)">
+            <ion-infinite-scroll *ngIf="!hasDate" (ionInfinite)="doInfiniteCal($event)">
+                <ion-infinite-scroll-content 
+                    loadingSpinner = "bubbles" 
+                    loadingText = "Caricamento">
+                </ion-infinite-scroll-content>
+            </ion-infinite-scroll>
+            <ion-infinite-scroll *ngIf="hasDate" (ionInfinite)="doInfiniteDate($event, myDate)">
                 <ion-infinite-scroll-content 
                     loadingSpinner = "bubbles" 
                     loadingText = "Caricamento">

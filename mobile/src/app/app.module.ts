@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { HttpModule, Http }    from '@angular/http';
+import { IonicStorageModule } from '@ionic/storage';
 
 // Imports for loading & configuring the in-memory web api
 import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
@@ -56,6 +57,7 @@ import { LeafletModule } from '@asymmetrik/angular2-leaflet';
     BrowserModule,
     IonicModule.forRoot(MyApp),
     HttpModule,
+    IonicStorageModule.forRoot(),
     InMemoryWebApiModule.forRoot(InMemoryDataService),
     TranslateModule.forRoot({
           //loader: {
