@@ -101,7 +101,7 @@ export class EventService {
     } 
   }
 
-  searchEvents(filter: string, from = 0, to = 65535, theme?: string[], tag?: string, source?: string[], date?: string, fav?: boolean): Promise<eventType[]> {
+  searchEvents(filter: string, from = 0, to = 65535, theme?: string[], tag?: string, source?: string[], date?: string): Promise<eventType[]> {
       return this.http.get(this.eventsUrl)
                 .toPromise()
                 .then(response => (response.json().data as eventType[])
@@ -111,7 +111,6 @@ export class EventService {
                             && (tag ? value.tags.indexOf(tag) >= 0 : true)
                             && (source ? this.intersectSource(value.source,source) : true)
                             && (date ?  this.intersectDate(date, value.eventDate) : true)
-                            //&& (fav ?  -PRENDI IL VALORE DELLA CHIAVE DI VALUE.TITLE- : true)
                     })
                     .slice(from, to + 1))
                     .catch(this.handleError);    
@@ -136,7 +135,7 @@ export class EventService {
                     }, {});
                     let res: occurenciesType[] = [];
                     for (let key in map) {
-                        res.push({name: key, count: map[key]});
+                        res.push({name: key, count: map[key], fav: false});
                     }
                     return res;
                 })
@@ -162,7 +161,7 @@ export class EventService {
                     }, {});
                     let res: occurenciesType[] = [];
                     for (let key in map) {
-                        res.push({name: key, count: map[key]});
+                        res.push({name: key, count: map[key], fav: false});
                     }
                     return res;
                 })
@@ -186,7 +185,7 @@ export class EventService {
                     }, {});
                     let res: occurenciesType[] = [];
                     for (let key in map) {
-                        res.push({name: key, count: map[key]});
+                        res.push({name: key, count: map[key], fav: false});
                     }
                     return res;
                 })
@@ -206,9 +205,30 @@ export class EventService {
   }
 
   favoriteEvents(from=0, to=65535):Promise<eventType[]>{
-    return this.searchEvents(null, 0, 65535, null, null, null, null, true)
+    return this.storage.get('favourites')
             .then(events => {
-                return events.splice(from, to+1);
+                if(events == null){
+                    events = [];
+                    this.storage.set('favourites', events).then(events =>{
+                        return events.splice(from, to+1);
+                    })
+                } else {
+                    return events.splice(from, to+1);
+                }
+            });
+  }
+
+  sourceFavorites(from=0, to=65535):Promise<occurenciesType[]>{
+    return this.storage.get('sorFavs')
+            .then(sources => {
+                if(sources == null){
+                    sources = [];
+                    this.storage.set('sorFavs', sources).then(sources =>{
+                        return sources.splice(from, to+1);
+                    })
+                } else {
+                    return sources.splice(from, to+1);
+                }
             });
   }
 

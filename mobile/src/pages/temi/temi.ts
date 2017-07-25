@@ -12,8 +12,8 @@ import { TemiListPage } from '../temiList/temiList';
 export class TemiPage implements OnInit{
   title: string = 'Temi';
   modeList : string = 'lista';
+  
   themeType : occurenciesType[] = [];
-  selectedTheme : occurenciesType;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private eventService: EventService) {
 
@@ -30,7 +30,6 @@ export class TemiPage implements OnInit{
   }
 
   onSelect(theme: occurenciesType): void{
-      this.selectedTheme = theme;
-      this.navCtrl.push(TemiListPage, {name: this.selectedTheme.name} )
+      this.navCtrl.push(TemiListPage, {name: theme.name} )
   }
 }

@@ -40,7 +40,6 @@ export abstract class ElementListPage implements OnInit{
     mainEvents : eventType[] = [];
     calendarEvents = null;
     calendarSize: number = 0;
-    selectedEvent : eventType;
     
     searching: boolean = false;
     tagging: boolean = false;
@@ -377,8 +376,7 @@ export abstract class ElementListPage implements OnInit{
     }
 
     onSelect(event: eventType): void{
-        this.selectedEvent = event;
-        this.navCtrl.push(ElementDetailsPage, {id: this.selectedEvent.id} )
+        this.navCtrl.push(ElementDetailsPage, {id: event.id} )
     }
 
 }

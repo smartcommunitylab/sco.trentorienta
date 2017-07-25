@@ -18,4 +18,5 @@ export class eventType {
 export class occurenciesType {
   name: string;
   count: number;
+  fav: boolean;
 }

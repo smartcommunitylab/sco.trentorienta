@@ -22,20 +22,58 @@ export class ElementDetailsPage implements OnInit{
 
     }
 
+    checkIndex(b: eventType[], e: eventType): number{
+        let a = -1;
+            b.forEach(evento => {
+                if(evento.id == e.id){
+                    a = b.indexOf(evento);
+                }
+            });
+        return a;
+    }
+
     addFav(event: eventType){
         this.isFav = !this.isFav;
         if(this.isFav){
-            this.storage.set(event.title, true);
+            this.storage.get('favourites').then(favourites => {
+                let a = this.checkIndex(favourites, event);
+                if(a < 0){
+                    favourites.push(event);
+                }
+                this.storage.set('favourites', favourites);
+            });
         } else {
-            this.storage.remove(event.title);
+            this.storage.get('favourites').then(favourites => {
+                let a = this.checkIndex(favourites, event);
+                if(a >= 0){
+                    favourites.splice(a, 1);
+                }
+                this.storage.set('favourites', favourites);
+            });
         }
     }
 
     ngOnInit(): void{
         this.eventService.getEvent(this.navParams.get('id'))
-                        .then(event => {this.event = event;
-                            this.dateEvent = moment(this.event.eventDate,'YYYYMMDDHHmmss');
-                            this.createEvent = moment(this.event.created,'YYYYMMDDHHmmss').format('DD.MM.YYYY');
-                        });
+            .then(event => {this.event = event;
+                this.dateEvent = moment(this.event.eventDate,'YYYYMMDDHHmmss');
+                this.createEvent = moment(this.event.created,'YYYYMMDDHHmmss').format('DD.MM.YYYY');
+                this.storage.get('favourites').then(favourites => {
+                    if(favourites == null){
+                        favourites = [];
+                        this.storage.set('favourites', favourites).then(favourites => {
+                            let a = this.checkIndex(favourites, event);
+                            if(a != -1){
+                                this.isFav = true;
+                            }
+                        })
+                    } else {
+                        let a = this.checkIndex(favourites, event);
+                        if(a != -1){
+                            this.isFav = true;
+                        }
+                    }
+                })
+            });
     }
 }

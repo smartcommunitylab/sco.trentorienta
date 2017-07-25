@@ -12,8 +12,8 @@ import { TagListPage } from '../tagList/tagList';
 export class TagPage implements OnInit{
   title: string = 'Tags';
   modeList : string = 'lista';
+  
   tagType : occurenciesType[] = [];
-  selectedTag : occurenciesType;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private eventService: EventService) {
 
@@ -30,7 +30,6 @@ export class TagPage implements OnInit{
   }
 
   onSelect(tag: occurenciesType): void{
-      this.selectedTag = tag;
-      this.navCtrl.push(TagListPage, {name: this.selectedTag.name} )
+      this.navCtrl.push(TagListPage, {name: tag.name} )
   }
 }

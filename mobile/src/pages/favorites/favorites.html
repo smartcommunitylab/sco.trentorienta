@@ -10,7 +10,7 @@
 <ion-content>
     <ion-list>
         <ion-item-sliding *ngFor="let event of favList">
-            <ion-item>
+            <ion-item (click)="onSelect(event)">
                 <ion-thumbnail item-start>
                     <img *ngIf="event.image" src={{event.image}}>
                     <img *ngIf="!event.image" src='assets/icon/comune.jpeg'>
@@ -19,11 +19,17 @@
                 <p class="pubb">Pubblicato il: <span class="crea">{{event.createdDate | date: 'dd/MM/yyyy'}}</span></p>
             </ion-item>
             <ion-item-options>
-                <button ion-button color="danger">
+                <button ion-button color="danger" (click)="remove(event)">
                     <ion-icon name="trash"></ion-icon>
                     DELETE
                 </button>
             </ion-item-options>
         </ion-item-sliding>
+        <ion-item *ngFor="let source of sourceFavList">
+            {{source.name}} 
+            <ion-badge item-end>
+                {{source.count}}
+            </ion-badge>
+        </ion-item>
     </ion-list>
 </ion-content>
