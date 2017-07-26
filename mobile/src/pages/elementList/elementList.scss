@@ -210,3 +210,29 @@ p.pubb{
     border: 1px solid #344294;
     padding: 1px 2px;
 }
+
+.credits_title {
+    text-align: center;
+    color: #4053a0;
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.credits_row.version .col {
+    font-size: 12px;
+    line-height: 12px;
+}
+
+.credits_row.version {
+    color: #aaa;
+}
+
+.credits_version {
+    text-align: center;
+}
+
+.col{
+    text-align: center;
+}

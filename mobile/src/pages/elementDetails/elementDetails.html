@@ -17,6 +17,8 @@
     <p class="pub">Pubblicato il: <span class="bla">{{createEvent}}</span></p>
     <h2>{{event.title}}</h2>
     <span class="gre">Data evento: <span class="bla">{{dateEvent | date: 'dd.MM.yyyy'}}</span> Ore: <span class="bla">{{dateEvent | date: 'HH.mm'}}</span></span>
+    <p *ngIf="event.address" class="gre">Luogo: <a href="{{url}}" target="_system" class="add">{{event.address}}</a></p>
+    <p *ngIf="!event.address" class="gre">Luogo: <a href="{{url}}" target="_system" class="add">Nessuna informazione sull'indirizzo dell'evento</a></p>
 
     <p class="des">{{event.description}}</p>    
   </div>

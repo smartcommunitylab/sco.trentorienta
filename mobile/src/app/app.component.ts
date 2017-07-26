@@ -9,7 +9,7 @@ import { SorgentiPage } from '../pages/sorgenti/sorgenti';
 import { TagPage } from '../pages/tag/tag';
 import { FavoritesPage } from '../pages/favorites/favorites';
 import { CreditsPage } from '../pages/credits/credits';
-import {TranslateService} from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 
 
 @Component({

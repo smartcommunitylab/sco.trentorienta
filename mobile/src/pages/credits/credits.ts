@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'page-credits',
@@ -7,7 +8,20 @@ import { NavController } from 'ionic-angular';
 })
 
 export class CreditsPage {
-  title:string = 'Credits';
-  
+  title: string = 'Credits';
+  info: string = null;
+  constructor(public translate: TranslateService){
+    translate.addLangs(["it", "en"]);
+    translate.setDefaultLang('it');
+
+    translate.setTranslation('it',{
+      menu_about: 'Informazioni',
+      lbl_credit_p2: "Che cosa è?",
+      app_name: 'WeLive Player',
+      information: "WeLive Player permette di scoprire e lanciare le applicazioni mobile sviluppate dagli utenti WeLive attraverso l'utilizzo della piattaforma WeLive. <br /> <br /> Tale piattaforma è uno dei risultati del progetto WeLive, un progetto H2020 finanziato dall'UE, il cui obiettivo è quello di promuovere un nuovo concetto di pubblica amministrazione, basato sulla co-creazione di servizi urbani mobili, insieme ai cittadini.<br /><br />WeLive Player è un contenitore in cui tutti i servizi creati dagli utenti WeLive, utilizzando la piattaforma WeLive, ed esposti sul Marketplace di WeLive, vengono mostrati e suggeriti agli utenti Android in base alle loro preferenze.<br /><br />I servizi disponibili sono raggruppati secondo le quattro città/regioni pilota coinvolte nella sperimentazione all'interno del progetto: Bilbao, Helsinki-Uusimaa, Novi Sad, Trento.<br /><br />L'applicazione permette di filtrare, cercare e ordinare le applicazioni in base a diversi criteri. All'utente viene chiesto di autenticarsi utilizzando un account social (Google/Facebook) o il proprio account WeLive. Durante il processo di autenticazione l'utente è invitato a fornire in modo facoltativo alcuni dati personali che verranno poi utilizzati dalla piattaforma WeLive per suggerire applicazioni potenzialmente interessanti per l'utente.<br /><br />WeLive Player permette quindi all'utente di scaricare e lanciare sul proprio smartphone le applicazioni scelte. Infine, esso mostra i commenti e le valutazioni espresse dagli utenti sul Marketplace di WeLive relativamente di tutte le applicazioni mostrate.",
+      credit_info: "Il progetto WeLive è stato finanziato dal programma H2020 della Commissione Europea per la ricerca, lo sviluppo tecnologico e l’ innovazione secondo l’accordo N° 645845",
+    });
+    this.info = translate.instant('information');
+  }
 
 }
