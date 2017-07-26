@@ -47,19 +47,17 @@ public class TestController {
 			@RequestParam(required=false) String[] themes
 			) {
 		if (start == null) start = 0;
-		if (size == null) size = 5;
+		if (size == null) size = 15;
 		return repo1.findAllEventType(themes, source, tag, new PageRequest(start / size, size));
 	}
 	
 	@CrossOrigin(origins = "*")
-	@RequestMapping("/api/events/{id}")
-	public @ResponseBody List<EventType> getEvent(
-			@PathVariable(value="id") String id
+	@RequestMapping("/api/event")
+	public @ResponseBody EventType getEvent(
+			@RequestParam(value="id") String id
 			) {
-		// return repo1.findByEventType(
-		//		);
 		
-		return null;
+		return repo1.findEvent(id);
 	}
 	
 	@CrossOrigin(origins = "*")
@@ -71,6 +69,28 @@ public class TestController {
 		if (start == null) start = 0;
 		if (size == null) size = 5;
 		return repo1.getThemes();
+	}
+	
+	@CrossOrigin(origins = "*")
+	@RequestMapping("/api/tags")
+	public @ResponseBody Map<String, Integer> getTagList(
+			@RequestParam(required=false) Integer start, 
+			@RequestParam(required=false) Integer size
+			) {
+		if (start == null) start = 0;
+		if (size == null) size = 5;
+		return repo1.getTags();
+	}
+	
+	@CrossOrigin(origins = "*")
+	@RequestMapping("/api/sources")
+	public @ResponseBody Map<String, Integer> getSourceList(
+			@RequestParam(required=false) Integer start, 
+			@RequestParam(required=false) Integer size
+			) {
+		if (start == null) start = 0;
+		if (size == null) size = 5;
+		return repo1.getSources();
 	}
 	
 	

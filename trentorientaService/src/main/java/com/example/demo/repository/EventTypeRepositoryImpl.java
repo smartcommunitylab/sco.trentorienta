@@ -41,7 +41,8 @@ public class EventTypeRepositoryImpl implements EventTypeRepositoryCustom {
 		}
 		if (tags != null) {
 			for (int i = 0; i < tags.length; i ++ ) {
-				criteria.add(Criteria.where("tags").in(tags[i]));
+				if (tags[i].compareTo("null") != 0)
+					criteria.add(Criteria.where("tags").in(tags[i]));
 			}
 		}
 		
@@ -64,9 +65,6 @@ public class EventTypeRepositoryImpl implements EventTypeRepositoryCustom {
 	}
 	
 	public Map<String, Integer> getThemes() {
-		
-		DBCollection thisColl = template.getCollection(template.getCollectionName(EventType.class));
-		
 		AggregationOperation group = Aggregation.group("themes").count().as("count");
 		
 		
@@ -84,6 +82,57 @@ public class EventTypeRepositoryImpl implements EventTypeRepositoryCustom {
 		});
 		
 		return map;
+	}
+
+	@Override
+	public Map<String, Integer> getTags() {
+		AggregationOperation group = Aggregation.group("tags").count().as("count");
+		
+		Aggregation a = Aggregation.newAggregation(
+				Aggregation.project("tags"),
+				Aggregation.unwind("tags"),
+				group
+		);
+				
+		AggregationResults<HashMap> aggregate = template.aggregate(a, EventType.class, HashMap.class);
+		Map<String, Integer> map = new HashMap<>();
+		aggregate.forEach(entry -> {
+			map.put((String)entry.get("_id"), (Integer)entry.get("count"));
+		});
+		
+		return map;
+	}
+
+	@Override
+	public Map<String, Integer> getSources() {
+		AggregationOperation group = Aggregation.group("source").count().as("count");
+		
+		Aggregation a = Aggregation.newAggregation(
+				Aggregation.project("source"),
+				Aggregation.unwind("source"),
+				group
+		);
+				
+		AggregationResults<HashMap> aggregate = template.aggregate(a, EventType.class, HashMap.class);
+		Map<String, Integer> map = new HashMap<>();
+		aggregate.forEach(entry -> {
+			map.put((String)entry.get("_id"), (Integer)entry.get("count"));
+		});
+		
+		return map;
+	}
+
+	@Override
+	public EventType findEvent(String id) {
+		Query query = new Query();
+		
+		// query.addCriteria(Criteria.where("id").is(id));
+			
+		// System.out.println(query.toString());
+		
+		EventType ret = template.findById(id, EventType.class);
+		
+		return ret;
 	}
 
 }
