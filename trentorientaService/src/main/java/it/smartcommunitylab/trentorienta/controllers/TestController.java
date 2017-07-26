@@ -5,12 +5,17 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import javax.naming.directory.SearchResult;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -18,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import it.smartcommunitylab.trentorienta.model.Echo;
 import it.smartcommunitylab.trentorienta.model.EventType;
+import it.smartcommunitylab.trentorienta.model.SearchRequest;
 import it.smartcommunitylab.trentorienta.repository.EchoRepository;
 import it.smartcommunitylab.trentorienta.repository.EventTypeRepositoryCustom;
 
@@ -61,6 +67,25 @@ public class TestController {
 		else
 			return repo1.findAllEventType(themes, source, tag, fromDate, false, new PageRequest(start / size, size));
 	}
+
+	@CrossOrigin(origins = "*")
+	@PostMapping("/api/events")
+	public @ResponseBody Page<EventType> getAllEvents(
+			@RequestBody SearchRequest params
+			) {
+		int start = params.getStart() == null ? 0 : params.getStart();  
+		int size = params.getSize() == null ? 15 : params.getSize();
+		
+		String fromDate = params.getFromDate() == null ? new SimpleDateFormat("YYYMMddHHmm").format(new Date().getTime()) : params.getFromDate();
+		
+		int sortForList = params.getSortForList() == null ? 1 : params.getSortForList();
+		
+		if (sortForList == 1)
+			return repo1.findAllEventType(params.getThemes(), params.getSource(), params.getTag(), fromDate, true, new PageRequest(start / size, size));
+		else
+			return repo1.findAllEventType(params.getThemes(), params.getSource(), params.getTag(), fromDate, false, new PageRequest(start / size, size));
+	}
+
 	
 	@CrossOrigin(origins = "*")
 	@RequestMapping("/api/event")

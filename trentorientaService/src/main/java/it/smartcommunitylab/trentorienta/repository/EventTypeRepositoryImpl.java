@@ -47,17 +47,21 @@ public class EventTypeRepositoryImpl implements EventTypeRepositoryCustom {
 					criteria.add(Criteria.where("tags").in(tags[i]));
 			}
 		}
-		if (fromDate != null) {
+		/*if (fromDate != null) {
 			criteria.add(Criteria.where("toTime").gte ( Long.parseLong(fromDate) ));
-		}
+		}*/
 		
 		Query query = new Query();
 		
-		if (criteria.size() > 0)
+		if (fromDate != null) {
+			SearchCriteria.andOperator(Criteria.where("toTime").gte ( Long.parseLong(fromDate)));
+		}
+		if (criteria.size() > 0) {
 			SearchCriteria.orOperator(criteria.toArray(new Criteria[criteria.size()]));
 			query.addCriteria(SearchCriteria);
+		}
 			
-		// System.out.println(query.toString());
+		System.out.println(query.toString());
 		
 		if (sortForList) { // == 1
 			query.with(new Sort(Sort.Direction.DESC, "created"));
