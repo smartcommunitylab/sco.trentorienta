@@ -1,4 +1,4 @@
-package com.example.demo.repository;
+package it.smartcommunitylab.trentorienta.repository;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,8 +16,9 @@ import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
-import com.example.demo.model.EventType;
 import com.mongodb.DBCollection;
+
+import it.smartcommunitylab.trentorienta.model.EventType;
 
 public class EventTypeRepositoryImpl implements EventTypeRepositoryCustom {
 

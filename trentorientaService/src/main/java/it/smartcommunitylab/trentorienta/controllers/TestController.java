@@ -1,4 +1,4 @@
-package com.example.demo.controllers;
+package it.smartcommunitylab.trentorienta.controllers;
 
 import java.util.List;
 import java.util.Map;
@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.model.Echo;
-import com.example.demo.model.EventType;
-import com.example.demo.repository.EchoRepository;
-import com.example.demo.repository.EventTypeRepositoryCustom;
+import it.smartcommunitylab.trentorienta.model.Echo;
+import it.smartcommunitylab.trentorienta.model.EventType;
+import it.smartcommunitylab.trentorienta.repository.EchoRepository;
+import it.smartcommunitylab.trentorienta.repository.EventTypeRepositoryCustom;
 
 @RestController	
 public class TestController {

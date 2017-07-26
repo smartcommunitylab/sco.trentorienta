@@ -1,4 +1,4 @@
-package com.example.demo.model;
+package it.smartcommunitylab.trentorienta.model;
 
 import org.springframework.data.annotation.Id;
 

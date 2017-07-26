@@ -1,4 +1,4 @@
-package com.example.demo.model;
+package it.smartcommunitylab.trentorienta.model;
 
 import java.util.List;
 

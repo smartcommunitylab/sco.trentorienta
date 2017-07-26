@@ -1,4 +1,4 @@
-package com.example.demo.services;
+package it.smartcommunitylab.trentorienta.services;
 
 import java.io.Console;
 import java.text.SimpleDateFormat;
@@ -15,9 +15,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import com.example.demo.model.EventType;
-import com.example.demo.repository.EchoRepository;
-import com.example.demo.repository.EventTypeRepository;
+import it.smartcommunitylab.trentorienta.model.EventType;
+import it.smartcommunitylab.trentorienta.repository.EchoRepository;
+import it.smartcommunitylab.trentorienta.repository.EventTypeRepository;
 
 @Component
 public class DataProcessor {

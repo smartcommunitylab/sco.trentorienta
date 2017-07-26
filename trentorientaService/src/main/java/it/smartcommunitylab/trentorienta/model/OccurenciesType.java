@@ -1,4 +1,4 @@
-package com.example.demo.model;
+package it.smartcommunitylab.trentorienta.model;
 
 public class OccurenciesType {
 	private String name;

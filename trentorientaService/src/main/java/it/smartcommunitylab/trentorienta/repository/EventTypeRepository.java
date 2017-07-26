@@ -1,4 +1,4 @@
-package com.example.demo.repository;
+package it.smartcommunitylab.trentorienta.repository;
 
 import java.util.List;
 
@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
-import com.example.demo.model.EventType;
+import it.smartcommunitylab.trentorienta.model.EventType;
 
 public interface EventTypeRepository extends MongoRepository<EventType, String> {
 

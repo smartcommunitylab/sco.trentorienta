@@ -1,11 +1,11 @@
-package com.example.demo.repository;
+package it.smartcommunitylab.trentorienta.repository;
 
 import java.util.Map;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.example.demo.model.EventType;
+import it.smartcommunitylab.trentorienta.model.EventType;
 
 public interface EventTypeRepositoryCustom {
 
