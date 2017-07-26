@@ -10,7 +10,7 @@
 <ion-content>
     <ion-list>
         <ion-item-divider color="date" (click)="popEvent()">
-            Eventi preferiti <ion-icon *ngIf="!eventPop" name="arrow-dropup"></ion-icon> <ion-icon *ngIf="eventPop" name="arrow-dropdown"></ion-icon>
+            Eventi preferiti <ion-icon *ngIf="!eventPop" name="md-arrow-dropup"></ion-icon> <ion-icon *ngIf="eventPop" name="md-arrow-dropdown"></ion-icon>
             <ion-item-sliding *ngFor="let event of favList">
                 <ion-item *ngIf="eventPop" class="noborder" (click)="onSelect(event)">
                     <ion-thumbnail item-start>
@@ -30,7 +30,7 @@
         </ion-item-divider>
 
         <ion-item-divider color="date" (click)="popSource()">
-            Sorgenti preferite <ion-icon *ngIf="!sourcePop" name="arrow-dropup"></ion-icon> <ion-icon *ngIf="sourcePop" name="arrow-dropdown"></ion-icon>
+            Sorgenti preferite <ion-icon *ngIf="!sourcePop" name="md-arrow-dropup"></ion-icon> <ion-icon *ngIf="sourcePop" name="md-arrow-dropdown"></ion-icon>
             <ion-item-sliding *ngFor="let source of sourceFavList">
                 <ion-item *ngIf="sourcePop" class="noborder" (click)="onSelectSource(source)">
                     {{source.name}} 
@@ -47,7 +47,7 @@
         </ion-item-divider>
             
         <ion-item-divider color="date" (click)="popTheme()">
-            Temi preferiti <ion-icon *ngIf="!themePop" name="arrow-dropup"></ion-icon> <ion-icon *ngIf="themePop" name="arrow-dropdown"></ion-icon>
+            Temi preferiti <ion-icon *ngIf="!themePop" name="md-arrow-dropup"></ion-icon> <ion-icon *ngIf="themePop" name="md-arrow-dropdown"></ion-icon>
             <ion-item-sliding  *ngFor="let theme of themesFavList">
                 <ion-item *ngIf="themePop" class="noborder" (click)="onSelectTheme(theme)">
                     {{theme.name}} 
