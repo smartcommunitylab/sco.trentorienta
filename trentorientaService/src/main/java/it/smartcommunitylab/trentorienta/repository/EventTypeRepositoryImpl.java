@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
@@ -26,7 +27,7 @@ public class EventTypeRepositoryImpl implements EventTypeRepositoryCustom {
 	private MongoTemplate template;
 	
 	@Override
-	public Page<EventType> findAllEventType(String[] themes, String[] sources, String[] tags, String fromDate, Pageable pageRequest) {
+	public Page<EventType> findAllEventType(String[] themes, String[] sources, String[] tags, String fromDate, Boolean sortForList, Pageable pageRequest) {
 		List<Criteria> criteria = new ArrayList<Criteria>();
 		Criteria SearchCriteria = new Criteria();
 
@@ -56,7 +57,13 @@ public class EventTypeRepositoryImpl implements EventTypeRepositoryCustom {
 			SearchCriteria.orOperator(criteria.toArray(new Criteria[criteria.size()]));
 			query.addCriteria(SearchCriteria);
 			
-			System.out.println(query.toString());
+		// System.out.println(query.toString());
+		
+		if (sortForList) { // == 1
+			query.with(new Sort(Sort.Direction.DESC, "created"));
+		} else {           // ** 0
+			query.with(new Sort(Sort.Direction.ASC, "eventDate"));
+		}
 		
 		Long total = template.count(query, EventType.class);
 			

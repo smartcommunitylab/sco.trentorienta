@@ -1,5 +1,7 @@
 package it.smartcommunitylab.trentorienta.controllers;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -45,11 +47,19 @@ public class TestController {
 			@RequestParam(required=false) String[] source,
 			@RequestParam(required=false) String[] tag,
 			@RequestParam(required=false) String[] themes,
-			@RequestParam(required=false) String fromDate
+			@RequestParam(required=false) String fromDate,
+			@RequestParam(required=false) Integer sortForList
 			) {
 		if (start == null) start = 0;
 		if (size == null) size = 15;
-		return repo1.findAllEventType(themes, source, tag, fromDate, new PageRequest(start / size, size));
+		if (fromDate == null)
+			fromDate = new SimpleDateFormat("YYYMMddHHmm").format(new Date().getTime());
+		if (sortForList == null)
+			sortForList = 1;
+		if (sortForList == 1)
+			return repo1.findAllEventType(themes, source, tag, fromDate, true, new PageRequest(start / size, size));
+		else
+			return repo1.findAllEventType(themes, source, tag, fromDate, false, new PageRequest(start / size, size));
 	}
 	
 	@CrossOrigin(origins = "*")
