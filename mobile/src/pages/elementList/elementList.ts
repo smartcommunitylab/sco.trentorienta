@@ -44,6 +44,8 @@ export abstract class ElementListPage implements OnInit{
     searching: boolean = false;
     tagging: boolean = false;
     isHome: boolean = false;
+    isSor: boolean = false;
+    isTheme: boolean = false;
     charged: boolean = false;
     hasDate: boolean = false;
 

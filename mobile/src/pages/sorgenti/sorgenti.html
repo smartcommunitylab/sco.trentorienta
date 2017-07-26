@@ -13,10 +13,8 @@
         <ion-item *ngFor="let source of sourceType" (click)="onSelect(source)">
             {{source.name}} 
             <ion-badge item-end class="fav">
-                <button ion-button (click)="addFav(source)">
-                    <ion-icon *ngIf="source.fav" name="star"></ion-icon>
-                    <ion-icon *ngIf="!source.fav" name="star-outline"></ion-icon>
-                </button>
+                <ion-icon *ngIf="source.fav" name="star"></ion-icon>
+                <ion-icon *ngIf="!source.fav" name="star-outline"></ion-icon>
             </ion-badge>
             <ion-badge item-end>
                 {{source.count}}

@@ -204,17 +204,9 @@ p.pubb{
     background-color: #ffffff;
 }
 
-.item .fav.badge{
-    width: 30px;
-    height: 30px;
-    background-color: #ffffff;
-}
-
-.fav.badge .button{
-    width: 20px;
-    height: 20px;
-    margin: 0px;
-    padding: 0px;
+.fav.badge{
     color: #344294;
     background-color: #ffffff;
+    border: 1px solid #344294;
+    padding: 1px 2px;
 }

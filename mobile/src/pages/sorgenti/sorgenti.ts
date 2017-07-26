@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController, NavParams, ToastController } from 'ionic-angular';
+import { NavController, NavParams } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 
 import { EventService } from '../../app/event-service';
@@ -16,7 +16,7 @@ export class SorgentiPage implements OnInit{
 
   sourceType : occurenciesType[] = [];
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private eventService: EventService, public storage: Storage, public toastCtrl: ToastController) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private eventService: EventService, public storage: Storage) {
 
   }
 
@@ -30,37 +30,6 @@ export class SorgentiPage implements OnInit{
     return a;
   }
 
-  cap(a: string): string{
-    return a.charAt(0).toUpperCase() + a.slice(1);
-  }
-  
-  addFav(source: occurenciesType){
-    source.fav = !source.fav;
-    if(source.fav){
-      this.storage.get('sorFavs').then(sorFavs => {
-          let a = this.checkIndex(sorFavs, source);
-          if(a < 0){
-              sorFavs.push(source);
-              let toast = this.toastCtrl.create({
-                message: '"' + this.cap(source.name) + '" é stato aggiunto ai preferiti',
-                duration: 1500,
-                position: 'middle',
-              })
-              toast.present();
-          }
-          this.storage.set('sorFavs', sorFavs);
-      });
-    } else {
-      this.storage.get('sorFavs').then(sorFavs => {
-          let a = this.checkIndex(sorFavs, source);
-          if(a >= 0){
-              sorFavs.splice(a, 1);
-          }
-          this.storage.set('sorFavs', sorFavs);
-      });
-    }
-  }
-  
   getSources(): void{
     this.eventService.getSourcesList()
       .then(sourceType => {
@@ -87,6 +56,6 @@ export class SorgentiPage implements OnInit{
   }
 
   onSelect(source: occurenciesType): void{
-      this.navCtrl.push(SorgentiListPage, {name: source.name} )
+      this.navCtrl.push(SorgentiListPage, {name: source.name, sor: source} )
   }
 }

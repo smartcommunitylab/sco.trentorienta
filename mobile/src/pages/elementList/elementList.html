@@ -11,15 +11,28 @@
                 <ion-label>Rimuovi modifiche</ion-label>
                 <ion-icon name="close-circle"></ion-icon>
             </button>
+            
             <button ion-button icon-right *ngIf="view=='calendario'" (click)="picker.open()"> 
                 <ion-datetime #picker style="display:none" pickerFormat="DD.MM.YYYY" 
                                min='{{currDate}}' max='2050' [(ngModel)]="myDate" (ionChange)="scrolling(myDate)">
                 </ion-datetime>
                 <ion-icon name="calendar"></ion-icon>
             </button>
+            
             <button ion-button *ngIf="view=='lista' && isHome" (click)='toggleFilters()'>
                 <ion-icon name="funnel"></ion-icon>
             </button>
+            
+            <button ion-button *ngIf="view=='lista' && isSor" (click)='addFav(source)'>
+                <ion-icon *ngIf="source.fav" name="star"></ion-icon>
+                <ion-icon *ngIf="!source.fav" name="star-outline"></ion-icon>
+            </button>
+            
+            <button ion-button *ngIf="view=='lista' && isTheme" (click)='addFav(theme)'>
+                <ion-icon *ngIf="theme.fav" name="star"></ion-icon>
+                <ion-icon *ngIf="!theme.fav" name="star-outline"></ion-icon>
+            </button>
+
             <button ion-button *ngIf="view=='lista'" (click)='toggleSearch()'>
                 <ion-icon *ngIf="!searching" name="search"></ion-icon>
                 <ion-icon *ngIf="searching" name="close-circle"></ion-icon>

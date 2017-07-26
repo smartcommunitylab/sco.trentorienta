@@ -60,11 +60,11 @@ export class FavoritesPage{
   }
 
   onSelectSource(source: occurenciesType){
-    this.navCtrl.push(SorgentiListPage, {name: source.name} )
+      this.navCtrl.push(SorgentiListPage, {name: source.name, sor: source} )
   }
 
   onSelectTheme(theme: occurenciesType){
-    this.navCtrl.push(TemiListPage, {name: theme.name} )
+    this.navCtrl.push(TemiListPage, {name: theme.name, tem: theme} )
   }
 
   remove(event: eventType){
