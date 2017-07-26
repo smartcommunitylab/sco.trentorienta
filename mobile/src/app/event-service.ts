@@ -79,15 +79,14 @@ export class EventService {
   }
 
   searchEvents(filter: string, from = 0, to = 65535, theme?: string[], tag?: string, source?: string[], date?: string): Promise<eventType[]> {
-      return this.http.get(this.serverUrl + 'events', {
-                    params: {
+
+    return this.http.post(this.serverUrl + 'events', {
                             start: from,
                             size: to-from,
                             source: source,
                             themes: theme,
                             tag: tag,
                             fromDate: date,
-                    }
                     })
                 .toPromise()
                 .then(response => (response.json().content as eventType[]))
