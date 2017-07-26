@@ -210,7 +210,7 @@ export class EventService {
                 if(events == null){
                     events = [];
                     this.storage.set('favourites', events).then(events =>{
-                        return events.splice(from, to+1);
+                        return events;
                     })
                 } else {
                     return events.splice(from, to+1);
@@ -224,10 +224,24 @@ export class EventService {
                 if(sources == null){
                     sources = [];
                     this.storage.set('sorFavs', sources).then(sources =>{
-                        return sources.splice(from, to+1);
+                        return sources;
                     })
                 } else {
                     return sources.splice(from, to+1);
+                }
+            });
+  }
+
+  themeFavorites(from=0, to=65535):Promise<occurenciesType[]>{
+    return this.storage.get('themeFavs')
+            .then(themes => {
+                if(themes == null){
+                    themes = [];
+                    this.storage.set('themeFavs', themes).then(themes =>{
+                        return themes;
+                    })
+                } else {
+                    return themes.splice(from, to+1);
                 }
             });
   }

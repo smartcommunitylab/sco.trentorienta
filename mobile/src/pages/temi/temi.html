@@ -10,8 +10,17 @@
 
 <ion-content>
     <ion-list>
-      <button ion-item *ngFor="let theme of themeType" (click)="onSelect(theme)">
-        {{theme.name}} <ion-badge item-end>{{theme.count}}</ion-badge>
-      </button>  
+      <ion-item *ngFor="let theme of themeType" (click)="onSelect(theme)">
+            {{theme.name}} 
+            <ion-badge item-end class="fav">
+                <button ion-button (click)="addFav(theme)">
+                    <ion-icon *ngIf="theme.fav" name="star"></ion-icon>
+                    <ion-icon *ngIf="!theme.fav" name="star-outline"></ion-icon>
+                </button>
+            </ion-badge>
+            <ion-badge item-end>
+                {{theme.count}}
+            </ion-badge>
+        </ion-item>  
     </ion-list>
 </ion-content>

@@ -6,6 +6,8 @@ import * as moment from 'moment';
 import { EventService } from '../../app/event-service';
 import { eventType, occurenciesType} from '../../app/struct-data';
 import { ElementDetailsPage } from '../elementDetails/elementDetails';
+import { SorgentiListPage } from '../sorgentiList/sorgentiList';
+import { TemiListPage } from '../temiList/temiList';
 
 @Component({
   selector: 'page-favorites',
@@ -16,6 +18,7 @@ export class FavoritesPage{
   title: string = 'Favorites';
   favList: eventType[] = [];
   sourceFavList: occurenciesType[] = [];
+  themesFavList: occurenciesType[] = [];
 
   constructor(public eventService: EventService, public navCtrl: NavController, public storage: Storage){
     
@@ -31,13 +34,32 @@ export class FavoritesPage{
     return a;
   }
 
+  checkIndexOcc(b: occurenciesType[], e: occurenciesType): number{
+    let a = -1;
+        b.forEach(evento => {
+            if(evento.name == e.name){
+                a = b.indexOf(evento);
+            }
+        });
+    return a;
+  }
+
   ionViewWillEnter() {
     this.getFavs();
     this.getSourceFavs();
+    this.getThemeFavs();
   }
 
   onSelect(event: eventType){
     this.navCtrl.push(ElementDetailsPage, {id: event.id} )
+  }
+
+  onSelectSource(source: occurenciesType){
+    this.navCtrl.push(SorgentiListPage, {name: source.name} )
+  }
+
+  onSelectTheme(theme: occurenciesType){
+    this.navCtrl.push(TemiListPage, {name: theme.name} )
   }
 
   remove(event: eventType){
@@ -50,6 +72,34 @@ export class FavoritesPage{
           this.storage.set('favourites', favourites)
             .then(favourites => {
               this.getFavs();
+            })
+      });
+  }
+
+  removeSource(source: occurenciesType){
+    this.storage.get('sorFavs')
+      .then(sources => {
+          let a = this.checkIndexOcc(sources, source);
+          if(a >= 0){
+              sources.splice(a, 1);
+          }
+          this.storage.set('sorFavs', sources)
+            .then(sources => {
+              this.getSourceFavs();
+            })
+      });
+  }
+
+  removeTheme(theme: occurenciesType){
+    this.storage.get('themeFavs')
+      .then(themes => {
+          let a = this.checkIndexOcc(themes, theme);
+          if(a >= 0){
+              themes.splice(a, 1);
+          }
+          this.storage.set('themeFavs', themes)
+            .then(themes => {
+              this.getThemeFavs();
             })
       });
   }
@@ -70,5 +120,12 @@ export class FavoritesPage{
       .then(sources => {
         this.sourceFavList = sources;
       });
+  }
+
+  getThemeFavs(){
+    this.eventService.themeFavorites()
+      .then(themes => {
+        this.themesFavList = themes;
+      })
   }
 }
