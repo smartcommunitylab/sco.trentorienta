@@ -24,6 +24,8 @@ public class EventType {
 	private String created;
 	private String eventoDate;
 	private String createdDate;
+	private long toTime;
+	private String address;
 	
 	public String getEventDate() {
 		return eventDate;
@@ -31,7 +33,7 @@ public class EventType {
 	public void setEventDate(String fromTime) {
 		this.eventDate = fromTime;
 	}
-	public String getToTime() {
+	public long getToTime() {
 		return toTime;
 	}
 	public List<String> getTags() {
@@ -40,10 +42,9 @@ public class EventType {
 	public void setTags(List<String> tags) {
 		this.tags = tags;
 	}
-	public void setToTime(String toTime) {
+	public void setToTime(long toTime) {
 		this.toTime = toTime;
 	}
-	private String toTime;
 	
 	public String getId() {
 		return id;
@@ -128,6 +129,12 @@ public class EventType {
 	}
 	public void setCreatedDate(String createdDate) {
 		this.createdDate = createdDate;
+	}
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
 	}
 	
 	

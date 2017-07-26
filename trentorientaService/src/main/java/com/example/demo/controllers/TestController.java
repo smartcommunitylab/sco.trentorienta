@@ -44,11 +44,12 @@ public class TestController {
 			@RequestParam(required=false) Integer size,
 			@RequestParam(required=false) String[] source,
 			@RequestParam(required=false) String[] tag,
-			@RequestParam(required=false) String[] themes
+			@RequestParam(required=false) String[] themes,
+			@RequestParam(required=false) String fromDate
 			) {
 		if (start == null) start = 0;
 		if (size == null) size = 15;
-		return repo1.findAllEventType(themes, source, tag, new PageRequest(start / size, size));
+		return repo1.findAllEventType(themes, source, tag, fromDate, new PageRequest(start / size, size));
 	}
 	
 	@CrossOrigin(origins = "*")

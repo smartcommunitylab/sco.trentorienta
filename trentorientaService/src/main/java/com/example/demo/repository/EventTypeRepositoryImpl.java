@@ -25,7 +25,7 @@ public class EventTypeRepositoryImpl implements EventTypeRepositoryCustom {
 	private MongoTemplate template;
 	
 	@Override
-	public Page<EventType> findAllEventType(String[] themes, String[] sources, String[] tags, Pageable pageRequest) {
+	public Page<EventType> findAllEventType(String[] themes, String[] sources, String[] tags, String fromDate, Pageable pageRequest) {
 		List<Criteria> criteria = new ArrayList<Criteria>();
 		Criteria SearchCriteria = new Criteria();
 
@@ -44,6 +44,9 @@ public class EventTypeRepositoryImpl implements EventTypeRepositoryCustom {
 				if (tags[i].compareTo("null") != 0)
 					criteria.add(Criteria.where("tags").in(tags[i]));
 			}
+		}
+		if (fromDate != null) {
+			criteria.add(Criteria.where("toTime").gte ( Long.parseLong(fromDate) ));
 		}
 		
 		Query query = new Query();

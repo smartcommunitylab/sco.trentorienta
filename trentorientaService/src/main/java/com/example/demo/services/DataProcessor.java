@@ -3,6 +3,7 @@ package com.example.demo.services;
 import java.io.Console;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -86,15 +87,45 @@ public class DataProcessor {
 			l = Long.valueOf(riga.get("toTime").toString());
 			date.setTime(l.longValue());
 
-			evento.setToTime(new SimpleDateFormat("YYYMMddHHmm").format(date));
+			evento.setToTime(Long.parseLong(new SimpleDateFormat("YYYMMddHHmm").format(date)));
 			
 			l = Long.valueOf(riga.get("lastModified").toString());
 			date.setTime(l.longValue());
 			
 			evento.setCreated(new SimpleDateFormat("YYYMMddHHmm").format(date));
 			
-			evento.setCoordX((float) 46);
-			evento.setCoordY((float) 11);
+			// Ottengo le coordinate dell'evento
+			// https://os.smartcommunitylab.it/core.geocoder/spring/address?address= INDIRIZZO
+
+			Map<String, String> input2 = new HashMap<String, String>();
+			
+			String indirizzo = (String) ( (LinkedHashMap)riga.get("address") ).get("it");
+			
+			input2.put("address", indirizzo);
+			// input2.put("latlng", "46.0655,11.1086");
+			// input2.put("distance", "10");
+			// input2.put("rows", "1");
+
+			// System.out.println("\n\n****" + indirizzo);
+			
+			evento.setAddress(indirizzo);
+			
+			RestTemplate template1 = new RestTemplate();
+			HashMap list1 = template1.getForObject("https://os.smartcommunitylab.it/core.geocoder/spring/address?address={address}", HashMap.class, input2);
+			
+			try {
+				String coord = (String) ((LinkedHashMap) ((ArrayList) ((LinkedHashMap) list1.get("response")).get("docs")).get(0)).get("coordinate");
+				
+				// System.out.println("Corodinate dal sito: " + coord);
+				
+				evento.setCoordX( Float.parseFloat(coord.split(",")[0]) );
+				evento.setCoordY( Float.parseFloat(coord.split(",")[1]) );
+			} catch (Exception e) {
+				evento.setCoordX(new Float(0));
+				evento.setCoordY(new Float(0));
+			}
+			
+			// System.out.println("Coordinate trovate:" + evento.getCoordX() + "," + evento.getCoordY());
 			
 			eventi.add(evento);
 			

@@ -9,7 +9,7 @@ import com.example.demo.model.EventType;
 
 public interface EventTypeRepositoryCustom {
 
-	Page<EventType> findAllEventType(String[] themes, String[] sources, String[] tags, Pageable pageRequest);
+	Page<EventType> findAllEventType(String[] themes, String[] sources, String[] tags, String fromDate, Pageable pageRequest);
 	
 	EventType findEvent(String id);
 	
