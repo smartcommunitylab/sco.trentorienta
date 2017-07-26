@@ -17,6 +17,7 @@ export class ElementDetailsPage implements OnInit{
     dateEvent: any;
     createEvent: any;
     isFav: boolean = false;
+    url: string;
 
     constructor(private eventService: EventService, public navParams: NavParams, public storage: Storage){
 
@@ -53,11 +54,20 @@ export class ElementDetailsPage implements OnInit{
         }
     }
 
+    onSelect(a: eventType): void{
+        console.log(a.description);
+    }
+
     ngOnInit(): void{
         this.eventService.getEvent(this.navParams.get('id'))
             .then(event => {this.event = event;
                 this.dateEvent = moment(this.event.eventDate,'YYYYMMDDHHmmss');
                 this.createEvent = moment(this.event.created,'YYYYMMDDHHmmss').format('DD.MM.YYYY');
+                if(event.address){
+                    this.url = "https://www.google.it/maps/search/?api=1&query=" + event.address;
+                } else {
+                    this.url = "https://www.google.it/maps/search/?api=1&query=" + event.coordX +"," + event.coordY;
+                }
                 this.storage.get('favourites').then(favourites => {
                     if(favourites == null){
                         favourites = [];

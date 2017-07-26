@@ -2,8 +2,8 @@
 
   <ion-content class="prime">
     <ion-list mode="md">
-      <button menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)" color="primary" class="pages">
-        <ion-icon [name]="p.icon">
+      <button menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)" color="primary" class="pages" >
+        <ion-icon [name]="p.icon"  item-start>
         </ion-icon>
         {{p.title | translate}}
       </button>
