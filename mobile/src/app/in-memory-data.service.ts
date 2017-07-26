@@ -1,4 +1,4 @@
-import { InMemoryDbService } from 'angular-in-memory-web-api';
+/* import { InMemoryDbService } from 'angular-in-memory-web-api';
 export class InMemoryDataService implements InMemoryDbService {
   createDb() {
     const mainEvents = [
@@ -16,4 +16,4 @@ export class InMemoryDataService implements InMemoryDbService {
       ];
     return {mainEvents};
   }
-}
+} */

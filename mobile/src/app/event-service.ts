@@ -13,63 +13,40 @@ import { eventType, occurenciesType} from './struct-data';
 export class EventService {
 
   private headers = new Headers({'Content-Type': 'application/json'});
-  private eventsUrl = 'api/mainEvents';  // URL to web api
+  // private eventsUrl = 'api/mainEvents';  // URL to web api
+  private serverUrl = 'https://dev.smartcommunitylab.it/trentorienta/api/';
+  // private serverUrl = 'http://localhost:8080/api/';
 
   constructor(private http: Http, public storage: Storage) { }
 
   // Returns all events in an array (optional from - to for pages)
   getEvents(from=0, to=65535): Promise<eventType[]> {
-    return this.http.get(this.eventsUrl)
+    return this.http.get(this.serverUrl + 'events', 
+                { 
+                    params:
+                        {
+                            start: from,
+                            size: to-from
+                        }
+                }
+            )
             .toPromise()
-            .then(response => (response.json().data as eventType[]).slice(from, to + 1)
+            .then(response => (response.json().content as eventType[])
                 )
             .catch(this.handleError);
   }
 
 
-  getEvent(id: number): Promise<eventType> {
-    const url = `${this.eventsUrl}/${id}`;
-    return this.http.get(url)
+  getEvent(id: string): Promise<eventType> {
+    const url = this.serverUrl + 'event';
+    return this.http.get(url, {
+        params: {
+            id: id
+        }
+    })
     .toPromise()
-    .then(response => response.json().data as eventType)
+    .then(response => response.json() as eventType)
     .catch(this.handleError);
-  }
-
-  // Retreive number of events
-  getNumberOfEvents(): Promise<number> {
-    return this.http.get(this.eventsUrl)
-                .toPromise()
-                .then(response => (response.json().data as eventType[]).length);
-  }
-
-  // Returns all events filtered by tag
-  getEventsByTag(filterTag: string, from = 0, to = 65535): Promise<eventType[]> {
-    return this.http.get(this.eventsUrl)
-                .toPromise()
-                .then(response => (response.json().data as eventType[]).filter
-                    (function(value:eventType) {return value.tags.indexOf(filterTag) >= 0 })
-                    .slice(from, to + 1))
-                .catch(this.handleError);
-  }
-
-  // Returns all events filtered by source
-  getEventsBySource(filterSource: string, from = 0, to = 65535): Promise<eventType[]> {
-    return this.http.get(this.eventsUrl)
-                .toPromise()
-                .then(response => (response.json().data as eventType[]).filter
-                    (function(value:eventType) {return value.source.localeCompare(filterSource) == 0 })
-                    .slice(from, to + 1))
-                .catch(this.handleError);
-  }
-
-  // Returns all events filtered by theme
-  getEventsByTheme(filterTheme: string, from = 0, to = 65535): Promise<eventType[]> {
-    return this.http.get(this.eventsUrl)
-                .toPromise()
-                .then(response => (response.json().data as eventType[]).filter
-                    (function(value:eventType) {return value.themes.indexOf(filterTheme) >= 0 })
-                    .slice(from, to + 1))
-                .catch(this.handleError);
   }
 
   intersect(a: string[], b: string[]): boolean{
@@ -102,92 +79,62 @@ export class EventService {
   }
 
   searchEvents(filter: string, from = 0, to = 65535, theme?: string[], tag?: string, source?: string[], date?: string): Promise<eventType[]> {
-      return this.http.get(this.eventsUrl)
-                .toPromise()
-                .then(response => (response.json().data as eventType[])
-                    .filter(value => {
-                        return (filter ? value.title.toLowerCase().match(filter.toLowerCase()) : true)
-                            && (theme ?  this.intersect(value.themes,theme) : true)
-                            && (tag ? value.tags.indexOf(tag) >= 0 : true)
-                            && (source ? this.intersectSource(value.source,source) : true)
-                            && (date ?  this.intersectDate(date, value.eventDate) : true)
+      return this.http.get(this.serverUrl + 'events', {
+                    params: {
+                            start: from,
+                            size: to-from,
+                            source: source,
+                            themes: theme,
+                            tag: tag,
+                            fromDate: date,
+                    }
                     })
-                    .slice(from, to + 1))
+                .toPromise()
+                .then(response => (response.json().content as eventType[]))
                     .catch(this.handleError);    
   }
 
   // Returns all available tags
   getTagsList(): Promise<occurenciesType[]> {
-    return this.http.get(this.eventsUrl)
-            .toPromise()
-            .then(response => {
-                    let map = (response.json().data as eventType[])
-                    .map(function(e: eventType) {return e.tags;})
-                    .reduce(function (acc, curr) {   // per contare le occorrenze
-                        curr.forEach(t => {
-                            if (typeof acc[t] == 'undefined') {
-                                acc[t] = 1;
-                            } else {
-                                acc[t] += 1;
-                            }
-                        });
-                        return acc;
-                    }, {});
-                    let res: occurenciesType[] = [];
-                    for (let key in map) {
-                        res.push({name: key, count: map[key], fav: false});
+    return this.http.get(this.serverUrl + 'tags')
+                .toPromise()
+                .then(response => {
+                    let etichette = response.json();
+                    let ret = [];
+                    for (var key in etichette) {
+                        ret.push ({name: key, count: etichette[key]});
                     }
-                    return res;
+                    return ret;
                 })
                 .catch(this.handleError);
   }
 
   // Returns all available themes
   getThemesList(): Promise<occurenciesType[]> {
-    return this.http.get(this.eventsUrl)
+    return this.http.get(this.serverUrl + 'themes')
                 .toPromise()
                 .then(response => {
-                    let map = (response.json().data as eventType[])
-                    .map(function(e: eventType) {return e.themes;})
-                    .reduce(function (acc, curr) {   // per contare le occorrenze
-                        curr.forEach(t => {
-                            if (typeof acc[t] == 'undefined') {
-                                acc[t] = 1;
-                            } else {
-                                acc[t] += 1;
-                            }
-                        });
-                        return acc;
-                    }, {});
-                    let res: occurenciesType[] = [];
-                    for (let key in map) {
-                        res.push({name: key, count: map[key], fav: false});
+                    let temi = response.json();
+                    let ret = [];
+                    for (var key in temi) {
+                        ret.push ({name: key, count: temi[key]});
                     }
-                    return res;
+                    return ret;
                 })
                 .catch(this.handleError);
   }
 
   // Returns all available sources
   getSourcesList(): Promise<occurenciesType[]> {
-    return this.http.get(this.eventsUrl)
+    return this.http.get(this.serverUrl + 'sources')
                 .toPromise()
                 .then(response => {
-                    let map = (response.json().data as eventType[])
-                    .map(function(e: eventType) {return e.source;})
-                    .reduce(function (acc, curr) {   // per contare le occorrenze
-                        if (typeof acc[curr] == 'undefined') {
-                            acc[curr] = 1;
-                        } else {
-                            acc[curr] += 1;
-                        }
-                        return acc;
-                    }, {});
-                    let res: occurenciesType[] = [];
-                    for (let key in map) {
-                        res.push({name: key, count: map[key], fav: false});
+                    let sorgenti = response.json();
+                    let ret = [];
+                    for (var key in sorgenti) {
+                        ret.push ({name: key, count: sorgenti[key]});
                     }
-                    return res;
+                    return ret;
                 })
                 .catch(this.handleError);
   }

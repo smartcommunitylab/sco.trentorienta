@@ -5,8 +5,8 @@ import { HttpModule, Http }    from '@angular/http';
 import { IonicStorageModule } from '@ionic/storage';
 
 // Imports for loading & configuring the in-memory web api
-import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
-import { InMemoryDataService }  from './in-memory-data.service';
+// import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
+// import { InMemoryDataService }  from './in-memory-data.service';
 import { EventService } from './event-service';
 
 import { MyApp } from './app.component';
@@ -58,7 +58,7 @@ import { LeafletModule } from '@asymmetrik/angular2-leaflet';
     IonicModule.forRoot(MyApp),
     HttpModule,
     IonicStorageModule.forRoot(),
-    InMemoryWebApiModule.forRoot(InMemoryDataService),
+    // InMemoryWebApiModule.forRoot(InMemoryDataService),
     TranslateModule.forRoot({
           //loader: {
           //  provide: TranslateLoader,
