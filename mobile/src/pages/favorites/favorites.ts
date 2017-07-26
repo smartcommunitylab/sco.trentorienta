@@ -16,9 +16,14 @@ import { TemiListPage } from '../temiList/temiList';
 
 export class FavoritesPage{
   title: string = 'Favorites';
+  
   favList: eventType[] = [];
   sourceFavList: occurenciesType[] = [];
   themesFavList: occurenciesType[] = [];
+
+  eventPop: boolean = false;
+  sourcePop: boolean = false;
+  themePop: boolean = false;
 
   constructor(public eventService: EventService, public navCtrl: NavController, public storage: Storage){
     
@@ -102,6 +107,18 @@ export class FavoritesPage{
               this.getThemeFavs();
             })
       });
+  }
+
+  popEvent(){
+    this.eventPop = !this.eventPop;
+  }
+
+  popSource(){
+    this.sourcePop = !this.sourcePop;
+  }
+
+  popTheme(){
+    this.themePop = !this.themePop;
   }
 
   getFavs(){
