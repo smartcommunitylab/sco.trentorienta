@@ -8,6 +8,7 @@ public class SearchRequest {
 	private String[] themes;
 	private String fromDate;
 	private Integer sortForList;
+	private String filter;
 	public Integer getStart() {
 		return start;
 	}
@@ -49,5 +50,11 @@ public class SearchRequest {
 	}
 	public void setSortForList(Integer sortForList) {
 		this.sortForList = sortForList;
+	}
+	public String getFilter() {
+		return filter;
+	}
+	public void setFilter(String filter) {
+		this.filter = filter;
 	}
 }

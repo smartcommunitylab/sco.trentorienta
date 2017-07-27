@@ -3,15 +3,21 @@ package it.smartcommunitylab.trentorienta.model;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.TextIndexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 
+@Document
 public class EventType {
 
 	@Id
 	private String id;
 	
 	private String source;   // sorgenti
-	private String title;
-	private String description;
+	
+	@TextIndexed private String title;
+	
+	@TextIndexed private String description;
+
 	private String category;      // temi
 	private String image;
 	private String eventStart;

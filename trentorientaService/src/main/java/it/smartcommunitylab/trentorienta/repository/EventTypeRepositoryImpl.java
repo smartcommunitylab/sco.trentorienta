@@ -16,6 +16,8 @@ import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.TextCriteria;
+import org.springframework.data.mongodb.core.query.TextQuery;
 
 import com.mongodb.DBCollection;
 
@@ -27,7 +29,7 @@ public class EventTypeRepositoryImpl implements EventTypeRepositoryCustom {
 	private MongoTemplate template;
 	
 	@Override
-	public Page<EventType> findAllEventType(String[] themes, String[] sources, String[] tags, String fromDate, Boolean sortForList, Pageable pageRequest) {
+	public Page<EventType> findAllEventType(String[] themes, String[] sources, String[] tags, String fromDate, Boolean sortForList, String filter, Pageable pageRequest) {
 		List<Criteria> criteria = new ArrayList<Criteria>();
 		Criteria SearchCriteria = new Criteria();
 
@@ -52,6 +54,13 @@ public class EventTypeRepositoryImpl implements EventTypeRepositoryCustom {
 		}*/
 		
 		Query query = new Query();
+
+		if (filter != null && filter != "") {
+			TextCriteria criteriaTesto = TextCriteria.forDefaultLanguage()
+				  .matchingAny(filter);
+			query = TextQuery.queryText(criteriaTesto)
+					  .sortByScore();
+		}
 		
 		if (fromDate != null)
 			SearchCriteria.andOperator(Criteria.where("toTime").gte ( Long.parseLong(fromDate)));
@@ -86,9 +95,8 @@ public class EventTypeRepositoryImpl implements EventTypeRepositoryCustom {
 		
 		Aggregation a = Aggregation.newAggregation(
 				Aggregation.project("themes"),
-				Aggregation.unwind("themes"),
+				// Aggregation.unwind("themes"),
 				group
-				
 		);
 				
 		AggregationResults<HashMap> aggregate = template.aggregate(a, EventType.class, HashMap.class);
@@ -125,7 +133,7 @@ public class EventTypeRepositoryImpl implements EventTypeRepositoryCustom {
 		
 		Aggregation a = Aggregation.newAggregation(
 				Aggregation.project("source"),
-				Aggregation.unwind("source"),
+				//Aggregation.unwind("source"),
 				group
 		);
 				

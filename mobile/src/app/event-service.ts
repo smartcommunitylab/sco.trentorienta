@@ -79,7 +79,7 @@ export class EventService {
     } 
   }
 
-  searchEvents(filter: string, from = 0, to = 65535, theme?: string[], tag?: string, source?: string[], date?: string, sortForList?: number): Promise<eventType[]> {
+  searchEvents(filter: string, from = 0, to = 65535, theme?: string[], tag?: string[], source?: string[], date?: string, sortForList?: number): Promise<eventType[]> {
 
     if (sortForList == null)
         sortForList = 1;
@@ -91,7 +91,8 @@ export class EventService {
                             themes: theme,
                             tag: tag,
                             fromDate: date,
-                            sortForList: sortForList
+                            sortForList: sortForList,
+                            filter: filter
                     })
                 .toPromise()
                 .then(response => (response.json().content as eventType[]))
@@ -143,7 +144,7 @@ export class EventService {
                 .catch(this.handleError);
   }
 
-  calendarEvents(from=0, to=65535, theme?: string[], tag?: string, source?: string[], date?: string):Promise<eventType[]>{
+  calendarEvents(from=0, to=65535, theme?: string[], tag?: string[], source?: string[], date?: string):Promise<eventType[]>{
       if (date != null)  // data = 2019.01.01
         date = date.replace (/\./g, "") + "0000";  // data = 201901010000
 

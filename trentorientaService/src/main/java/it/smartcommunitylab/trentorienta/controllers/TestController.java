@@ -54,7 +54,8 @@ public class TestController {
 			@RequestParam(required=false) String[] tag,
 			@RequestParam(required=false) String[] themes,
 			@RequestParam(required=false) String fromDate,
-			@RequestParam(required=false) Integer sortForList
+			@RequestParam(required=false) Integer sortForList,
+			@RequestParam(required=false) String filter
 			) {
 		if (start == null) start = 0;
 		if (size == null) size = 15;
@@ -63,9 +64,9 @@ public class TestController {
 		if (sortForList == null)
 			sortForList = 1;
 		if (sortForList == 1)
-			return repo1.findAllEventType(themes, source, tag, fromDate, true, new PageRequest(start / size, size));
+			return repo1.findAllEventType(themes, source, tag, fromDate, true, filter, new PageRequest(start / size, size));
 		else
-			return repo1.findAllEventType(themes, source, tag, fromDate, false, new PageRequest(start / size, size));
+			return repo1.findAllEventType(themes, source, tag, fromDate, false, filter, new PageRequest(start / size, size));
 	}
 
 	@CrossOrigin(origins = "*")
@@ -81,9 +82,9 @@ public class TestController {
 		int sortForList = params.getSortForList() == null ? 1 : params.getSortForList();
 		
 		if (sortForList == 1)
-			return repo1.findAllEventType(params.getThemes(), params.getSource(), params.getTag(), fromDate, true, new PageRequest(start / size, size));
+			return repo1.findAllEventType(params.getThemes(), params.getSource(), params.getTag(), fromDate, true, params.getFilter(), new PageRequest(start / size, size));
 		else
-			return repo1.findAllEventType(params.getThemes(), params.getSource(), params.getTag(), fromDate, false, new PageRequest(start / size, size));
+			return repo1.findAllEventType(params.getThemes(), params.getSource(), params.getTag(), fromDate, false, params.getFilter(), new PageRequest(start / size, size));
 	}
 
 	
