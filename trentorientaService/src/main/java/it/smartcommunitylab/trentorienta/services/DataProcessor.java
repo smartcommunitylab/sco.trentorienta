@@ -102,16 +102,15 @@ public class DataProcessor {
 			String indirizzo = (String) ( (LinkedHashMap)riga.get("address") ).get("it");
 			
 			input2.put("address", indirizzo);
-			// input2.put("latlng", "46.0655,11.1086");
-			// input2.put("distance", "10");
-			// input2.put("rows", "1");
+			input2.put("latlng", "46.0655,11.1086");
+			input2.put("distance", "10");
 
 			// System.out.println("\n\n****" + indirizzo);
 			
 			evento.setAddress(indirizzo);
 			
 			RestTemplate template1 = new RestTemplate();
-			HashMap list1 = template1.getForObject("https://os.smartcommunitylab.it/core.geocoder/spring/address?address={address}", HashMap.class, input2);
+			HashMap list1 = template1.getForObject("https://os.smartcommunitylab.it/core.geocoder/spring/address?address={address}&latlng={latlng}&distance={distance}&rows=1", HashMap.class, input2);
 			
 			try {
 				String coord = (String) ((LinkedHashMap) ((ArrayList) ((LinkedHashMap) list1.get("response")).get("docs")).get(0)).get("coordinate");
