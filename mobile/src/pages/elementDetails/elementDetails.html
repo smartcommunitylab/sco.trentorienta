@@ -20,6 +20,6 @@
     <p *ngIf="event.address" class="gre">Luogo: <a href="{{url}}" target="_system" class="add">{{event.address}}</a></p>
     <p *ngIf="!event.address" class="gre">Luogo: <a href="{{url}}" target="_system" class="add">Nessuna informazione sull'indirizzo dell'evento</a></p>
 
-    <p class="des">{{event.description}}</p>    
+    <p class="des" [innerHTML]="event.description"></p>    
   </div>
 </ion-content>
