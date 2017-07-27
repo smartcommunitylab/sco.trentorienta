@@ -14,8 +14,9 @@ export class EventService {
 
   private headers = new Headers({'Content-Type': 'application/json'});
   // private eventsUrl = 'api/mainEvents';  // URL to web api
-  private serverUrl = 'https://dev.smartcommunitylab.it/trentorienta/api/';
-  // private serverUrl = 'http://localhost:8080/api/';
+  // private serverUrl = 'https://dev.smartcommunitylab.it/trentorienta/api/';
+  //private serverUrl = 'http://localhost:8080/api/';
+  private serverUrl = 'http://192.168.95.82:8080/api/';
 
   constructor(private http: Http, public storage: Storage) { }
 
@@ -78,7 +79,10 @@ export class EventService {
     } 
   }
 
-  searchEvents(filter: string, from = 0, to = 65535, theme?: string[], tag?: string, source?: string[], date?: string): Promise<eventType[]> {
+  searchEvents(filter: string, from = 0, to = 65535, theme?: string[], tag?: string, source?: string[], date?: string, sortForList?: number): Promise<eventType[]> {
+
+    if (sortForList == null)
+        sortForList = 1;
 
     return this.http.post(this.serverUrl + 'events', {
                             start: from,
@@ -87,6 +91,7 @@ export class EventService {
                             themes: theme,
                             tag: tag,
                             fromDate: date,
+                            sortForList: sortForList
                     })
                 .toPromise()
                 .then(response => (response.json().content as eventType[]))
@@ -139,8 +144,12 @@ export class EventService {
   }
 
   calendarEvents(from=0, to=65535, theme?: string[], tag?: string, source?: string[], date?: string):Promise<eventType[]>{
-      return this.searchEvents(null, 0, 65535, theme, tag, source, date).then(events => {
-          return events.sort((a,b) => {return parseInt(a.eventDate) - parseInt(b.eventDate);}).splice(from, to+1);
+      if (date != null)  // data = 2019.01.01
+        date = date.replace (/\./g, "") + "0000";  // data = 201901010000
+
+      return this.searchEvents(null, from, to+1, theme, tag, source, date, 0).then(events => {
+          // return events.sort((a,b) => {return parseInt(a.eventDate) - parseInt(b.eventDate);}).splice(from, to+1);
+          return events;
       });
     // return this.http.get(this.eventsUrl)
     //             .toPromise()

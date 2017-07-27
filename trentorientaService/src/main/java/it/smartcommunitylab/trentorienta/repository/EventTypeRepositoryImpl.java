@@ -53,13 +53,14 @@ public class EventTypeRepositoryImpl implements EventTypeRepositoryCustom {
 		
 		Query query = new Query();
 		
-		if (fromDate != null) {
+		if (fromDate != null)
 			SearchCriteria.andOperator(Criteria.where("toTime").gte ( Long.parseLong(fromDate)));
-		}
-		if (criteria.size() > 0) {
+		
+		if (criteria.size() > 0)
 			SearchCriteria.orOperator(criteria.toArray(new Criteria[criteria.size()]));
+
+		if (fromDate != null || criteria.size() > 0)
 			query.addCriteria(SearchCriteria);
-		}
 			
 		System.out.println(query.toString());
 		
