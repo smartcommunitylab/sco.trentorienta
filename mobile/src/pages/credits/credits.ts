@@ -10,8 +10,7 @@ import { TranslateService } from '@ngx-translate/core';
 export class CreditsPage {
   title: string = 'Credits';
   info: string = null;
-  version: string;
-
+  
   constructor(public translate: TranslateService){
     translate.addLangs(["it", "en"]);
     translate.setDefaultLang('it');
