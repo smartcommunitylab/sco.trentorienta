@@ -20,12 +20,6 @@
                     <h2>{{event.title}}</h2>
                     <p class="pubb">Pubblicato il: <span class="crea">{{event.createdDate | date: 'dd/MM/yyyy'}}</span></p>
                 </ion-item>
-                <ion-item-options>
-                    <button ion-button color="danger" (click)="remove(event)">
-                        <ion-icon name="trash"></ion-icon>
-                        DELETE
-                    </button>
-                </ion-item-options>
             </ion-item-sliding>
         </ion-item-divider>
 
@@ -38,11 +32,6 @@
                         {{source.count}}
                     </ion-badge>
                 </ion-item>
-                <ion-item-options>
-                    <button ion-button color="danger" (click)="removeSource(source)">
-                        <ion-icon name="trash"></ion-icon>
-                    </button>
-                </ion-item-options>
             </ion-item-sliding>
         </ion-item-divider>
             
@@ -55,11 +44,6 @@
                         {{theme.count}}
                     </ion-badge>
                 </ion-item>
-                <ion-item-options>
-                    <button ion-button color="danger" (click)="removeTheme(theme)">
-                        <ion-icon name="trash"></ion-icon>
-                    </button>
-                </ion-item-options>
             </ion-item-sliding>
         </ion-item-divider>
         

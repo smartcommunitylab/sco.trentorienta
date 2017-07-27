@@ -48,6 +48,7 @@ export abstract class ElementListPage implements OnInit{
     isTheme: boolean = false;
     charged: boolean = false;
     hasDate: boolean = false;
+    enabled: boolean = true;
 
     data: string[] = [];
     myDate: string;
@@ -169,7 +170,7 @@ export abstract class ElementListPage implements OnInit{
                 this.charged = true;
                 if (infiniteScroll != null) {
                     if(mainEvents == null || mainEvents.length == 0){
-                        infiniteScroll.enable(false);
+                        this.enabled = false;
                     }
                     infiniteScroll.complete();
                 }                    
@@ -238,6 +239,7 @@ export abstract class ElementListPage implements OnInit{
 
     toggleSearch():void{
         this.searching= !this.searching;
+        this.enabled = true;
         this.searchValue="";
         this.searchTerms.next(this.searchValue);
     }
