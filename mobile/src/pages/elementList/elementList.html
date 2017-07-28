@@ -59,7 +59,7 @@
                         <img *ngIf="event.image" src={{event.image}}>
                         <img *ngIf="!event.image" src='assets/icon/comune.jpeg'>
                     </ion-thumbnail>
-                    <span *ngIf="tagging" item-end class="tags">{{event.tags}}</span>
+                    <span *ngIf="tagging" class="tags">{{event.tags}}</span>
                     <h2>{{event.title}}</h2>
                     <p class="pubb">Pubblicato il: <span class="crea">{{event.createdDate | date: 'dd/MM/yyyy'}}</span></p>
                 </ion-item>
@@ -81,7 +81,7 @@
         </div>
 
         <div *ngSwitchCase="'calendario'">
-            <div *ngIf="mainEvents.length==0 && charged" class="error"> 
+            <div *ngIf="mainEvents.length == 0 && charged" class="error"> 
                 <h2>Non sono stati trovati eventi corrispondenti ai tuoi filtri</h2>
                 <button ion-button (click)="goBack()">
                     OK

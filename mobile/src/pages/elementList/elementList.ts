@@ -256,16 +256,17 @@ export abstract class ElementListPage implements OnInit{
     goBack():void{
         if(this.searching){
             this.toggleSearch();
+        } else {
+            this.storage.get('temChosen')
+                .then(temChosen => {
+                    this.storage.get('sorChosen')
+                        .then(sorChosen => {
+                            if(temChosen != null && sorChosen != null){
+                                this.navCtrl.push(FilterPage)
+                            }
+                        })
+                })
         }
-        this.storage.get('temChosen')
-            .then(temChosen => {
-                this.storage.get('sorChosen')
-                    .then(sorChosen => {
-                        if(temChosen != null && sorChosen != null){
-                            this.navCtrl.push(FilterPage)
-                        }
-                    })
-            })
     }
 
     toggleFilters():void{
@@ -284,7 +285,7 @@ export abstract class ElementListPage implements OnInit{
 
     scrolling(date: string){
         let scrollDate = moment(date).format('YYYY.MM.DD');
-        this.loadCalendar(null, scrollDate)
+        this.loadCalendar(null, scrollDate);
     }
 
     ngOnInit(): void{
