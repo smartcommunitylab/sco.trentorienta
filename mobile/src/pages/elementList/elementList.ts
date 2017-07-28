@@ -169,6 +169,9 @@ export abstract class ElementListPage implements OnInit{
         let from = reset ? 0 : this.mainEvents.length;
         this.getData(from, from + this.PAGE_SIZE, this.searchValue)
             .then(mainEvents => {
+                if(reset == true && mainEvents.length < this.PAGE_SIZE){
+                    this.enabled = false;
+                }
                 mainEvents.forEach(e => {
                     e.createdDate = moment(e.created, 'YYYYMMDDHHmmss').toDate();
                 });
@@ -285,7 +288,6 @@ export abstract class ElementListPage implements OnInit{
     }
 
     ngOnInit(): void{
-        this.getEvents(false);
         this.myDate = new Date().toISOString();
         this.currDate = moment(new Date()).format('YYYY-MM-DD');
         this.termsObs = this.searchTerms
