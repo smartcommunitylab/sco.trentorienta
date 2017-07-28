@@ -1,5 +1,7 @@
 package it.smartcommunitylab.trentorienta.services;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
+
 import java.io.Console;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -32,24 +34,22 @@ public class DataProcessor {
 		// save to db
 		Map<String, Object> input = new HashMap<>();
 		input.put("fromTime", new Date().getTime());
-		
-		EventType evento = new EventType();
 
 		RestTemplate template = new RestTemplate();
 		ArrayList list = template.postForObject("https://os.smartcommunitylab.it/comuneintasca-multi/events/TrentoInTasca", input, ArrayList.class);
 		
-		ArrayList<EventType> eventi = new ArrayList<>();
-		
-		// System.out.println("*** Numero eventi trovati: " + list.size());
+		//System.out.println("*** Numero eventi trovati: " + list.size());
 		
 		for(int i = 0; i < list.size(); i ++) {
 			Map<String, Object> riga = (Map<String, Object>) list.get(i);
+			
+			EventType evento = new EventType();
 			
 			// converto i valori nei campi di destinazione 
 			evento.setId((String) riga.get("id"));
 			// evento.setSource((String) riga.get("source"));
 			evento.setSource("Eventi del Comune di Trento");
-			
+
 			String titolo = (String) ( (LinkedHashMap)riga.get("title") ).get("it");
 			
 			evento.setTitle((String) titolo);
@@ -58,7 +58,10 @@ public class DataProcessor {
 			
 			evento.setDescription((String) descrizione);
 			
-			evento.setCategory((String) riga.get("category"));
+			String cat = (String) riga.get("category");
+			if (cat == null) cat = "Evento";
+			
+			evento.setCategory(cat);
 			
 			evento.setImage((String) riga.get("image"));
 			
@@ -69,7 +72,10 @@ public class DataProcessor {
 			evento.setEventTiming(durata);
 
 			
-			evento.setThemes((String) riga.get("eventType"));
+			String tema = (String) riga.get("eventType");
+			if (tema == null) tema = "Tema generico";
+			
+			evento.setThemes(tema);
 			
 			
 			ArrayList topics = (ArrayList) riga.get("topics");
@@ -126,18 +132,88 @@ public class DataProcessor {
 			
 			// System.out.println("Coordinate trovate:" + evento.getCoordX() + "," + evento.getCoordY());
 			
-			eventi.add(evento);
-			
 			// System.out.println ("************* title = " + titolo);
 			
 			repoEvent.save(evento);
 			
 		}
 		
-		// System.out.println ("************* " + eventi.size());
+		// avvisi del Comune di Trento (limitata a 20 eventi 
 		
-		// repoEvent.save(eventi);
+		String nLimit = "20";
+		
+		HashMap listComune = template.getForObject("http://www.comune.trento.it/api/opendata/v1/content/class/avviso/offset/0/limit/20", HashMap.class);
+		
+		ArrayList list1 = (ArrayList) listComune.get("nodes");
+		
+		for(int i = 0; i < list1.size(); i ++) {
+			Map<String, Object> riga = (Map<String, Object>) list1.get(i);
+			
+			String url = (String) riga.get("link");
+			
+			HashMap pagina = template.getForObject(url, HashMap.class);
+			
+			HashMap fields = (HashMap) pagina.get("fields");
+			
+			String titolo = (String) ( (HashMap) fields.get("titolo") ).get("value");
+			
+			EventType evento = new EventType();
+			
+			evento.setTitle(titolo);
+			
+			evento.setSource("Avvisi del Comune di Trento");
+			
+			String descrizione = (String) ( (HashMap) fields.get("descrizione") ).get("string_value");
+			
+			evento.setDescription(descrizione);
+			
+			String categoria = "";
+			
+			Object value = ((HashMap) fields.get("argomento") ).get("value");
+			
+			if (value instanceof Boolean) {
+				categoria = "Avvisi";
+			} else {
+				categoria = (String) ((HashMap) value).get("objectName");
+				if (categoria == null) categoria = "Avvisi";
+			}
+			
+			evento.setCategory(categoria);
+			evento.setThemes(categoria);
+			
+			String immagine = (String) ( (HashMap) fields.get("image") ).get("value");
+			
+			evento.setImage(immagine);
+			
+			String eventDate = (String) ( (HashMap) fields.get("data") ).get("value");
+			String dataInizio = new SimpleDateFormat("YYYMMddHHmm").format(new Date(Integer.parseInt(eventDate)));
+			evento.setEventDate(dataInizio);
+			
+			evento.setEventStart( new SimpleDateFormat("dd/MM/YYYY").format(new Date(Integer.parseInt(eventDate))));
+			
+			evento.setEventTiming("");
+			
+			ArrayList tags = new ArrayList();
+			tags.add(categoria);
+			
+			evento.setTags(tags);
+			
+			// System.out.println( ( (HashMap) fields.get("gps") ).get("value") );
+			
+			evento.setCoordX(new Float(46.0));
+			evento.setCoordY(new Float(11.0));
+			
+			evento.setCreated(dataInizio);
+			
+			String eventFine = (String) ( (HashMap) fields.get("data_archiviazione") ).get("value");
+			String toTime = new SimpleDateFormat("YYYMMddHHmm").format(new Date(Integer.parseInt(eventFine)));
+			evento.setToTime(Long.parseLong(toTime));
+			
+			evento.setAddress("Comune di Trento");
+			
+			repoEvent.save(evento);
+		}
 
-		// System.out.println ("****" + repoEvent.count());
+		
 	}
 }

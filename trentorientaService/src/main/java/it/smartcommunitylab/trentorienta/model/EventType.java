@@ -104,8 +104,13 @@ public class EventType {
 		return themes;
 	}
 	public void setThemes(String themes) {
-		this.themes = themes;
+		if (themes != null) {
+			this.themes = themes;
+		} else {
+			this.themes = "";
+		}
 	}
+
 	public Float getCoordX() {
 		return coordX;
 	}
@@ -134,13 +139,20 @@ public class EventType {
 		return createdDate;
 	}
 	public void setCreatedDate(String createdDate) {
-		this.createdDate = createdDate;
+		if (createdDate != null) 
+			this.createdDate = createdDate;
+		else
+			this.createdDate = "";
+		
 	}
 	public String getAddress() {
 		return address;
 	}
 	public void setAddress(String address) {
-		this.address = address;
+		if (address != null)
+			this.address = address;
+		else
+			this.address = "";
 	}
 	
 	
