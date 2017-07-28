@@ -1,5 +1,6 @@
 import { Component, OnInit, Pipe, PipeTransform, ViewChild } from '@angular/core';
 import { NavController, AlertController, Content } from 'ionic-angular';
+import { Storage } from '@ionic/storage';
 import * as moment from 'moment';
 
 import { EventService } from '../../app/event-service';
@@ -134,8 +135,13 @@ export abstract class ElementListPage implements OnInit{
 
 
 
-    constructor(protected eventService: EventService, public navCtrl: NavController, public alertCtrl: AlertController){
+    constructor(protected eventService: EventService, public navCtrl: NavController, public alertCtrl: AlertController, public storage: Storage){
         
+    }
+
+    ionViewWillEnter(){
+        this.getEvents(true);
+        this.enabled = true;
     }
 
     doInfinite(infiniteScroll) {
@@ -245,7 +251,18 @@ export abstract class ElementListPage implements OnInit{
     }
 
     goBack():void{
-        this.navCtrl.pop();
+        if(this.searching){
+            this.toggleSearch();
+        }
+        this.storage.get('temChosen')
+            .then(temChosen => {
+                this.storage.get('sorChosen')
+                    .then(sorChosen => {
+                        if(temChosen != null && sorChosen != null){
+                            this.navCtrl.push(FilterPage)
+                        }
+                    })
+            })
     }
 
     toggleFilters():void{
@@ -279,6 +296,8 @@ export abstract class ElementListPage implements OnInit{
             this.searchValue = v;
             this.getEvents(true);
         });
+        this.storage.set('temChosen', []);
+        this.storage.set('sorChosen', []);
     }
 
     map: L.Map; // points to leaflet map

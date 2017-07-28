@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
+import { Storage } from '@ionic/storage';
 
 import { EventService } from '../../app/event-service';
 import { eventType,occurenciesType } from '../../app/struct-data';
@@ -19,15 +20,18 @@ export class FilterPage implements OnInit{
     temChose: string[];
     sorChose: string[];
 
-    constructor(public navCtrl: NavController, public navParams: NavParams, private eventService: EventService) {
+    constructor(public navCtrl: NavController, public navParams: NavParams, private eventService: EventService, public storage: Storage) {
 
     }
     
     filter(): void{
-        this.navCtrl.push(HomePage, {
-            temChosen: this.temChose,
-            sorChosen: this.sorChose
-        })
+        this.storage.set('temChosen', this.temChose)
+            .then(temChosen => {
+                this.storage.set('sorChosen',this.sorChose)
+                    .then(sorChosen => {
+                        this.navCtrl.pop();
+                    })
+            })
     }
 
     behind(): void{

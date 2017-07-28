@@ -88,7 +88,7 @@
                 </button>
             </div>
             <ion-list>
-                <ion-item-divider *ngFor="let key of calendarEvents | ObjNgFor" id="{{key}}" color="date" mode="md">
+                <ion-item-divider *ngFor="let key of calendarEvents | ObjNgFor" color="date" mode="md">
                     {{key | date: 'dd.MM.yyyy'}}
                     <ion-item *ngFor="let event of calendarEvents[key]" (click)="onSelect(event)" mode="md" class="noborder">
                         <ion-thumbnail item-start>

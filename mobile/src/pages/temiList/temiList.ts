@@ -16,7 +16,7 @@ export class TemiListPage extends ElementListPage {
     theme: occurenciesType;
 
     constructor(protected eventService: EventService, public navCtrl: NavController, public alertCtrl: AlertController, public navParams: NavParams, public storage: Storage){
-        super(eventService, navCtrl, alertCtrl);
+        super(eventService, navCtrl, alertCtrl, storage);
         this.title = this.navParams.get('name');
         this.data[0] = this.navParams.get('name');
         this.theme = this.navParams.get('tem');

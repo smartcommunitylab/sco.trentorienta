@@ -16,7 +16,7 @@ export class SorgentiListPage extends ElementListPage{
     source: occurenciesType;
 
     constructor(protected eventService: EventService, public navCtrl: NavController, public alertCtrl: AlertController, public navParams: NavParams, public storage: Storage){
-        super(eventService, navCtrl, alertCtrl);
+        super(eventService, navCtrl, alertCtrl, storage);
         this.title = this.navParams.get('name');
         this.data[0] = this.navParams.get('name');
         this.source = this.navParams.get('sor');

@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams, AlertController } from 'ionic-angular';
+import { Storage } from '@ionic/storage';
 
 import { EventService } from '../../app/event-service';
 import { ElementListPage } from '../elementList/elementList';
-import { eventType } from '../../app/struct-data';
+import { eventType, occurenciesType } from '../../app/struct-data';
 
 
 @Component({
@@ -12,20 +13,32 @@ import { eventType } from '../../app/struct-data';
 })
 export class HomePage extends ElementListPage {
     title =  "Home";
+    temChosen: occurenciesType[] = [];
+    sorChosen: occurenciesType[] = [];
 
-    constructor(protected eventService: EventService, public navCtrl: NavController, public alertCtrl: AlertController, public navParams: NavParams){
-        super(eventService, navCtrl, alertCtrl);
+
+    constructor(protected eventService: EventService, public navCtrl: NavController, public alertCtrl: AlertController, public navParams: NavParams, public storage: Storage){
+        super(eventService, navCtrl, alertCtrl, storage);
         this.isHome = true;
     }
 
     getData(from: number, to: number, filter: string): Promise<eventType[]> {
-        return this.eventService.searchEvents(filter, from ,to, this.navParams.get('temChosen'), null , this.navParams.get('sorChosen'));
+        return this.storage.get('temChosen')
+            .then(temChosen => {
+                return this.storage.get('sorChosen')
+                    .then(sorChosen => {
+                        return this.eventService.searchEvents(filter, from, to, temChosen, null, sorChosen)
+                    }) 
+            })
     }
     
     getCalData(from: number, to: number, data?: string): Promise<eventType[]> {
-      return this.eventService.calendarEvents(from ,to, this.navParams.get('temChosen'), null , this.navParams.get('sorChosen'), data);
+        return this.storage.get('temChosen')
+            .then(temChosen => {
+                return this.storage.get('sorChosen')
+                    .then(sorChosen => {
+                        return this.eventService.calendarEvents(from, to, temChosen, null, sorChosen, data)
+                    }) 
+            })    
     }
-
-    
-    
 }
