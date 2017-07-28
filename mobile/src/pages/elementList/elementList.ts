@@ -169,6 +169,9 @@ export abstract class ElementListPage implements OnInit{
         let from = reset ? 0 : this.mainEvents.length;
         this.getData(from, from + this.PAGE_SIZE, this.searchValue)
             .then(mainEvents => {
+                if(reset == true && mainEvents.length < this.PAGE_SIZE){
+                    this.enabled = false;
+                }
                 mainEvents.forEach(e => {
                     e.createdDate = moment(e.created, 'YYYYMMDDHHmmss').toDate();
                 });
@@ -253,16 +256,17 @@ export abstract class ElementListPage implements OnInit{
     goBack():void{
         if(this.searching){
             this.toggleSearch();
+        } else {
+            this.storage.get('temChosen')
+                .then(temChosen => {
+                    this.storage.get('sorChosen')
+                        .then(sorChosen => {
+                            if(temChosen != null && sorChosen != null){
+                                this.navCtrl.push(FilterPage)
+                            }
+                        })
+                })
         }
-        this.storage.get('temChosen')
-            .then(temChosen => {
-                this.storage.get('sorChosen')
-                    .then(sorChosen => {
-                        if(temChosen != null && sorChosen != null){
-                            this.navCtrl.push(FilterPage)
-                        }
-                    })
-            })
     }
 
     toggleFilters():void{
@@ -281,11 +285,10 @@ export abstract class ElementListPage implements OnInit{
 
     scrolling(date: string){
         let scrollDate = moment(date).format('YYYY.MM.DD');
-        this.loadCalendar(null, scrollDate)
+        this.loadCalendar(null, scrollDate);
     }
 
     ngOnInit(): void{
-        this.getEvents(false);
         this.myDate = new Date().toISOString();
         this.currDate = moment(new Date()).format('YYYY-MM-DD');
         this.termsObs = this.searchTerms
