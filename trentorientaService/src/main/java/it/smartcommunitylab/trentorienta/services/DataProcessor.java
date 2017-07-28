@@ -186,10 +186,10 @@ public class DataProcessor {
 			evento.setImage(immagine);
 			
 			String eventDate = (String) ( (HashMap) fields.get("data") ).get("value");
-			String dataInizio = new SimpleDateFormat("YYYMMddHHmm").format(new Date(Integer.parseInt(eventDate)));
+			String dataInizio = new SimpleDateFormat("YYYMMddHHmm").format(new Date((long) Integer.parseInt(eventDate) * 1000 ));
 			evento.setEventDate(dataInizio);
 			
-			evento.setEventStart( new SimpleDateFormat("dd/MM/YYYY").format(new Date(Integer.parseInt(eventDate))));
+			evento.setEventStart( new SimpleDateFormat("dd/MM/YYYY").format(new Date((long) Integer.parseInt(eventDate) * 1000)));
 			
 			evento.setEventTiming("");
 			
@@ -206,7 +206,7 @@ public class DataProcessor {
 			evento.setCreated(dataInizio);
 			
 			String eventFine = (String) ( (HashMap) fields.get("data_archiviazione") ).get("value");
-			String toTime = new SimpleDateFormat("YYYMMddHHmm").format(new Date(Integer.parseInt(eventFine)));
+			String toTime = new SimpleDateFormat("YYYMMddHHmm").format(new Date((long) Integer.parseInt(eventFine)*1000));
 			evento.setToTime(Long.parseLong(toTime));
 			
 			evento.setAddress("Comune di Trento");
