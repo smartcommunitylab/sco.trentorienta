@@ -1,7 +1,5 @@
 package it.smartcommunitylab.trentorienta.services;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-
 import java.io.Console;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
