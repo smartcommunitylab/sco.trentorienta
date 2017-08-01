@@ -21,17 +21,20 @@ export class FilterPage implements OnInit{
     sorChose: string[];
 
     constructor(public navCtrl: NavController, public navParams: NavParams, private eventService: EventService, public storage: Storage) {
-
+        this.storage.get('filterData')
+            .then(filterData => {
+                this.sorChose = filterData && filterData.sorChosen ? filterData.sorChosen : [];
+                this.temChose = filterData && filterData.temChosen ? filterData.temChosen : [];
+            });
     }
-    
-    filter(): void{
-        this.storage.set('temChosen', this.temChose)
-            .then(temChosen => {
-                this.storage.set('sorChosen',this.sorChose)
-                    .then(sorChosen => {
-                        this.navCtrl.pop();
-                    })
-            })
+
+    filter(): void {
+        let filterData = {
+           temChosen: this.temChose,
+           sorChosen: this.sorChose 
+        };
+        this.storage.set('filterData', filterData)
+            .then(savedData => this.navCtrl.pop());
     }
 
     behind(): void{

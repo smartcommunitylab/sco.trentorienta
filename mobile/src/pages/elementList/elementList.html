@@ -49,9 +49,9 @@
         <div *ngSwitchCase="'lista'" style="height: 100%; width: 100%">
             <div *ngIf="mainEvents.length==0 && charged" class="error"> 
                 <h2>Non sono stati trovati eventi corrispondenti ai tuoi filtri</h2>
-                <button ion-button (click)="goBack()">
+                <!-- <button ion-button (click)="goBack()">
                     OK
-                </button>
+                </button> -->
             </div>
             <ion-list mode="md">
                 <ion-item *ngFor="let event of mainEvents" (click)="onSelect(event)">

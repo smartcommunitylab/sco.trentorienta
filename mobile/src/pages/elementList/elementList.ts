@@ -247,27 +247,27 @@ export abstract class ElementListPage implements OnInit{
     }
 
     toggleSearch():void{
-        this.searching= !this.searching;
+        this.searching = !this.searching;
         this.enabled = true;
-        this.searchValue="";
+        this.searchValue = "";
         this.searchTerms.next(this.searchValue);
     }
 
-    goBack():void{
-        if(this.searching){
-            this.toggleSearch();
-        } else {
-            this.storage.get('temChosen')
-                .then(temChosen => {
-                    this.storage.get('sorChosen')
-                        .then(sorChosen => {
-                            if(temChosen != null && sorChosen != null){
-                                this.navCtrl.push(FilterPage)
-                            }
-                        })
-                })
-        }
-    }
+    // goBack():void{
+    //     if(this.searching){
+    //         this.toggleSearch();
+    //     } else {
+    //         this.storage.get('temChosen')
+    //             .then(temChosen => {
+    //                 this.storage.get('sorChosen')
+    //                     .then(sorChosen => {
+    //                         if(temChosen != null && sorChosen != null){
+    //                             this.navCtrl.push(FilterPage)
+    //                         }
+    //                     })
+    //             })
+    //     }
+    // }
 
     toggleFilters():void{
         this.navCtrl.push(FilterPage);
@@ -297,6 +297,7 @@ export abstract class ElementListPage implements OnInit{
 
         this.termsObs.forEach(v => {
             this.searchValue = v;
+            this.enabled = true;
             this.getEvents(true);
         });
         this.storage.set('temChosen', []);
