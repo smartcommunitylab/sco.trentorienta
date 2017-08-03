@@ -36,6 +36,21 @@ export class MyApp {
         Sources: "Sources",
         Tag: 'Tag',
         Filtercontent: 'Filter content',
+        Cancel: 'Cancel',
+        Published: 'Published on: ',
+        EventDate: 'Event date: ',
+        AddressNotFound: 'There are no informations regarding the event address',
+        Place: 'Place: ',
+        OK: 'OK',
+        FilterNotFound: 'There are no events based on your filters',
+        FavoriteThemes: 'Favorite themes  ',
+        FavoriteSources: 'Favorite sources  ',
+        FavoriteEvents: 'Favorite events  ',
+        Filter: 'Filter',
+        FilterCancel: 'Cancel filter',
+        Time: 'Time: ',
+        EventsArea: 'Events in this area',
+        Loading: 'Loading',
     });
     translate.setTranslation('it', {
         Home: 'Home (it)',
@@ -45,6 +60,21 @@ export class MyApp {
         Sources: "Sorgenti",
         Tag: 'Etichette',
         Filtercontent: 'Filtra contenuti',
+        Cancel: 'Annulla',
+        Published: 'Pubblicato il: ',
+        EventDate: "Data evento: ",
+        AddressNotFound: "Nessuna informazione sull'indirizzo dell'evento",
+        Place: 'Luogo: ',
+        OK: 'OK',
+        FilterNotFound: 'Non sono stati trovati eventi corrispondenti ai tuoi filtri',
+        FavoriteThemes: 'Temi preferiti  ',
+        FavoriteSources: 'Sorgenti preferite  ',
+        FavoriteEvents: 'Eventi preferiti  ',
+        Filter: 'Filtra',
+        FilterCancel: 'Rimuovi filtro',
+        Time: 'Ora: ',
+        EventsArea: 'Eventi in questa zona',
+        Loading: 'Caricamento',
     });
 
 
@@ -57,7 +87,7 @@ export class MyApp {
       { icon: 'flag', title: 'Themes', component: TemiPage },
       { icon: 'folder', title: 'Sources', component: SorgentiPage },
       { icon: 'pricetag', title: 'Tag', component: TagPage },
-      { icon: 'star', title: 'Preferiti', component: FavoritesPage },
+      { icon: 'star', title: 'Favorites', component: FavoritesPage },
       { icon: 'information-circle', title: 'Credits', component: CreditsPage },
     ];
 

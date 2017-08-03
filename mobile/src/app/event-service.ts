@@ -71,7 +71,7 @@ export class EventService {
   }
 
   intersectDate(a: string, b: string): boolean{
-    let c = moment(b,'YYYYMMDDHHmmss').format('YYYY.MM.DD');
+    let c = moment(b,'YYYYMMDDHHmm').format('YYYY.MM.DD');
     if(a == c){
         return true;
     } else {
@@ -95,8 +95,7 @@ export class EventService {
                             filter: filter
                     })
                 .toPromise()
-                .then(response => (response.json().content as eventType[]))
-                    .catch(this.handleError);    
+                .then(response => (response.json().content as eventType[])).catch(this.handleError);    
   }
 
   // Returns all available tags
@@ -147,6 +146,9 @@ export class EventService {
   calendarEvents(from=0, to=65535, theme?: string[], tag?: string[], source?: string[], date?: string):Promise<eventType[]>{
       if (date != null)  // data = 2019.01.01
         date = date.replace (/\./g, "") + "0000";  // data = 201901010000
+      else{
+          date = moment().format("YYYYMMDDHHmm");
+      }
 
       return this.searchEvents(null, from, to+1, theme, tag, source, date, 0).then(events => {
           // return events.sort((a,b) => {return parseInt(a.eventDate) - parseInt(b.eventDate);}).splice(from, to+1);

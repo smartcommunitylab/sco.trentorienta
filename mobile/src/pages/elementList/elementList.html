@@ -8,7 +8,7 @@
         </ion-title>
         <ion-buttons end>
             <button ion-button *ngIf="view=='calendario' && hasDate" (click)='removeDate()'>
-                <ion-label>Annulla</ion-label>
+                <ion-label>{{'Cancel'|translate}}</ion-label>
                 <ion-icon name="close-circle"></ion-icon>
             </button>
             
@@ -48,7 +48,7 @@
         
         <div *ngSwitchCase="'lista'" style="height: 100%; width: 100%">
             <div *ngIf="mainEvents.length==0 && charged" class="error"> 
-                <h2>Non sono stati trovati eventi corrispondenti ai tuoi filtri</h2>
+                <h2>{{'FilterNotFound'|translate}}</h2>
                 <!-- <button ion-button (click)="goBack()">
                     OK
                 </button> -->
@@ -61,13 +61,13 @@
                     </ion-thumbnail>
                     <span *ngIf="tagging" class="tags">{{event.tags}}</span>
                     <h2>{{event.title}}</h2>
-                    <p class="pubb">Pubblicato il: <span class="crea">{{event.createdDate | date: 'dd/MM/yyyy'}}</span></p>
+                    <p class="pubb">{{'Published'|translate}}<span class="crea">{{event.createdDate | date: 'dd/MM/yyyy'}}</span></p>
                 </ion-item>
             </ion-list>
             <ion-infinite-scroll *ngIf="enabled" (ionInfinite)="doInfinite($event)">
                 <ion-infinite-scroll-content 
                     loadingSpinner = "bubbles" 
-                    loadingText = "Caricamento">
+                    loadingText = "{{'Loading'|translate}}">
                 </ion-infinite-scroll-content>
             </ion-infinite-scroll>
         </div>    
@@ -82,9 +82,9 @@
 
         <div *ngSwitchCase="'calendario'">
             <div *ngIf="mainEvents.length == 0 && charged" class="error"> 
-                <h2>Non sono stati trovati eventi corrispondenti ai tuoi filtri</h2>
+                <h2>{{'FilterNotFound'|translate}}</h2>
                 <button ion-button (click)="goBack()">
-                    OK
+                    {{'OK'|translate}}
                 </button>
             </div>
             <ion-list>
@@ -96,20 +96,20 @@
                             <img *ngIf="!event.image" src='assets/icon/comune.jpeg'>
                         </ion-thumbnail>
                         <h2>{{event.title}}</h2>
-                        <span class="grey">Pubblicato il:</span> {{event.createdDate | date: 'dd/MM/yyyy'}}
+                        <span class="grey">{{'Published'|translate}}</span> {{event.createdDate | date: 'dd/MM/yyyy'}}
                     </ion-item>
                 </ion-item-divider>  
             </ion-list>
             <ion-infinite-scroll *ngIf="!hasDate" (ionInfinite)="doInfiniteCal($event)">
                 <ion-infinite-scroll-content 
                     loadingSpinner = "bubbles" 
-                    loadingText = "Caricamento">
+                    loadingText = "{{'Loading'|translate}}">
                 </ion-infinite-scroll-content>
             </ion-infinite-scroll>
             <ion-infinite-scroll *ngIf="hasDate" (ionInfinite)="doInfiniteDate($event, myDate)">
                 <ion-infinite-scroll-content 
                     loadingSpinner = "bubbles" 
-                    loadingText = "Caricamento">
+                    loadingText = "{{'Loading'|translate}}">
                 </ion-infinite-scroll-content>
             </ion-infinite-scroll>
         </div>

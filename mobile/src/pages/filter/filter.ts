@@ -41,6 +41,13 @@ export class FilterPage implements OnInit{
         this.navCtrl.pop();
     }
 
+    filterCancel(): void{
+        this.temChose = null;
+        this.sorChose = null;
+
+        this.filter();
+    }
+
     ngOnInit(): void{
         this.eventService.getThemesList()
             .then(temList => 

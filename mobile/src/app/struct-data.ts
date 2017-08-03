@@ -13,6 +13,7 @@ export class eventType {
   eventDate: string;
   createdDate: any;
   eventoDate: any;
+  eventStart: string;
 }
 
 // simple struct

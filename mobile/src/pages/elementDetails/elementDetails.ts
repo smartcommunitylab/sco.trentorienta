@@ -61,8 +61,8 @@ export class ElementDetailsPage implements OnInit{
     ngOnInit(): void{
         this.eventService.getEvent(this.navParams.get('id'))
             .then(event => {this.event = event;
-                this.dateEvent = moment(this.event.eventDate,'YYYYMMDDHHmmss');
-                this.createEvent = moment(this.event.created,'YYYYMMDDHHmmss').format('DD.MM.YYYY');
+                this.dateEvent = moment(this.event.eventStart,'YYYYMMDDHHmm');
+                this.createEvent = moment(this.event.created,'YYYYMMDDHHmm').format('DD.MM.YYYY');
                 if(event.address){
                     this.url = "https://www.google.it/maps/search/?api=1&query=" + event.address;
                 } else {

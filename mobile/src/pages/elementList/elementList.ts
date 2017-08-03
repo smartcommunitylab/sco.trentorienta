@@ -173,7 +173,7 @@ export abstract class ElementListPage implements OnInit{
                     this.enabled = false;
                 }
                 mainEvents.forEach(e => {
-                    e.createdDate = moment(e.created, 'YYYYMMDDHHmmss').toDate();
+                    e.createdDate = moment(e.created, 'YYYYMMDDHHmm').toDate();
                 });
                 this.mainEvents = reset ? mainEvents : this.mainEvents.concat(mainEvents);
                 this.charged = true;
@@ -210,9 +210,9 @@ export abstract class ElementListPage implements OnInit{
                     }
                     this.calendarSize += events.length;
                     events.forEach(event => {
-                        var date = moment(event.eventDate, "YYYYMMDDHHmmss").format("YYYY.MM.DD");
-                        event.eventoDate = moment(event.eventDate, 'YYYYMMDDHHmmss').toDate();
-                        event.createdDate = moment(event.created, 'YYYYMMDDHHmmss').toDate();
+                        var date = moment(event.eventStart, "YYYYMMDDHHmm").format("YYYY.MM.DD");
+                        event.eventoDate = moment(event.eventStart, 'YYYYMMDDHHmm').toDate();
+                        event.createdDate = moment(event.created, 'YYYYMMDDHHmm').toDate();
                         if (this.calendarEvents[date]) {
                             this.calendarEvents[date].push(event);
                         } else {
