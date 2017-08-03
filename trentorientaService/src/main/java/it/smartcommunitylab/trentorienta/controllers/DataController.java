@@ -28,7 +28,7 @@ public class DataController {
 	@Autowired
 	private EventTypeRepositoryCustom repo1;
 
-	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("YYYMMddHHmm");
+	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyyMMddHHmm");
 
 	@CrossOrigin(origins = "*")
 	@GetMapping("/api/events")

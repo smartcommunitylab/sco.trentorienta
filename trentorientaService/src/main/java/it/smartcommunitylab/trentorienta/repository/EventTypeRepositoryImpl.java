@@ -1,5 +1,8 @@
 package it.smartcommunitylab.trentorienta.repository;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -23,6 +26,9 @@ import org.springframework.data.mongodb.core.query.TextQuery;
 import it.smartcommunitylab.trentorienta.model.EventType;
 
 public class EventTypeRepositoryImpl implements EventTypeRepositoryCustom {
+
+
+	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyyMMddHHmm");
 
 	@Autowired
 	private MongoTemplate template;
@@ -84,6 +90,15 @@ public class EventTypeRepositoryImpl implements EventTypeRepositoryCustom {
 		query.limit(pageRequest.getPageSize());
 		
 		List<EventType> list = template.find(query, EventType.class);
+		Date now = Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant());
+		list.forEach(evt -> {
+			if (evt.getEventStart() != null) {
+				try { 
+					Date d = DATE_FORMAT.parse(evt.getEventStart());
+					if (d.before(now)) evt.setEventStart(DATE_FORMAT.format(now));
+				} catch(Exception e) {} 
+			}
+		});
 		
 		return new PageImpl<>(list, pageRequest, total);
 	}
