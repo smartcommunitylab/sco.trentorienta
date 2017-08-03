@@ -1,14 +1,11 @@
 package it.smartcommunitylab.trentorienta.services;
 
-import java.io.Console;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -16,7 +13,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import it.smartcommunitylab.trentorienta.model.EventType;
-import it.smartcommunitylab.trentorienta.repository.EchoRepository;
 import it.smartcommunitylab.trentorienta.repository.EventTypeRepository;
 
 @Component
@@ -51,10 +47,13 @@ public class DataProcessor {
 			String titolo = (String) ( (LinkedHashMap)riga.get("title") ).get("it");
 			
 			evento.setTitle((String) titolo);
+			evento.setWeb((String)riga.get("url"));
 			
 			String descrizione = (String) ( (LinkedHashMap)riga.get("description") ).get("it");
+			String abstr = riga.containsKey("subtitle") ? (String) ( (LinkedHashMap)riga.get("subtitle") ).get("it") : null;
 			
 			evento.setDescription((String) descrizione);
+			evento.setShortAbstract(abstr);
 			
 			String cat = (String) riga.get("category");
 			if (cat == null) cat = "Evento";
@@ -62,41 +61,24 @@ public class DataProcessor {
 			evento.setCategory(cat);
 			
 			evento.setImage((String) riga.get("image"));
-			
-			String periodo = (String) ( (LinkedHashMap)riga.get("eventPeriod") ).get("it");
-			String durata = (String) ( (LinkedHashMap)riga.get("eventTiming") ).get("it");
-			
-			evento.setEventStart(periodo);
-			evento.setEventTiming(durata);
-
-			
+			evento.setWeb((String)riga.get("fullUrl"));
+			ArrayList topics = (ArrayList) riga.get("topics");
+			evento.setTags(topics);
 			String tema = (String) riga.get("eventType");
 			if (tema == null) tema = "Tema generico";
-			
 			evento.setThemes(tema);
 			
 			
-			ArrayList topics = (ArrayList) riga.get("topics");
+//			String periodo = (String) ( (LinkedHashMap)riga.get("eventPeriod") ).get("it");
+			String durata = (String) ( (LinkedHashMap)riga.get("eventTiming") ).get("it");
 			
-			evento.setTags(topics);
-			
-			Date date = new Date();
-			
-			Long l = Long.valueOf(riga.get("fromTime").toString());
-			
-			date.setTime(l.longValue());
-			
-			evento.setEventDate(new SimpleDateFormat("YYYMMddHHmm").format(date));
-			
-			l = Long.valueOf(riga.get("toTime").toString());
-			date.setTime(l.longValue());
+//			evento.setEventStart(periodo);
+			evento.setEventTiming(durata);
 
-			evento.setToTime(Long.parseLong(new SimpleDateFormat("YYYMMddHHmm").format(date)));
+			evento.setEventStart(new SimpleDateFormat("YYYMMddHHmm").format(new Date(Long.valueOf(riga.get("fromTime").toString()))));
+			evento.setToTime(Long.parseLong(new SimpleDateFormat("YYYMMddHHmm").format(new Date(Long.valueOf(riga.get("toTime").toString())))));
 			
-			l = Long.valueOf(riga.get("lastModified").toString());
-			date.setTime(l.longValue());
-			
-			evento.setCreated(new SimpleDateFormat("YYYMMddHHmm").format(date));
+			evento.setCreated(new SimpleDateFormat("YYYMMddHHmm").format(Long.valueOf(riga.get("lastModified").toString())));
 			
 			// Ottengo le coordinate dell'evento
 			// https://os.smartcommunitylab.it/core.geocoder/spring/address?address= INDIRIZZO
@@ -140,7 +122,7 @@ public class DataProcessor {
 		
 		String nLimit = "20";
 		
-		HashMap listComune = template.getForObject("http://www.comune.trento.it/api/opendata/v1/content/class/avviso/offset/0/limit/20", HashMap.class);
+		HashMap listComune = template.getForObject("http://www.comune.trento.it/api/opendata/v1/content/class/avviso/offset/0/limit/1000", HashMap.class);
 		
 		ArrayList list1 = (ArrayList) listComune.get("nodes");
 		
@@ -156,15 +138,18 @@ public class DataProcessor {
 			String titolo = (String) ( (HashMap) fields.get("titolo") ).get("value");
 			
 			EventType evento = new EventType();
+			evento.setWeb((String)riga.get("fullUrl"));
+			evento.setId("avvisi_"+riga.get("nodeId"));
 			
 			evento.setTitle(titolo);
 			
 			evento.setSource("Avvisi del Comune di Trento");
 			
 			String descrizione = (String) ( (HashMap) fields.get("descrizione") ).get("string_value");
-			
+			String abstr = (String) ( (HashMap) fields.get("abstract") ).get("string_value");
 			evento.setDescription(descrizione);
-			
+			evento.setShortAbstract(abstr);
+
 			String categoria = "";
 			
 			Object value = ((HashMap) fields.get("argomento") ).get("value");
@@ -185,11 +170,11 @@ public class DataProcessor {
 			
 			String eventDate = (String) ( (HashMap) fields.get("data") ).get("value");
 			String dataInizio = new SimpleDateFormat("YYYMMddHHmm").format(new Date((long) Integer.parseInt(eventDate) * 1000 ));
-			evento.setEventDate(dataInizio);
+//			evento.setEventDate(dataInizio);
 			
-			evento.setEventStart( new SimpleDateFormat("dd/MM/YYYY").format(new Date((long) Integer.parseInt(eventDate) * 1000)));
-			
-			evento.setEventTiming("");
+//			evento.setEventStart( new SimpleDateFormat("dd/MM/YYYY").format(new Date((long) Integer.parseInt(eventDate) * 1000)));
+//			
+//			evento.setEventTiming("");
 			
 			ArrayList tags = new ArrayList();
 			tags.add(categoria);
@@ -203,9 +188,9 @@ public class DataProcessor {
 			
 			evento.setCreated(dataInizio);
 			
-			String eventFine = (String) ( (HashMap) fields.get("data_archiviazione") ).get("value");
-			String toTime = new SimpleDateFormat("YYYMMddHHmm").format(new Date((long) Integer.parseInt(eventFine)*1000));
-			evento.setToTime(Long.parseLong(toTime));
+//			String eventFine = (String) ( (HashMap) fields.get("data_archiviazione") ).get("value");
+//			String toTime = new SimpleDateFormat("YYYMMddHHmm").format(new Date((long) Integer.parseInt(eventFine)*1000));
+//			evento.setToTime(Long.parseLong(toTime));
 			
 			evento.setAddress("Comune di Trento");
 			

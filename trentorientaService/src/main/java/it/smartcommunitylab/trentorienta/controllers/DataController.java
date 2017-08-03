@@ -1,19 +1,16 @@
 package it.smartcommunitylab.trentorienta.controllers;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
-
-import javax.naming.directory.SearchResult;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,30 +18,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import it.smartcommunitylab.trentorienta.model.Echo;
 import it.smartcommunitylab.trentorienta.model.EventType;
 import it.smartcommunitylab.trentorienta.model.SearchRequest;
-import it.smartcommunitylab.trentorienta.repository.EchoRepository;
 import it.smartcommunitylab.trentorienta.repository.EventTypeRepositoryCustom;
 
 @RestController	
-public class TestController {
+public class DataController {
 
 	@Autowired
-	private EchoRepository repo;
-	@Autowired
 	private EventTypeRepositoryCustom repo1;
-	
-	@GetMapping("/api/echo")
-	public @ResponseBody List<Echo> echo() {
-		Echo echo = new Echo();
-		echo.setMessage("Ciao");
-				
-		repo.save(echo);
-		
-		return repo.findByMessage("Ciao");
-	}
-	
+
+	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("YYYMMddHHmm");
+
 	@CrossOrigin(origins = "*")
 	@GetMapping("/api/events")
 	public @ResponseBody Page<EventType> getAllEvents(
@@ -53,14 +38,13 @@ public class TestController {
 			@RequestParam(required=false) String[] source,
 			@RequestParam(required=false) String[] tag,
 			@RequestParam(required=false) String[] themes,
-			@RequestParam(required=false) String fromDate,
+			@RequestParam(required=false) String fromDateStr,
 			@RequestParam(required=false) Integer sortForList,
 			@RequestParam(required=false) String filter
-			) {
+			) throws ParseException {
 		if (start == null) start = 0;
 		if (size == null) size = 15;
-		if (fromDate == null)
-			fromDate = new SimpleDateFormat("YYYMMddHHmm").format(new Date().getTime());
+		Date fromDate = StringUtils.isEmpty(fromDateStr) ? new Date() : DATE_FORMAT.parse(fromDateStr);
 		if (sortForList == null)
 			sortForList = 1;
 		if (sortForList == 1)
@@ -73,11 +57,11 @@ public class TestController {
 	@PostMapping("/api/events")
 	public @ResponseBody Page<EventType> getAllEvents(
 			@RequestBody SearchRequest params
-			) {
+			) throws ParseException {
 		int start = params.getStart() == null ? 0 : params.getStart();  
 		int size = params.getSize() == null ? 15 : params.getSize();
 		
-		String fromDate = params.getFromDate() == null ? new SimpleDateFormat("YYYMMddHHmm").format(new Date().getTime()) : params.getFromDate();
+		Date fromDate = StringUtils.isEmpty(params.getFromDate()) ? new Date() : DATE_FORMAT.parse(params.getFromDate());
 		
 		int sortForList = params.getSortForList() == null ? 1 : params.getSortForList();
 		

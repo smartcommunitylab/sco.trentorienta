@@ -17,6 +17,7 @@ public class EventType {
 	@TextIndexed private String title;
 	
 	@TextIndexed private String description;
+	@TextIndexed private String shortAbstract;
 
 	private String category;      // temi
 	private String image;
@@ -32,6 +33,7 @@ public class EventType {
 	private String createdDate;
 	private long toTime;
 	private String address;
+	private String web;
 	
 	public String getEventDate() {
 		return eventDate;
@@ -154,6 +156,17 @@ public class EventType {
 		else
 			this.address = "";
 	}
-	
-	
+	public String getWeb() {
+		return web;
+	}
+	public void setWeb(String web) {
+		this.web = web;
+	}
+	public String getShortAbstract() {
+		return shortAbstract;
+	}
+	public void setShortAbstract(String shortAbstract) {
+		this.shortAbstract = shortAbstract;
+	}
+
 }

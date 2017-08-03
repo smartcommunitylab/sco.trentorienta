@@ -1,6 +1,7 @@
 package it.smartcommunitylab.trentorienta.repository;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,8 +20,6 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.TextCriteria;
 import org.springframework.data.mongodb.core.query.TextQuery;
 
-import com.mongodb.DBCollection;
-
 import it.smartcommunitylab.trentorienta.model.EventType;
 
 public class EventTypeRepositoryImpl implements EventTypeRepositoryCustom {
@@ -29,7 +28,7 @@ public class EventTypeRepositoryImpl implements EventTypeRepositoryCustom {
 	private MongoTemplate template;
 	
 	@Override
-	public Page<EventType> findAllEventType(String[] themes, String[] sources, String[] tags, String fromDate, Boolean sortForList, String filter, Pageable pageRequest) {
+	public Page<EventType> findAllEventType(String[] themes, String[] sources, String[] tags, Date fromDate, Boolean sortForList, String filter, Pageable pageRequest) {
 		List<Criteria> criteria = new ArrayList<Criteria>();
 		Criteria SearchCriteria = new Criteria();
 
@@ -63,7 +62,7 @@ public class EventTypeRepositoryImpl implements EventTypeRepositoryCustom {
 		}
 		
 		if (fromDate != null)
-			SearchCriteria.andOperator(Criteria.where("toTime").gte ( Long.parseLong(fromDate)));
+			SearchCriteria.andOperator(Criteria.where("toTime").gte (fromDate.getTime()));
 		
 		if (criteria.size() > 0)
 			SearchCriteria.orOperator(criteria.toArray(new Criteria[criteria.size()]));

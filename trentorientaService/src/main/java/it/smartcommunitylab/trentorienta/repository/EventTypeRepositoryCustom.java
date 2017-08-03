@@ -1,5 +1,6 @@
 package it.smartcommunitylab.trentorienta.repository;
 
+import java.util.Date;
 import java.util.Map;
 
 import org.springframework.data.domain.Page;
@@ -9,7 +10,7 @@ import it.smartcommunitylab.trentorienta.model.EventType;
 
 public interface EventTypeRepositoryCustom {
 
-	Page<EventType> findAllEventType(String[] themes, String[] sources, String[] tags, String fromDate, Boolean sortForList, String filter, Pageable pageRequest);
+	Page<EventType> findAllEventType(String[] themes, String[] sources, String[] tags, Date fromDate, Boolean sortForList, String filter, Pageable pageRequest);
 	
 	EventType findEvent(String id);
 	
