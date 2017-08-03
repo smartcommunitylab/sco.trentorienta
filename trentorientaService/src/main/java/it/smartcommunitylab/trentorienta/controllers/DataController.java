@@ -44,7 +44,7 @@ public class DataController {
 			) throws ParseException {
 		if (start == null) start = 0;
 		if (size == null) size = 15;
-		Date fromDate = StringUtils.isEmpty(fromDateStr) ? new Date() : DATE_FORMAT.parse(fromDateStr);
+		Date fromDate = StringUtils.isEmpty(fromDateStr) ? null : DATE_FORMAT.parse(fromDateStr);
 		if (sortForList == null)
 			sortForList = 1;
 		if (sortForList == 1)
@@ -61,7 +61,7 @@ public class DataController {
 		int start = params.getStart() == null ? 0 : params.getStart();  
 		int size = params.getSize() == null ? 15 : params.getSize();
 		
-		Date fromDate = StringUtils.isEmpty(params.getFromDate()) ? new Date() : DATE_FORMAT.parse(params.getFromDate());
+		Date fromDate = StringUtils.isEmpty(params.getFromDate()) ? null : DATE_FORMAT.parse(params.getFromDate());
 		
 		int sortForList = params.getSortForList() == null ? 1 : params.getSortForList();
 		

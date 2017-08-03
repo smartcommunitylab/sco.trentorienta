@@ -23,101 +23,15 @@ public class DataProcessor {
 	
 	@Scheduled(initialDelay=0, fixedRate=60*60*1000)
 	public void getDataPeriodically() {
-		// call https://os.smartcommunitylab.it/comuneintasca-multi/events/TrentoInTasca
-		// transform data
-		// save to db
-		Map<String, Object> input = new HashMap<>();
-		input.put("fromTime", new Date().getTime());
-
 		RestTemplate template = new RestTemplate();
-		ArrayList list = template.postForObject("https://os.smartcommunitylab.it/comuneintasca-multi/events/TrentoInTasca", input, ArrayList.class);
 		
-		//System.out.println("*** Numero eventi trovati: " + list.size());
+		processEventsSource(template);		
+		processAvvisiSource(template);
+
 		
-		for(int i = 0; i < list.size(); i ++) {
-			Map<String, Object> riga = (Map<String, Object>) list.get(i);
-			
-			EventType evento = new EventType();
-			
-			// converto i valori nei campi di destinazione 
-			evento.setId((String) riga.get("id"));
-			// evento.setSource((String) riga.get("source"));
-			evento.setSource("Eventi del Comune di Trento");
+	}
 
-			String titolo = (String) ( (LinkedHashMap)riga.get("title") ).get("it");
-			
-			evento.setTitle((String) titolo);
-			evento.setWeb((String)riga.get("url"));
-			
-			String descrizione = (String) ( (LinkedHashMap)riga.get("description") ).get("it");
-			String abstr = riga.containsKey("subtitle") ? (String) ( (LinkedHashMap)riga.get("subtitle") ).get("it") : null;
-			
-			evento.setDescription((String) descrizione);
-			evento.setShortAbstract(abstr);
-			
-			String cat = (String) riga.get("category");
-			if (cat == null) cat = "Evento";
-			
-			evento.setCategory(cat);
-			
-			evento.setImage((String) riga.get("image"));
-			evento.setWeb((String)riga.get("fullUrl"));
-			ArrayList topics = (ArrayList) riga.get("topics");
-			evento.setTags(topics);
-			String tema = (String) riga.get("eventType");
-			if (tema == null) tema = "Tema generico";
-			evento.setThemes(tema);
-			
-			
-//			String periodo = (String) ( (LinkedHashMap)riga.get("eventPeriod") ).get("it");
-			String durata = (String) ( (LinkedHashMap)riga.get("eventTiming") ).get("it");
-			
-//			evento.setEventStart(periodo);
-			evento.setEventTiming(durata);
-
-			evento.setEventStart(new SimpleDateFormat("YYYMMddHHmm").format(new Date(Long.valueOf(riga.get("fromTime").toString()))));
-			evento.setToTime(Long.parseLong(new SimpleDateFormat("YYYMMddHHmm").format(new Date(Long.valueOf(riga.get("toTime").toString())))));
-			
-			evento.setCreated(new SimpleDateFormat("YYYMMddHHmm").format(Long.valueOf(riga.get("lastModified").toString())));
-			
-			// Ottengo le coordinate dell'evento
-			// https://os.smartcommunitylab.it/core.geocoder/spring/address?address= INDIRIZZO
-
-			Map<String, String> input2 = new HashMap<String, String>();
-			
-			String indirizzo = (String) ( (LinkedHashMap)riga.get("address") ).get("it");
-			
-			input2.put("address", indirizzo);
-			input2.put("latlng", "46.0655,11.1086");
-			input2.put("distance", "10");
-
-			// System.out.println("\n\n****" + indirizzo);
-			
-			evento.setAddress(indirizzo);
-			
-			RestTemplate template1 = new RestTemplate();
-			HashMap list1 = template1.getForObject("https://os.smartcommunitylab.it/core.geocoder/spring/address?address={address}&latlng={latlng}&distance={distance}&rows=1", HashMap.class, input2);
-			
-			try {
-				String coord = (String) ((LinkedHashMap) ((ArrayList) ((LinkedHashMap) list1.get("response")).get("docs")).get(0)).get("coordinate");
-				
-				// System.out.println("Corodinate dal sito: " + coord);
-				
-				evento.setCoordX( Float.parseFloat(coord.split(",")[0]) );
-				evento.setCoordY( Float.parseFloat(coord.split(",")[1]) );
-			} catch (Exception e) {
-				evento.setCoordX(new Float(0));
-				evento.setCoordY(new Float(0));
-			}
-			
-			// System.out.println("Coordinate trovate:" + evento.getCoordX() + "," + evento.getCoordY());
-			
-			// System.out.println ("************* title = " + titolo);
-			
-			repoEvent.save(evento);
-			
-		}
-		
+	private void processAvvisiSource(RestTemplate template) {
 		// avvisi del Comune di Trento (limitata a 20 eventi 
 		
 		String nLimit = "20";
@@ -164,9 +78,11 @@ public class DataProcessor {
 			evento.setCategory(categoria);
 			evento.setThemes(categoria);
 			
-			String immagine = (String) ( (HashMap) fields.get("image") ).get("value");
 			
-			evento.setImage(immagine);
+			Object immagine = ( (HashMap) fields.get("image") ).get("value");
+			if (immagine instanceof Map) {
+				evento.setImage(immagine.toString());
+			}
 			
 			String eventDate = (String) ( (HashMap) fields.get("data") ).get("value");
 			String dataInizio = new SimpleDateFormat("YYYMMddHHmm").format(new Date((long) Integer.parseInt(eventDate) * 1000 ));
@@ -196,7 +112,101 @@ public class DataProcessor {
 			
 			repoEvent.save(evento);
 		}
+	}
 
+	private void processEventsSource(RestTemplate template) {
+		// call https://os.smartcommunitylab.it/comuneintasca-multi/events/TrentoInTasca
+		// transform data
+		// save to db
+		Map<String, Object> input = new HashMap<>();
+		input.put("fromTime", new Date().getTime());
+
+		ArrayList list = template.postForObject("https://os.smartcommunitylab.it/comuneintasca-multi/events/TrentoInTasca", input, ArrayList.class);
 		
+		//System.out.println("*** Numero eventi trovati: " + list.size());
+		
+		for(int i = 0; i < list.size(); i ++) {
+			Map<String, Object> riga = (Map<String, Object>) list.get(i);
+			
+			EventType evento = new EventType();
+			
+			// converto i valori nei campi di destinazione 
+			evento.setId((String) riga.get("id"));
+			// evento.setSource((String) riga.get("source"));
+			evento.setSource("Eventi del Comune di Trento");
+
+			String titolo = (String) ( (LinkedHashMap)riga.get("title") ).get("it");
+			
+			evento.setTitle((String) titolo);
+			evento.setWeb((String)riga.get("url"));
+			
+			String descrizione = (String) ( (LinkedHashMap)riga.get("description") ).get("it");
+			String abstr = riga.containsKey("subtitle") ? (String) ( (LinkedHashMap)riga.get("subtitle") ).get("it") : null;
+			
+			evento.setDescription((String) descrizione);
+			evento.setShortAbstract(abstr);
+			
+			String cat = (String) riga.get("category");
+			if (cat == null) cat = "Evento";
+			
+			evento.setCategory(cat);
+			
+			evento.setImage((String) riga.get("image"));
+			evento.setWeb((String)riga.get("fullUrl"));
+			ArrayList topics = (ArrayList) riga.get("topics");
+			evento.setTags(topics);
+			String tema = (String) riga.get("eventType");
+			if (tema == null) tema = "Tema generico";
+			evento.setThemes(tema);
+			
+			
+//			String periodo = (String) ( (LinkedHashMap)riga.get("eventPeriod") ).get("it");
+			String durata = (String) ( (LinkedHashMap)riga.get("eventTiming") ).get("it");
+			
+//			evento.setEventStart(periodo);
+			evento.setEventTiming(durata);
+
+			evento.setEventStart(new SimpleDateFormat("YYYMMddHHmm").format(new Date(Long.valueOf(riga.get("fromTime").toString()))));
+			evento.setToTime(Long.valueOf(riga.get("toTime").toString()));
+			
+			evento.setCreated(new SimpleDateFormat("YYYMMddHHmm").format(Long.valueOf(riga.get("lastModified").toString())));
+			
+			// Ottengo le coordinate dell'evento
+			// https://os.smartcommunitylab.it/core.geocoder/spring/address?address= INDIRIZZO
+
+			Map<String, String> input2 = new HashMap<String, String>();
+			
+			String indirizzo = (String) ( (LinkedHashMap)riga.get("address") ).get("it");
+			
+			input2.put("address", indirizzo);
+			input2.put("latlng", "46.0655,11.1086");
+			input2.put("distance", "10");
+
+			// System.out.println("\n\n****" + indirizzo);
+			
+			evento.setAddress(indirizzo);
+			
+			RestTemplate template1 = new RestTemplate();
+			HashMap list1 = template1.getForObject("https://os.smartcommunitylab.it/core.geocoder/spring/address?address={address}&latlng={latlng}&distance={distance}&rows=1", HashMap.class, input2);
+			
+			try {
+				String coord = (String) ((LinkedHashMap) ((ArrayList) ((LinkedHashMap) list1.get("response")).get("docs")).get(0)).get("coordinate");
+				
+				// System.out.println("Corodinate dal sito: " + coord);
+				
+				evento.setCoordX( Float.parseFloat(coord.split(",")[0]) );
+				evento.setCoordY( Float.parseFloat(coord.split(",")[1]) );
+			} catch (Exception e) {
+				evento.setCoordX(new Float(0));
+				evento.setCoordY(new Float(0));
+			}
+			
+			// System.out.println("Coordinate trovate:" + evento.getCoordX() + "," + evento.getCoordY());
+			
+			// System.out.println ("************* title = " + titolo);
+			
+			repoEvent.save(evento);
+			
+		}
 	}
 }
