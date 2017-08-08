@@ -3,7 +3,7 @@ import { Headers, Http } from '@angular/http';
 import { Storage } from '@ionic/storage';
 import * as moment from 'moment';
 
-import { Observable }     from 'rxjs/Observable';
+// import { Observable }     from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 
@@ -12,7 +12,7 @@ import { eventType, occurenciesType} from './struct-data';
 @Injectable()
 export class EventService {
 
-  private headers = new Headers({'Content-Type': 'application/json'});
+//   private headers = new Headers({'Content-Type': 'application/json'});
   // private eventsUrl = 'api/mainEvents';  // URL to web api
    private serverUrl = 'https://dev.smartcommunitylab.it/trentorienta/api/';
   // private serverUrl = 'http://localhost:8080/api/';

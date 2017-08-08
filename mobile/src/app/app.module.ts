@@ -25,6 +25,7 @@ import { FilterPage } from '../pages/filter/filter';
 import { ConfigSrv } from '../services/config-service'
 import { QuestionnaireService } from '../services/questionnaire-service'
 import { InAppBrowser } from '@ionic-native/in-app-browser';
+import { AppVersion } from '@ionic-native/app-version';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -91,6 +92,7 @@ import { LeafletModule } from '@asymmetrik/angular2-leaflet';
     ConfigSrv,
     QuestionnaireService,
     InAppBrowser,
+    AppVersion,
     EventService,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]

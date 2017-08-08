@@ -14,7 +14,8 @@ export class QuestionnaireService {
 
     openQuestionnaireWindow(): Promise<any> {
 
-
+        // debugger;
+        
         return new Promise((resolve, reject) => {
 
             let browser = this.iab.create(this.url, '_blank');

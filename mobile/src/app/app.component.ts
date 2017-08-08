@@ -35,7 +35,7 @@ export class MyApp {
         Favorites: 'Favorites',
         Themes: 'Themes',
         Sources: "Sources",
-        lbl_questionnaire: "Questionnaire",
+        Questionnaire: "Questionnaire",
         Tag: 'Tag',
         Filtercontent: 'Filter content',
         Cancel: 'Cancel',
@@ -60,7 +60,7 @@ export class MyApp {
         Favorites: 'Preferiti',
         Themes: 'Temi',
         Sources: "Sorgenti",
-        lbl_questionnaire: "Questionario",
+        Questionnaire: "Questionario",
         Tag: 'Etichette',
         Filtercontent: 'Filtra contenuti',
         Cancel: 'Annulla',
@@ -89,7 +89,7 @@ export class MyApp {
       { icon: 'home', title: 'Home', component: HomePage },
       { icon: 'flag', title: 'Themes', component: TemiPage },
       { icon: 'folder', title: 'Sources', component: SorgentiPage },
-      { icon: 'information-circle', title: 'lbl_questionnaire', component: '' },
+      { icon: 'information-circle', title: 'Questionnaire', component: null },
       { icon: 'pricetag', title: 'Tag', component: TagPage },
       { icon: 'star', title: 'Favorites', component: FavoritesPage },
       { icon: 'information-circle', title: 'Credits', component: CreditsPage },
@@ -110,9 +110,10 @@ export class MyApp {
   openPage(page) {
     // Reset the content nav to have just this page
     // we wouldn't want the back button to show in this scenario
+    if (page.component)
     this.nav.setRoot(page.component);
 
-    if (page.title === 'lbl_questionnaire') {
+    if (page.title === 'Questionnaire') {
       this.questionnaireService.openQuestionnaireWindow();
     }
   }

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { AppVersion } from '@ionic-native/app-version';
 
 @Component({
   selector: 'page-credits',
@@ -9,11 +10,20 @@ import { TranslateService } from '@ngx-translate/core';
 export class CreditsPage {
   title: string = 'Credits';
   info: string = null;
-  
-  constructor(public translate: TranslateService){
+  version: string = null;
+
+  constructor(private appVersion: AppVersion, private translate: TranslateService){
     translate.addLangs(["it", "en"]);
     // translate.setDefaultLang('it');
 
+    // debugger;
+    appVersion.getVersionNumber().then((version) => {
+      this.version = "v " + version;
+    }).catch(function (error) {
+      this.version = "v " + '1.0';
+    });
+    
+    
     translate.setTranslation('it',{
       Home: 'Home (it)',
       Credits: 'Referenze',
@@ -43,6 +53,7 @@ export class CreditsPage {
     });
 
     this.info = translate.instant('information');
+    
   }
 
 }
