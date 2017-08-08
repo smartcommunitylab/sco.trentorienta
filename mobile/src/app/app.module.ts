@@ -22,7 +22,9 @@ import { TagListPage } from '../pages/tagList/tagList';
 import { SorgentiListPage } from '../pages/sorgentiList/sorgentiList';
 import { ObjNgFor } from '../pages/elementList/elementList';
 import { FilterPage } from '../pages/filter/filter';
-
+import { ConfigSrv } from '../services/config-service'
+import { QuestionnaireService } from '../services/questionnaire-service'
+import { InAppBrowser } from '@ionic-native/in-app-browser';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -86,6 +88,9 @@ import { LeafletModule } from '@asymmetrik/angular2-leaflet';
   providers: [
     StatusBar,
     SplashScreen,
+    ConfigSrv,
+    QuestionnaireService,
+    InAppBrowser,
     EventService,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
