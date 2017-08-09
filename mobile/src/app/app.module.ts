@@ -3,6 +3,7 @@ import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { HttpModule, Http }    from '@angular/http';
 import { IonicStorageModule } from '@ionic/storage';
+import { DynamicComponentModule } from 'angular2-dynamic-component/index';
 
 // Imports for loading & configuring the in-memory web api
 // import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
@@ -24,13 +25,14 @@ import { ObjNgFor } from '../pages/elementList/elementList';
 import { FilterPage } from '../pages/filter/filter';
 import { ConfigSrv } from '../services/config-service'
 import { QuestionnaireService } from '../services/questionnaire-service'
+import { TermsPage } from '../pages/terms/terms';
+
 import { InAppBrowser } from '@ionic-native/in-app-browser';
 import { AppVersion } from '@ionic-native/app-version';
-
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
-
-import {TranslateModule, TranslateLoader} from "@ngx-translate/core";
+import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
+// import { CustomNgInclude } from '../common/custom-ng-include.component';
 // import {TranslateHttpLoader} from "@ngx-translate/http-loader";
 
 // AoT requires an exported function for factories
@@ -55,12 +57,14 @@ import { LeafletModule } from '@asymmetrik/angular2-leaflet';
     SorgentiListPage,
     ObjNgFor,
     FilterPage,
+    TermsPage
   ],
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
     HttpModule,
     IonicStorageModule.forRoot(),
+    DynamicComponentModule,
     // InMemoryWebApiModule.forRoot(InMemoryDataService),
     TranslateModule.forRoot({
           //loader: {
@@ -85,6 +89,7 @@ import { LeafletModule } from '@asymmetrik/angular2-leaflet';
     TagListPage,
     SorgentiListPage,
     FilterPage,
+    TermsPage
   ],
   providers: [
     StatusBar,

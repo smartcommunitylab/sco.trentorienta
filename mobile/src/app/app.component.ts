@@ -11,6 +11,8 @@ import { FavoritesPage } from '../pages/favorites/favorites';
 import { CreditsPage } from '../pages/credits/credits';
 import { TranslateService } from '@ngx-translate/core';
 import { QuestionnaireService } from '../services/questionnaire-service';
+import { TermsPage } from '../pages/terms/terms';
+// import { CustomNgInclude } from '../common/custom-ng-include.component';
 
 
 @Component({
@@ -89,10 +91,11 @@ export class MyApp {
       { icon: 'home', title: 'Home', component: HomePage },
       { icon: 'flag', title: 'Themes', component: TemiPage },
       { icon: 'folder', title: 'Sources', component: SorgentiPage },
-      { icon: 'information-circle', title: 'Questionnaire', component: null },
+      { icon: 'help-circle', title: 'Questionnaire', component: null },
       { icon: 'pricetag', title: 'Tag', component: TagPage },
       { icon: 'star', title: 'Favorites', component: FavoritesPage },
       { icon: 'information-circle', title: 'Credits', component: CreditsPage },
+      { icon: 'alert', title: 'Terms', component: TermsPage }
     ];
 
 
