@@ -3,6 +3,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { Storage } from '@ionic/storage';
 import { Headers, Http } from '@angular/http';
 import { AlertController } from 'ionic-angular';
+import { NavController, ViewController } from 'ionic-angular';
+import { HomePage } from '../home/home';
 
 @Component({
     selector: 'terms',
@@ -16,7 +18,8 @@ export class TermsPage {
     termsFile: any;
     accepting: Boolean;
   
-    constructor(private http: Http, public translate: TranslateService, public storage: Storage, public alertCtrl: AlertController) {
+    constructor(private http: Http, public translate: TranslateService, public storage: Storage, public nav: NavController,
+        public viewCtrl: ViewController, public alertCtrl: AlertController) {
 
         translate.addLangs(["it", "en"]);
 
@@ -36,7 +39,6 @@ export class TermsPage {
             terms_refused_alert_text: 'Terms refused.',
         });
 
-        debugger;
         // load html file.
         var url = 'resources/terms-' + translate.currentLang.toString() + '.html';
         this.load(url).then(resp => this.termsFile = resp);
@@ -54,13 +56,17 @@ export class TermsPage {
     }
 
     goToProposalsList = function () {
-        alert("proposal");
+        debugger;
+        this.nav.setRoot(HomePage);
+
     }
 
 
     acceptPrivacy = function () {
-        this.storage.set("isPrivacyAccepted", true);
-        // this.goToProposalsList();
+        this.setPrivacyAccepted().then(flag => {
+            this.accepting = flag;
+        });
+        this.goToProposalsList();
     };
 
     refusePrivacy = function () {
@@ -81,6 +87,10 @@ export class TermsPage {
 
     readIsPrivacyAccepted(): Promise<String> {
         return this.storage.get("isPrivacyAccepted").then(flag => { return flag });
+    }
+
+    setPrivacyAccepted(): Promise<String> {
+        return this.storage.set("isPrivacyAccepted", "true").then(flag => { return flag });
     }
 
 }
