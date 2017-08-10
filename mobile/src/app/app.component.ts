@@ -21,7 +21,7 @@ import { ConfigSrv } from '../services/config-service';
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
-  rootPage: any = HomePage;
+  rootPage: any;
 
   pages: Array<{ icon: string, title: string, component: any }>;
 
