@@ -43,7 +43,7 @@ export class ConfigSrv {
     presentErrorToast() {
         let toast = this.toastCtrl.create({
             message: this.translate.instant('lbl_error'),
-            cssClass: '/services/toast.scss',
+            // cssClass: '/services/toast.scss',
             duration: 3000
         });
         toast.present();
