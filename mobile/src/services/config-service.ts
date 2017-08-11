@@ -40,7 +40,9 @@ export class ConfigSrv {
         return this.storage.get("isPrivacyAccepted").then(flag => { return flag });
     }
 
+    presentErrorToast() {
         let toast = this.toastCtrl.create({
+            message: this.translate.instant('lbl_error'),
             cssClass: '/services/toast.scss',
             duration: 3000
         });
