@@ -1,6 +1,7 @@
 import { Injectable }    from '@angular/core';
 import { Headers, Http } from '@angular/http';
 import { Storage } from '@ionic/storage';
+import { ConfigSrv} from '../services/config-service'
 import * as moment from 'moment';
 
 // import { Observable }     from 'rxjs/Observable';
@@ -18,7 +19,6 @@ export class EventService {
   // private serverUrl = 'http://localhost:8080/api/';
   //private serverUrl = 'http://192.168.95.82:8080/api/';
 
-  constructor(private http: Http, public storage: Storage) { }
 
   // Returns all events in an array (optional from - to for pages)
   getEvents(from=0, to=65535): Promise<eventType[]> {
@@ -205,7 +205,7 @@ export class EventService {
   }
 
   private handleError(error: any): Promise<any> {
-    console.error('An error occurred', error); // for demo purposes only
-    return Promise.reject(error.message || error);
+      console.error('An error occurred', error); // for demo purposes only
+      return Promise.reject(error.message || error);
   }
 }
