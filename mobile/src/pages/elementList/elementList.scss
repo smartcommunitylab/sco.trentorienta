@@ -246,3 +246,11 @@ p.pubb{
 .row.credits_row{
     padding: 0px 10px 0px;
 }
+
+modal-page { // only for modal page.
+    .item {
+        background-color: orange;
+        color: white;
+        font-size: medium;
+    }
+}

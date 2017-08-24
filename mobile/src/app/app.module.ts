@@ -26,19 +26,14 @@ import { FilterPage } from '../pages/filter/filter';
 import { ConfigSrv } from '../services/config-service'
 import { QuestionnaireService } from '../services/questionnaire-service'
 import { TermsPage } from '../pages/terms/terms';
+import { ModalContentPage } from '../pages/elementList/elementList';
 
 import { InAppBrowser } from '@ionic-native/in-app-browser';
 import { AppVersion } from '@ionic-native/app-version';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
-// import { CustomNgInclude } from '../common/custom-ng-include.component';
-// import {TranslateHttpLoader} from "@ngx-translate/http-loader";
 
-// AoT requires an exported function for factories
-// export function HttpLoaderFactory(http: Http) {
-    //return new TranslateHttpLoader(http, "/i18n/", ".json");
-//}
 
 import { LeafletModule } from '@asymmetrik/angular2-leaflet';
 
@@ -57,7 +52,8 @@ import { LeafletModule } from '@asymmetrik/angular2-leaflet';
     SorgentiListPage,
     ObjNgFor,
     FilterPage,
-    TermsPage
+    TermsPage,
+    ModalContentPage
   ],
   imports: [
     BrowserModule,
@@ -89,7 +85,8 @@ import { LeafletModule } from '@asymmetrik/angular2-leaflet';
     TagListPage,
     SorgentiListPage,
     FilterPage,
-    TermsPage
+    TermsPage,
+    ModalContentPage
   ],
   providers: [
     StatusBar,

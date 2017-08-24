@@ -1,5 +1,5 @@
 import { Component, OnInit, Pipe, PipeTransform, ViewChild } from '@angular/core';
-import { NavController, AlertController, Content } from 'ionic-angular';
+import { NavController, ModalController, Content, ViewController, NavParams, Platform } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 import * as moment from 'moment';
 
@@ -135,7 +135,7 @@ export abstract class ElementListPage implements OnInit{
 
 
 
-    constructor(protected eventService: EventService, public navCtrl: NavController, public alertCtrl: AlertController, public storage: Storage){
+    constructor(protected eventService: EventService, public navCtrl: NavController, public modalCtrl: ModalController, public storage: Storage){
         
     }
 
@@ -291,8 +291,7 @@ export abstract class ElementListPage implements OnInit{
     ngOnInit(): void{
         this.myDate = new Date().toISOString();
         this.currDate = moment(new Date()).format('YYYY-MM-DD');
-        this.termsObs = this.searchTerms
-            .debounceTime(300)        // wait 300ms after each keystroke before considering the term
+        this.termsObs = this.searchTerms.debounceTime(300)        // wait 300ms after each keystroke before considering the term
             .distinctUntilChanged();
 
         this.termsObs.forEach(v => {
@@ -363,19 +362,21 @@ export abstract class ElementListPage implements OnInit{
             
 
             marker.addEventListener('click', evt => {
-                let alert = this.alertCtrl.create();
-                alert.setTitle('Eventi in questa zona');
-                
+
+                var evts = [];
                 for(let event of commonPlace[key]){
-                    alert.addButton({
-                        text: event.title,
-                        handler: (button) => {
-                            this.onSelect(event);
-                        }
-                    });
+                    evts.push(event);
+                    // alert.addButton({
+                    //     text: event.title,
+                    //     handler: (button) => {
+                    //         this.onSelect(event);
+                    //     }
+                    // });
                 }
 
-                alert.present();
+                let modal = this.modalCtrl.create(ModalContentPage, evts);
+                // alert.setTitle('Eventi in questa zona');
+                modal.present();
             });
         }
         // zoom to all visible markers...
@@ -422,3 +423,42 @@ export class LeafletCoreDemoModel {
     
     }
     
+@Component({
+    selector: 'modal-page',
+    template: `
+      <ion-header>
+        <ion-navbar color="primary" >
+          <ion-title>{{title | translate}}</ion-title>
+           <ion-buttons end>
+               <button ion-button (click)="dismiss()">
+                    <ion-icon name="close"></ion-icon>
+               </button>
+           </ion-buttons>
+        </ion-navbar>
+      </ion-header>
+      <ion-content>
+      <ion-item *ngFor="let event of evts" (click)="onSelect(event)" >
+      {{event.title}}
+      </ion-item>
+      </ion-content>
+      `
+})
+export class ModalContentPage { 
+
+    evts;
+    title="Events in questo zona";
+    ElementDetailsPage
+    constructor(public platform: Platform, public params: NavParams, public viewCtrl: ViewController, public navCtrl:NavController) { 
+        this.evts = params.data;
+    }
+     
+    dismiss() {
+        this.viewCtrl.dismiss();
+    }
+    
+    onSelect(event: eventType): void{
+        this.navCtrl.push(ElementDetailsPage, {id: event.id} )
+    }
+
+}
+

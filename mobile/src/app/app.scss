@@ -16,6 +16,14 @@
     background-color: #344294;
 }
 
+.md button .button-effect {
+    display: none;
+}
+
+.ios button .button-effect {
+    display: none;
+}
+
 // App Global Sass
 // --------------------------------------------------
 // Put style rules here that you want to apply globally. These

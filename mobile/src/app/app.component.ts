@@ -53,13 +53,14 @@ export class MyApp {
       FavoriteSources: 'Favorite sources  ',
       FavoriteEvents: 'Favorite events  ',
       Filter: 'Filter',
-      FilterCancel: 'Cancel filter',
+      FilterCancel: 'Cancel',
       Time: 'Time: ',
       EventsArea: 'Events in this area',
       Loading: 'Loading',
+      lbl_error: 'error'
     });
     translate.setTranslation('it', {
-      Home: 'Home (it)',
+      Home: 'Home',
       Credits: 'Referenze',
       Favorites: 'Preferiti',
       Themes: 'Temi',
@@ -78,10 +79,11 @@ export class MyApp {
       FavoriteSources: 'Sorgenti preferite  ',
       FavoriteEvents: 'Eventi preferiti  ',
       Filter: 'Filtra',
-      FilterCancel: 'Rimuovi filtro',
+      FilterCancel: 'Annulla',
       Time: 'Ora: ',
       EventsArea: 'Eventi in questa zona',
       Loading: 'Caricamento',
+      lbl_error: 'errore'
     });
 
 

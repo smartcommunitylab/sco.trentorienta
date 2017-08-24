@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController, NavParams, AlertController } from 'ionic-angular';
+import { NavController, NavParams, ModalController } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 
 
@@ -15,8 +15,8 @@ import { ElementListPage } from '../elementList/elementList';
 
 export class TagListPage extends ElementListPage {
 
-    constructor(protected eventService: EventService, public navCtrl: NavController, public alertCtrl: AlertController, public navParams: NavParams, public storage: Storage){
-        super(eventService, navCtrl, alertCtrl, storage);
+    constructor(protected eventService: EventService, public navCtrl: NavController, public modalCtrl: ModalController, public navParams: NavParams, public storage: Storage){
+        super(eventService, navCtrl, modalCtrl, storage);
         this.title = this.navParams.get('name');
         this.tagging = true;
     }

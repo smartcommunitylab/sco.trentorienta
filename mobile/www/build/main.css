@@ -30067,6 +30067,14 @@ ion-navbar.toolbar {
   background-color: #344294;
 }
 
+.md button .button-effect {
+  display: none;
+}
+
+.ios button .button-effect {
+  display: none;
+}
+
 .pub {
   text-align: right;
   margin-right: 10px;
@@ -30347,6 +30355,12 @@ p.pubb {
   padding: 0px 10px 0px;
 }
 
+modal-page .item {
+  background-color: orange;
+  color: white;
+  font-size: medium;
+}
+
 .alert-checkbox-group .button-inner {
   display: -webkit-box;
   display: -webkit-flex;
@@ -30380,12 +30394,12 @@ p.pubb {
   text-transform: capitalize;
 }
 
-div {
+terms div {
   padding: 5px;
   text-align: justify;
 }
 
-div.help_title {
+terms div.help_title {
   /*font-size: 20px;*/
   font-weight: bold;
   margin-bottom: 1em;
@@ -30396,7 +30410,7 @@ div.help_title {
   width: 90%;
 }
 
-div.start_title {
+terms div.start_title {
   font-size: 45px;
   font-weight: bold;
   margin-left: 5%;
@@ -30405,7 +30419,7 @@ div.start_title {
   width: 90%;
 }
 
-div.start_subtitle {
+terms div.start_subtitle {
   font-size: 20px;
   font-weight: bold;
   margin-bottom: 1.8em;
@@ -30415,7 +30429,7 @@ div.start_subtitle {
   width: 90%;
 }
 
-div.tips {
+terms div.tips {
   line-height: 24px;
   margin-bottom: 1em;
   margin-left: 5%;
@@ -30423,43 +30437,43 @@ div.tips {
   width: 90%;
 }
 
-div.tool_title {
+terms div.tool_title {
   font-weight: bold;
   margin-bottom: 10px;
 }
 
-div.tool_desc {
+terms div.tool_desc {
   font-size: 13px;
   line-height: 18px;
 }
 
-div.help_icon {
+terms div.help_icon {
   float: left;
   width: 20%;
   text-align: center;
 }
 
-div.help_text {
+terms div.help_text {
   float: left;
   width: 77%;
 }
 
-div.policy_text.policy_text {
+terms div.policy_text.policy_text {
   float: left;
   width: 98%;
 }
 
-div.policy_text.policy_text p {
+terms div.policy_text.policy_text p {
   margin-bottom: 10px;
   text-align: justify;
 }
 
-div.policy_text.policy_text ul li {
+terms div.policy_text.policy_text ul li {
   font-size: 11px;
   margin-bottom: 5px;
 }
 
-.button {
+terms .button {
   border-color: #b2b2b2;
   background-color: #f8f8f8;
   color: #444;
@@ -30480,7 +30494,7 @@ div.policy_text.policy_text ul li {
   cursor: pointer;
 }
 
-.button:after {
+terms .button:after {
   position: absolute;
   top: -6px;
   right: -6px;
@@ -30489,7 +30503,7 @@ div.policy_text.policy_text ul li {
   content: ' ';
 }
 
-.button.button-calm {
+terms .button.button-calm {
   border-color: #0a9ec7;
   background-color: #11c1f3;
   color: #fff;
