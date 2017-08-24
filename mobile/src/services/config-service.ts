@@ -12,19 +12,19 @@ export class ConfigSrv {
 
     constructor(private storage: Storage, private toastCtrl: ToastController, private translate:TranslateService) { 
         
-        translate.addLangs(["it", "en"]);
-        translate.setDefaultLang('it');
+        // translate.addLangs(["it", "en"]);
+        // translate.setDefaultLang('it');
         
-        translate.setTranslation('en', {
-            lbl_error: 'oops error',
-        });
+        // translate.setTranslation('en', {
+        //     lbl_error: 'oops error',
+        // });
         
-        translate.setTranslation('it', {
-            lbl_error: 'oops errore',
-        });
+        // translate.setTranslation('it', {
+        //     lbl_error: 'oops errore',
+        // });
         
-        let browserLang = translate.getBrowserLang();
-        translate.use(browserLang.match(/it|en/) ? browserLang : 'en');
+        // let browserLang = translate.getBrowserLang();
+        // translate.use(browserLang.match(/it|en/) ? browserLang : 'en');
     }
 
     

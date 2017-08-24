@@ -20,23 +20,23 @@ export class TermsPage {
     constructor(private http: Http, public translate: TranslateService, public storage: Storage, public nav: NavController,
         public viewCtrl: ViewController, public modalCtrl: ModalController) {
 
-        translate.addLangs(["it", "en"]);
+        // translate.addLangs(["it", "en"]);
 
-        translate.setTranslation('it', {
-            lbl_terms_of_service: 'Termini di utilizzo',
-            lbl_accept: 'Accetto',
-            lbl_reject: 'Rifiuto',
-            about_subtitle: 'Termini e condizioni di utilizzo',
-            terms_refused_alert_text: 'Termini rifiutati.'
-        });
+        // translate.setTranslation('it', {
+        //     lbl_terms_of_service: 'Termini di utilizzo',
+        //     lbl_accept: 'Accetto',
+        //     lbl_reject: 'Rifiuto',
+        //     about_subtitle: 'Termini e condizioni di utilizzo',
+        //     terms_refused_alert_text: 'Termini rifiutati.'
+        // });
 
-        translate.setTranslation('en', {
-            lbl_terms_of_service: 'Terms of service',
-            lbl_accept: 'Accept',
-            lbl_reject: 'Reject',
-            about_subtitle: 'Information and Terms of Use',
-            terms_refused_alert_text: 'Terms refused.',
-        });
+        // translate.setTranslation('en', {
+        //     lbl_terms_of_service: 'Terms of service',
+        //     lbl_accept: 'Accept',
+        //     lbl_reject: 'Reject',
+        //     about_subtitle: 'Information and Terms of Use',
+        //     terms_refused_alert_text: 'Terms refused.',
+        // });
 
         // load html file.
         var url = 'resources/terms-' + translate.currentLang.toString() + '.html';

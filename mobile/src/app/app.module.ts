@@ -24,7 +24,7 @@ import { ConfigSrv } from '../services/config-service'
 import { QuestionnaireService } from '../services/questionnaire-service'
 import { TermsPage } from '../pages/terms/terms';
 import { ModalContentPage } from '../pages/elementList/elementList';
-
+import { Globalization } from '@ionic-native/globalization';
 import { InAppBrowser } from '@ionic-native/in-app-browser';
 import { AppVersion } from '@ionic-native/app-version';
 import { StatusBar } from '@ionic-native/status-bar';
@@ -86,6 +86,7 @@ import { LeafletModule } from '@asymmetrik/angular2-leaflet';
     InAppBrowser,
     AppVersion,
     EventService,
+    Globalization,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

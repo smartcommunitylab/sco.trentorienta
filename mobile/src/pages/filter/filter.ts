@@ -5,6 +5,7 @@ import { Storage } from '@ionic/storage';
 import { EventService } from '../../app/event-service';
 import { eventType,occurenciesType } from '../../app/struct-data';
 import { HomePage } from '../home/home';
+import { ConfigSrv} from '../../services/config-service'
 
 @Component({
   selector: 'page-filter',
@@ -20,7 +21,9 @@ export class FilterPage implements OnInit{
     temChose: string[];
     sorChose: string[];
 
-    constructor(public navCtrl: NavController, public navParams: NavParams, private eventService: EventService, public storage: Storage) {
+    constructor(public navCtrl: NavController, public navParams: NavParams, private eventService: EventService,
+        public storage: Storage, public utils: ConfigSrv) {
+        this.utils.presentErrorToast();
         this.storage.get('filterData')
             .then(filterData => {
                 this.sorChose = filterData && filterData.sorChosen ? filterData.sorChosen : [];
