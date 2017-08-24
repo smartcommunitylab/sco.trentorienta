@@ -5,9 +5,6 @@ import { HttpModule, Http }    from '@angular/http';
 import { IonicStorageModule } from '@ionic/storage';
 import { DynamicComponentModule } from 'angular2-dynamic-component/index';
 
-// Imports for loading & configuring the in-memory web api
-// import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
-// import { InMemoryDataService }  from './in-memory-data.service';
 import { EventService } from './event-service';
 
 import { MyApp } from './app.component';
@@ -32,7 +29,7 @@ import { InAppBrowser } from '@ionic-native/in-app-browser';
 import { AppVersion } from '@ionic-native/app-version';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
-import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
+import {TranslateModule} from '@ngx-translate/core';
 
 
 import { LeafletModule } from '@asymmetrik/angular2-leaflet';
@@ -61,14 +58,7 @@ import { LeafletModule } from '@asymmetrik/angular2-leaflet';
     HttpModule,
     IonicStorageModule.forRoot(),
     DynamicComponentModule,
-    // InMemoryWebApiModule.forRoot(InMemoryDataService),
-    TranslateModule.forRoot({
-          //loader: {
-          //  provide: TranslateLoader,
-          //  useFactory: HttpLoaderFactory,
-          // deps: [Http]
-          //}
-    }),
+    TranslateModule.forRoot({}),
     LeafletModule,
    ],
   bootstrap: [IonicApp],
