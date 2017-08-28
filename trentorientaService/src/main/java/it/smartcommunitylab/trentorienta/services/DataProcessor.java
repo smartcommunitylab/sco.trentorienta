@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,7 +63,12 @@ public class DataProcessor {
 
 			String descrizione = (String) ((HashMap) fields.get("descrizione")).get("string_value");
 			String abstr = (String) ((HashMap) fields.get("abstract")).get("string_value");
-			evento.setDescription(descrizione);
+			// for most of the events we have abstract(short description)
+			if (descrizione != null && !descrizione.isEmpty()) {
+				evento.setDescription((String) descrizione);
+			} else {
+				evento.setDescription(abstr);
+			}
 			evento.setShortAbstract(abstr);
 
 			String categoria = "";
@@ -155,7 +159,12 @@ public class DataProcessor {
 			String abstr = riga.containsKey("subtitle") ? (String) ((LinkedHashMap) riga.get("subtitle")).get("it")
 					: null;
 
-			evento.setDescription((String) descrizione);
+			// for most of the events we have abstract(short description)
+			if (descrizione != null && !descrizione.isEmpty()) {
+				evento.setDescription((String) descrizione);
+			} else {
+				evento.setDescription(abstr);
+			}
 			evento.setShortAbstract(abstr);
 
 			String cat = (String) riga.get("category");
@@ -259,7 +268,14 @@ public class DataProcessor {
 			evento.setWeb((String) riga.get("fullUrl"));
 			String descrizione = (String) ((LinkedHashMap) fields.get("descrizione")).get("string_value");
 			String abstr = (String) ((LinkedHashMap) fields.get("abstract")).get("string_value");
-			evento.setDescription((String) descrizione);
+
+			// for most of the events we have abstract(short description)
+			if (descrizione != null && !descrizione.isEmpty()) {
+				evento.setDescription((String) descrizione);
+			} else {
+				evento.setDescription(abstr);
+			}
+
 			evento.setShortAbstract(abstr);
 			// category.
 			String categoria = "";
@@ -272,22 +288,22 @@ public class DataProcessor {
 					if (value != null && value.containsKey("objectName")) {
 						categoria = String.valueOf(value.get("objectName"));
 					}
-					if (value.containsKey("path") && value.get("path") instanceof ArrayList){
+					if (value.containsKey("path") && value.get("path") instanceof ArrayList) {
 						ArrayList tags = (ArrayList) value.get("path");
-						evento.setTags(tags);	
+						evento.setTags(tags);
 					}
 				}
 			}
-		
+
 			if (categoria == null | categoria.isEmpty()) {
 				categoria = "Avvisi";
 			}
-			
+
 			evento.setCategory(categoria);
 			evento.setThemes(categoria);
 			HashMap imageMap = (HashMap) fields.get("image");
 			if (imageMap != null && imageMap.containsKey("value") && !(imageMap.get("value") instanceof Boolean)) {
-				evento.setImage(String.valueOf(imageMap.get("value")));	
+				evento.setImage(String.valueOf(imageMap.get("value")));
 			}
 			HashMap durataMap = (LinkedHashMap) fields.get("durata");
 			if (durataMap != null && durataMap.containsKey("value") && !(durataMap.get("value") instanceof Boolean)) {
@@ -339,7 +355,12 @@ public class DataProcessor {
 
 			String descrizione = (String) ((HashMap) fields.get("descrizione")).get("string_value");
 			String abstr = (String) ((HashMap) fields.get("abstract")).get("string_value");
-			evento.setDescription(descrizione);
+			// for most of the events we have abstract(short description)
+			if (descrizione != null && !descrizione.isEmpty()) {
+				evento.setDescription((String) descrizione);
+			} else {
+				evento.setDescription(abstr);
+			}
 			evento.setShortAbstract(abstr);
 
 			String categoria = "";
