@@ -298,8 +298,8 @@ public class DataProcessor {
 			evento.setCoordY(new Float(11.0));
 			evento.setAddress("Comune di Trento");
 
-			evento.setCreated(
-					new SimpleDateFormat("YYYMMddHHmm").format(Long.valueOf(riga.get("dateModified").toString())));
+			evento.setCreated(new SimpleDateFormat("YYYMMddHHmm")
+					.format(new Date((long) Integer.parseInt(riga.get("dateModified").toString()) * 1000)));
 
 			repoEvent.save(evento);
 
