@@ -4,30 +4,30 @@
             <ion-icon name="menu"></ion-icon>
         </button>
         <ion-title>
-            {{title}}        
+            {{title}}
         </ion-title>
         <ion-buttons end>
             <button ion-button *ngIf="view=='calendario' && hasDate" (click)='removeDate()'>
                 <ion-label>{{'Cancel'|translate}}</ion-label>
                 <ion-icon name="close-circle"></ion-icon>
             </button>
-            
+
             <button ion-button icon-right *ngIf="view=='calendario'" (click)="picker.open()"> 
                 <ion-datetime #picker style="display:none" pickerFormat="DD.MM.YYYY" 
                                min='{{currDate}}' max='2050' [(ngModel)]="myDate" (ionChange)="scrolling(myDate)">
                 </ion-datetime>
                 <ion-icon name="calendar"></ion-icon>
             </button>
-            
+
             <button ion-button *ngIf="view=='lista' && isHome" (click)='toggleFilters()'>
                 <ion-icon name="ios-funnel"></ion-icon>
             </button>
-            
+
             <button ion-button *ngIf="view=='lista' && isSor" (click)='addFav(source)'>
                 <ion-icon *ngIf="source.fav" name="star"></ion-icon>
                 <ion-icon *ngIf="!source.fav" name="star-outline"></ion-icon>
             </button>
-            
+
             <button ion-button *ngIf="view=='lista' && isTheme" (click)='addFav(theme)'>
                 <ion-icon *ngIf="theme.fav" name="star"></ion-icon>
                 <ion-icon *ngIf="!theme.fav" name="star-outline"></ion-icon>
@@ -43,16 +43,24 @@
 
 
 <ion-content>
-    <div [ngSwitch]="view" style="height: 100%; width: 100%">        
+
+    <ion-refresher *ngIf="enabledRefresh" (ionRefresh)="doRefresh($event)">
+        <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="circles" refreshingText="Refreshing...">
+        </ion-refresher-content>
+    </ion-refresher>
+
+    <div [ngSwitch]="view" style="height: 100%; width: 100%">
         <ion-searchbar #searchBox *ngIf="searching" (ionInput)="search(searchBox.value)"></ion-searchbar>
-        
+
         <div *ngSwitchCase="'lista'" style="height: 100%; width: 100%">
-            <div *ngIf="mainEvents.length==0 && charged" class="error"> 
+
+            <div *ngIf="mainEvents.length==0 && charged" class="error">
                 <h2>{{'FilterNotFound'|translate}}</h2>
                 <!-- <button ion-button (click)="goBack()">
                     OK
                 </button> -->
             </div>
+
             <ion-list mode="md">
                 <ion-item *ngFor="let event of mainEvents" (click)="onSelect(event)">
                     <ion-thumbnail item-start>
@@ -65,23 +73,18 @@
                 </ion-item>
             </ion-list>
             <ion-infinite-scroll *ngIf="enabled" (ionInfinite)="doInfinite($event)">
-                <ion-infinite-scroll-content 
-                    loadingSpinner = "bubbles" 
-                    loadingText = "{{'Loading'|translate}}">
+                <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="{{'Loading'|translate}}">
                 </ion-infinite-scroll-content>
             </ion-infinite-scroll>
-        </div>    
+        </div>
 
         <div *ngSwitchCase="'mappa'" style="height: 100%; width: 100%">
-            <div leaflet style="height: 100%; width: 100%"
-                [leafletOptions]="options"
-                [leafletLayers]="layers"
-                (leafletMapReady)="onMapReady($event)" >
+            <div leaflet style="height: 100%; width: 100%" [leafletOptions]="options" [leafletLayers]="layers" (leafletMapReady)="onMapReady($event)">
             </div>
         </div>
 
         <div *ngSwitchCase="'calendario'">
-            <div *ngIf="mainEvents.length == 0 && charged" class="error"> 
+            <div *ngIf="mainEvents.length == 0 && charged" class="error">
                 <h2>{{'FilterNotFound'|translate}}</h2>
                 <button ion-button (click)="goBack()">
                     {{'OK'|translate}}
@@ -98,18 +101,14 @@
                         <h2>{{event.title}}</h2>
                         <span class="grey">{{'Published'|translate}}</span> {{event.createdDate | date: 'dd/MM/yyyy'}}
                     </ion-item>
-                </ion-item-divider>  
+                </ion-item-divider>
             </ion-list>
             <ion-infinite-scroll *ngIf="!hasDate" (ionInfinite)="doInfiniteCal($event)">
-                <ion-infinite-scroll-content 
-                    loadingSpinner = "bubbles" 
-                    loadingText = "{{'Loading'|translate}}">
+                <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="{{'Loading'|translate}}">
                 </ion-infinite-scroll-content>
             </ion-infinite-scroll>
             <ion-infinite-scroll *ngIf="hasDate" (ionInfinite)="doInfiniteDate($event, myDate)">
-                <ion-infinite-scroll-content 
-                    loadingSpinner = "bubbles" 
-                    loadingText = "{{'Loading'|translate}}">
+                <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="{{'Loading'|translate}}">
                 </ion-infinite-scroll-content>
             </ion-infinite-scroll>
         </div>
@@ -118,7 +117,7 @@
 
 <ion-footer>
     <ion-toolbar no-border-top color="primary">
-        <ion-segment [(ngModel)]="view" (ionChange)="switchSegment(view)"  color="light" mode="md">
+        <ion-segment [(ngModel)]="view" (ionChange)="switchSegment(view)" color="light" mode="md">
             <ion-segment-button value="lista">
                 <ion-icon name="md-list"></ion-icon>
             </ion-segment-button>

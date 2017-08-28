@@ -51,6 +51,16 @@ export class SorgentiPage implements OnInit{
       })
   }
 
+  doRefresh(refresher) {
+    console.log('source list refresh', refresher);
+    this.sourceType = [];
+    setTimeout( ()=> {
+        this.getSources();
+        refresher.complete();
+    });
+    
+}
+
   ngOnInit(): void{
     this.getSources();
   }

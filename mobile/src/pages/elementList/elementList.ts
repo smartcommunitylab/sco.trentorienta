@@ -186,6 +186,15 @@ export abstract class ElementListPage implements OnInit{
             });
     }
  
+    doRefresh(refresher) {
+        console.log('element list refresh', refresher);
+        setTimeout( ()=> {
+            this.getEvents(true);
+            refresher.complete();
+        });
+        
+    }
+    
     loadCalendar(infiniteScroll?: any, data?: string): void{
         if (this.calendarEvents == null) {
             this.calendarEvents = {};
@@ -383,21 +392,16 @@ export abstract class ElementListPage implements OnInit{
         map.fitBounds (group.getBounds());
     }
 
+    enabledRefresh: boolean = true;
     switchSegment(segmentName: string) {
         // Mappa Leaflet
         // set up the map
 	    // var map = new L.Map('map');
     
-        if (segmentName == "mappa") {
-            // create the tile layer with correct attribution
-            // this.zoom = this.model.zoom;
-            
-            
-                
-            // }
-
-
-            
+        if (segmentName == "lista") {
+            this.enabledRefresh = true;
+        } else {
+            this.enabledRefresh = false;
         }
 
 		return false;

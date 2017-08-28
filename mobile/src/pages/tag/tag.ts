@@ -25,6 +25,16 @@ export class TagPage implements OnInit{
       {this.tagType = this.tagType.concat(tagType)})
   }
 
+  doRefresh(refresher) {
+    console.log('tag list refresh', refresher);
+    this.tagType = [];
+    setTimeout( ()=> {
+        this.getTags();
+        refresher.complete();
+    });
+    
+}
+
   ngOnInit(): void{
     this.getTags();
   }

@@ -9,9 +9,13 @@
 
 
 <ion-content>
+    <ion-refresher (ionRefresh)="doRefresh($event)">
+        <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="circles" refreshingText="Refreshing...">
+        </ion-refresher-content>
+    </ion-refresher>
     <ion-list>
-      <button ion-item *ngFor="let tag of tagType" (click)="onSelect(tag)">
+        <button ion-item *ngFor="let tag of tagType" (click)="onSelect(tag)">
         {{tag.name}} <ion-badge item-end>{{tag.count}}</ion-badge>
-      </button>  
+      </button>
     </ion-list>
 </ion-content>
