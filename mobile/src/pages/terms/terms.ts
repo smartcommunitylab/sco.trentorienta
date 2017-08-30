@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Storage } from '@ionic/storage';
 import { Headers, Http } from '@angular/http';
-import { NavController, ViewController, ModalController } from 'ionic-angular';
+import { NavController, ViewController, AlertController } from 'ionic-angular';
 import { HomePage } from '../home/home';
 
 @Component({
@@ -18,7 +18,7 @@ export class TermsPage {
     accepting: Boolean;
   
     constructor(private http: Http, public translate: TranslateService, public storage: Storage, public nav: NavController,
-        public viewCtrl: ViewController, public modalCtrl: ModalController) {
+        public viewCtrl: ViewController, public alertCtrl: AlertController) {
 
         // translate.addLangs(["it", "en"]);
 

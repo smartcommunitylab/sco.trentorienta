@@ -69,6 +69,7 @@ export class MyApp {
       app_name: 'TrentoInforma',
       lbl_credit_p2: "What is it?",
       credit_info: "The WeLive project has been financed under European Commission's H2020 programme for research, development and innovation under agreement #64584",
+      lbl_wait: "Please wait"
 
     });
     translate.setTranslation('it', {
@@ -106,6 +107,7 @@ export class MyApp {
       app_name: 'TrentOrienta',
       lbl_credit_p2: "Che cosa è?",
       credit_info: "Il progetto WeLive è stato finanziato dal programma H2020 della Commissione Europea per la ricerca, lo sviluppo tecnologico e l’ innovazione secondo l’accordo N° 645845",
+      lbl_wait: "Attendere prego"
       
     });
 

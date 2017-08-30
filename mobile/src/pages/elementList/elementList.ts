@@ -1,5 +1,5 @@
 import { Component, OnInit, Pipe, PipeTransform, ViewChild } from '@angular/core';
-import { NavController, ModalController, Content, ViewController, NavParams, Platform } from 'ionic-angular';
+import { LoadingController, NavController, ModalController, Content, ViewController, NavParams, Platform } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 import * as moment from 'moment';
 
@@ -9,7 +9,9 @@ import { ElementDetailsPage } from '../elementDetails/elementDetails';
 import { FilterPage } from '../filter/filter';
 
 import { Observable }     from 'rxjs/Observable';
-import { Subject }           from 'rxjs/Subject';
+import { Subject } from 'rxjs/Subject';
+
+import { TranslateService } from '@ngx-translate/core';
 
 // Observable class extensions
 import 'rxjs/add/observable/of';
@@ -135,7 +137,8 @@ export abstract class ElementListPage implements OnInit{
 
 
 
-    constructor(protected eventService: EventService, public navCtrl: NavController, public modalCtrl: ModalController, public storage: Storage){
+    constructor(protected eventService: EventService, public navCtrl: NavController,
+        public modalCtrl: ModalController, public storage: Storage, public loadingCtrl: LoadingController, public translate: TranslateService) {
         
     }
 
@@ -167,9 +170,15 @@ export abstract class ElementListPage implements OnInit{
 
     getEvents(reset: boolean, infiniteScroll?: any): void {
         let from = reset ? 0 : this.mainEvents.length;
+        
+        let loading = this.loadingCtrl.create({
+            content: this.translate.instant('lbl_wait')+ '...'
+        });
+        loading.present();
         this.getData(from, from + this.PAGE_SIZE, this.searchValue)
             .then(mainEvents => {
-                if(reset == true && mainEvents.length < this.PAGE_SIZE){
+                loading.dismiss();
+                if (reset == true && mainEvents.length < this.PAGE_SIZE) {
                     this.enabled = false;
                 }
                 mainEvents.forEach(e => {
@@ -178,11 +187,11 @@ export abstract class ElementListPage implements OnInit{
                 this.mainEvents = reset ? mainEvents : this.mainEvents.concat(mainEvents);
                 this.charged = true;
                 if (infiniteScroll != null) {
-                    if(mainEvents == null || mainEvents.length == 0){
+                    if (mainEvents == null || mainEvents.length == 0) {
                         this.enabled = false;
                     }
                     infiniteScroll.complete();
-                }                    
+                }
             });
     }
  

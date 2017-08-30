@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { LoadingController, NavController, NavParams } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
-
+import { TranslateService } from '@ngx-translate/core';
 import { EventService } from '../../app/event-service';
 import { occurenciesType } from '../../app/struct-data';
 import { TemiListPage } from '../temiList/temiList';
@@ -10,38 +10,44 @@ import { TemiListPage } from '../temiList/temiList';
   selector: 'page-temi',
   templateUrl: 'temi.html'
 })
-export class TemiPage implements OnInit{
+export class TemiPage implements OnInit {
   title: string = 'Temi';
-  modeList : string = 'lista';
-  
-  themeType : occurenciesType[] = [];
+  modeList: string = 'lista';
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private eventService: EventService, public storage: Storage) {
+  themeType: occurenciesType[] = [];
+
+  constructor(public navCtrl: NavController, public navParams: NavParams,
+    private eventService: EventService, public storage: Storage, public loadingCtrl: LoadingController, public translate: TranslateService) {
 
   }
-  
-  checkIndex(b: occurenciesType[], e: occurenciesType): number{
+
+  checkIndex(b: occurenciesType[], e: occurenciesType): number {
     let a = -1;
-        b.forEach(evento => {
-            if(evento.name == e.name){
-                a = b.indexOf(evento);
-            }
-        });
+    b.forEach(evento => {
+      if (evento.name == e.name) {
+        a = b.indexOf(evento);
+      }
+    });
     return a;
   }
 
-  getThemes(): void{
+  getThemes(): void {
+    let loading = this.loadingCtrl.create({
+      content: this.translate.instant('lbl_wait') + '...'
+    });
+    loading.present();
     this.eventService.getThemesList()
       .then(themeType => {
+        loading.dismiss();
         this.themeType = this.themeType.concat(themeType);
-        this.storage.get('themeFavs').then(themeFavs =>{
-          if(themeFavs == null){
+        this.storage.get('themeFavs').then(themeFavs => {
+          if (themeFavs == null) {
             themeFavs = [];
             this.storage.set('themeFavs', themeFavs);
           } else {
             themeFavs.forEach(theme => {
               let a = this.checkIndex(themeFavs, theme);
-              if(a >= 0){
+              if (a >= 0) {
                 let b = this.checkIndex(this.themeType, theme);
                 this.themeType[b].fav = true;
               }
@@ -51,11 +57,11 @@ export class TemiPage implements OnInit{
       })
   }
 
-  ngOnInit(): void{
+  ngOnInit(): void {
     this.getThemes();
   }
 
-  onSelect(theme: occurenciesType): void{
-      this.navCtrl.push(TemiListPage, {name: theme.name, tem: theme} )
+  onSelect(theme: occurenciesType): void {
+    this.navCtrl.push(TemiListPage, { name: theme.name, tem: theme })
   }
 }
