@@ -8,7 +8,7 @@ import { eventType, occurenciesType } from '../../app/struct-data';
 import { ElementDetailsPage } from '../elementDetails/elementDetails';
 import { FilterPage } from '../filter/filter';
 
-import { Observable }     from 'rxjs/Observable';
+import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 
 import { TranslateService } from '@ngx-translate/core';
@@ -16,34 +16,34 @@ import { TranslateService } from '@ngx-translate/core';
 // Observable class extensions
 import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/fromPromise';
- 
+
 // Observable operators
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
 
-@Pipe({ name: 'ObjNgFor',  pure: false })
+@Pipe({ name: 'ObjNgFor', pure: false })
 export class ObjNgFor implements PipeTransform {
     transform(value: any, args: any[] = null): any {
         return Object.keys(value)//.map(key => value[key]);
     }
 }
 
-@Component({
-  selector: 'page-elementList',
-  templateUrl: 'elementList.html',
-  providers: [EventService]
-})
+// @Component({
+//   selector: 'page-elementList',
+//   templateUrl: 'elementList.html',
+//   providers: [EventService]
+// })
 
-export abstract class ElementListPage implements OnInit{
+export abstract class ElementListPage implements OnInit {
     @ViewChild(Content) content: Content;
 
     view: string = "lista";
 
-    mainEvents : eventType[] = [];
+    mainEvents: eventType[] = [];
     calendarEvents = null;
     calendarSize: number = 0;
-    
+
     searching: boolean = false;
     tagging: boolean = false;
     isHome: boolean = false;
@@ -56,7 +56,7 @@ export abstract class ElementListPage implements OnInit{
     data: string[] = [];
     myDate: string;
     currDate: string;
-    
+
     temList: occurenciesType[] = [];
     sorList: occurenciesType[] = [];
 
@@ -71,78 +71,78 @@ export abstract class ElementListPage implements OnInit{
     readonly PAGE_SIZE = 10;
 
     // per la mappa
-	optionsSpec: {
-		layers: any[],
-		zoom: number,
-		center: number[]
-	} = {
-		layers: [
-			{
-				url: 'http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png',
-				maxZoom: 18,
-				attribution: 'Open Cycle Map'
-			},
-			{
-				url: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-				maxZoom: 18,
-				attribution: 'Open Street Map'
-			},
-		],
-		zoom: 12,
-		center: [ 46.0, 11.1 ]
-	};
+    optionsSpec: {
+        layers: any[],
+        zoom: number,
+        center: number[]
+    } = {
+        layers: [
+            {
+                url: 'http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png',
+                maxZoom: 18,
+                attribution: 'Open Cycle Map'
+            },
+            {
+                url: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                maxZoom: 18,
+                attribution: 'Open Street Map'
+            },
+        ],
+        zoom: 12,
+        center: [46.0, 11.1]
+    };
 
-	// Fields for managing the form inputs and binding to leaflet zoom/center
-	model = new LeafletCoreDemoModel(
-		this.optionsSpec.center[0],
-		this.optionsSpec.center[1],
-		this.optionsSpec.zoom
-	);
-	zoom: number;
-	center: L.LatLng;
+    // Fields for managing the form inputs and binding to leaflet zoom/center
+    model = new LeafletCoreDemoModel(
+        this.optionsSpec.center[0],
+        this.optionsSpec.center[1],
+        this.optionsSpec.zoom
+    );
+    zoom: number;
+    center: L.LatLng;
 
 	/*
 	 * This are the leaflet map options that we're going to use for input binding
 	 */
 
-	options = {
-		layers: this.optionsSpec.layers.map((l) => {
-			return L.tileLayer(l.url, { maxZoom: l.maxZoom, attribution: l.attribution });
-		}),
-		zoom: this.optionsSpec.zoom,
-		center: L.latLng({ lat: this.optionsSpec.center[0], lng: this.optionsSpec.center[1] })
-	};
+    options = {
+        layers: this.optionsSpec.layers.map((l) => {
+            return L.tileLayer(l.url, { maxZoom: l.maxZoom, attribution: l.attribution });
+        }),
+        zoom: this.optionsSpec.zoom,
+        center: L.latLng({ lat: this.optionsSpec.center[0], lng: this.optionsSpec.center[1] })
+    };
 
-	fitBoundsOptions = {
-		padding: 100,
-		maxZoom: 10,
-		animate: true,
-		duration: 1
-	};
+    fitBoundsOptions = {
+        padding: 100,
+        maxZoom: 10,
+        animate: true,
+        duration: 1
+    };
 
-	panOptions = {
-		animate: true,
-		duration: 1
-	};
+    panOptions = {
+        animate: true,
+        duration: 1
+    };
 
-	zoomOptions = {
-		animate: true,
-		duration: 1
-	};
+    zoomOptions = {
+        animate: true,
+        duration: 1
+    };
 
-	zoomPanOptions = {
-		animate: true,
-		duration: 1
-	};
+    zoomPanOptions = {
+        animate: true,
+        duration: 1
+    };
 
 
 
     constructor(protected eventService: EventService, public navCtrl: NavController,
         public modalCtrl: ModalController, public storage: Storage, public loadingCtrl: LoadingController, public translate: TranslateService) {
-        
+
     }
 
-    ionViewWillEnter(){
+    ionViewWillEnter() {
         this.getEvents(true);
         this.enabled = true;
     }
@@ -166,13 +166,13 @@ export abstract class ElementListPage implements OnInit{
 
     abstract getData(from: number, to: number, filter: string): Promise<eventType[]>;
 
-    abstract getCalData(from:number, to:number, data?: string): Promise<eventType[]>;
+    abstract getCalData(from: number, to: number, data?: string): Promise<eventType[]>;
 
     getEvents(reset: boolean, infiniteScroll?: any): void {
         let from = reset ? 0 : this.mainEvents.length;
-        
+
         let loading = this.loadingCtrl.create({
-            content: this.translate.instant('lbl_wait')+ '...'
+            content: this.translate.instant('lbl_wait') + '...'
         });
         loading.present();
         this.getData(from, from + this.PAGE_SIZE, this.searchValue)
@@ -194,23 +194,23 @@ export abstract class ElementListPage implements OnInit{
                 }
             });
     }
- 
+
     doRefresh(refresher) {
         console.log('element list refresh', refresher);
-        setTimeout( ()=> {
+        setTimeout(() => {
             this.getEvents(true);
             refresher.complete();
         });
-        
+
     }
-    
-    loadCalendar(infiniteScroll?: any, data?: string): void{
+
+    loadCalendar(infiniteScroll?: any, data?: string): void {
         if (this.calendarEvents == null) {
             this.calendarEvents = {};
-        }   
+        }
         let from;
-        if(data){
-            if(infiniteScroll == null){
+        if (data) {
+            if (infiniteScroll == null) {
                 from = 0;
                 this.calendarSize = 0;
             } else {
@@ -221,50 +221,55 @@ export abstract class ElementListPage implements OnInit{
             from = this.calendarSize;
             this.hasDate = false;
         }
-        this.getCalData(from,  from + this.PAGE_SIZE, data)
-                .then(events => {
-                    if(infiniteScroll == null && data){
-                        this.calendarEvents = {};
-                    }
-                    this.calendarSize += events.length;
-                    events.forEach(event => {
-                        var date = moment(event.eventStart, "YYYYMMDDHHmm").format("YYYY.MM.DD");
-                        event.eventoDate = moment(event.eventStart, 'YYYYMMDDHHmm').toDate();
-                        event.createdDate = moment(event.created, 'YYYYMMDDHHmm').toDate();
-                        if (this.calendarEvents[date]) {
-                            this.calendarEvents[date].push(event);
-                        } else {
-                            this.calendarEvents[date] = [event];
-                        }
-                    });
-                    if (infiniteScroll != null) {
-                        if(events == null || events.length == 0){
-                            infiniteScroll.enable(false);
-                        }
-                        infiniteScroll.complete();
+        let loading = this.loadingCtrl.create({
+            content: this.translate.instant('lbl_wait') + '...'
+        });
+        loading.present();
+        this.getCalData(from, from + this.PAGE_SIZE, data)
+            .then(events => {
+                loading.dismiss();
+                if (infiniteScroll == null && data) {
+                    this.calendarEvents = {};
+                }
+                this.calendarSize += events.length;
+                events.forEach(event => {
+                    var date = moment(event.eventStart, "YYYYMMDDHHmm").format("YYYY.MM.DD");
+                    event.eventoDate = moment(event.eventStart, 'YYYYMMDDHHmm').toDate();
+                    event.createdDate = moment(event.created, 'YYYYMMDDHHmm').toDate();
+                    if (this.calendarEvents[date]) {
+                        this.calendarEvents[date].push(event);
+                    } else {
+                        this.calendarEvents[date] = [event];
                     }
                 });
+                if (infiniteScroll != null) {
+                    if (events == null || events.length == 0) {
+                        infiniteScroll.enable(false);
+                    }
+                    infiniteScroll.complete();
+                }
+            });
     }
 
-    distance(lat1: number,lon1: number,lat2: number,lon2: number):number {
+    distance(lat1: number, lon1: number, lat2: number, lon2: number): number {
         var R = 6371; // Radius of the earth in km
-        var dLat = this.deg2rad(lat2-lat1);  // deg2rad below
-        var dLon = this.deg2rad(lon2-lon1); 
-        var a = 
-            Math.sin(dLat/2) * Math.sin(dLat/2) +
-            Math.cos(this.deg2rad(lat1)) * Math.cos(this.deg2rad(lat2)) * 
-            Math.sin(dLon/2) * Math.sin(dLon/2)
-            ; 
-        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+        var dLat = this.deg2rad(lat2 - lat1);  // deg2rad below
+        var dLon = this.deg2rad(lon2 - lon1);
+        var a =
+            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(this.deg2rad(lat1)) * Math.cos(this.deg2rad(lat2)) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2)
+            ;
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         var d = R * c; // Distance in km
-        return d*1000;
+        return d * 1000;
     }
 
-    deg2rad(deg: number):number{
-        return deg * (Math.PI/180);
+    deg2rad(deg: number): number {
+        return deg * (Math.PI / 180);
     }
 
-    toggleSearch():void{
+    toggleSearch(): void {
         this.searching = !this.searching;
         this.enabled = true;
         this.searchValue = "";
@@ -287,11 +292,11 @@ export abstract class ElementListPage implements OnInit{
     //     }
     // }
 
-    toggleFilters():void{
+    toggleFilters(): void {
         this.navCtrl.push(FilterPage);
     }
 
-    removeDate(): void{
+    removeDate(): void {
         this.calendarSize = 0;
         this.calendarEvents = {};
         this.loadCalendar();
@@ -301,12 +306,12 @@ export abstract class ElementListPage implements OnInit{
         this.searchTerms.next(filter);
     }
 
-    scrolling(date: string){
+    scrolling(date: string) {
         let scrollDate = moment(date).format('YYYY.MM.DD');
         this.loadCalendar(null, scrollDate);
     }
 
-    ngOnInit(): void{
+    ngOnInit(): void {
         this.myDate = new Date().toISOString();
         this.currDate = moment(new Date()).format('YYYY-MM-DD');
         this.termsObs = this.searchTerms.debounceTime(300)        // wait 300ms after each keystroke before considering the term
@@ -330,21 +335,21 @@ export abstract class ElementListPage implements OnInit{
         map.eachLayer(layer => (map.removeLayer(layer)));
 
         // re-add the background layer
-        map.addLayer (this.options.layers[1]);
+        map.addLayer(this.options.layers[1]);
 
         // I create a group of markers, so I can view all markers in the map
         let group = L.featureGroup();
-        
-        let commonPlace = {0:[this.mainEvents[0]]};
+
+        let commonPlace = { 0: [this.mainEvents[0]] };
         for (let i = 0; i < this.mainEvents.length; i++) {
             let evento = this.mainEvents[i];
             let found = false;
-            for(let j = 0; j < i; j++){        
-                if (commonPlace[j] == null) continue;        
+            for (let j = 0; j < i; j++) {
+                if (commonPlace[j] == null) continue;
 
                 let evento2 = this.mainEvents[j];
                 let dis = this.distance(evento.coordX, evento.coordY, evento2.coordX, evento2.coordY);
-                if(dis<=50){
+                if (dis <= 50) {
                     commonPlace[j].push(evento);
                     found = true;
                     break;
@@ -359,30 +364,30 @@ export abstract class ElementListPage implements OnInit{
                 commonPlace[i] = [evento];
             }
         }
-        for(let key in commonPlace){
+        for (let key in commonPlace) {
             let event = this.mainEvents[key];
-            let marker = L.marker([event.coordX, event.coordY ], {
+            let marker = L.marker([event.coordX, event.coordY], {
                 icon: L.icon({
-                    iconSize: [ 25, 41 ],
-                    iconAnchor: [ 13, 41 ],
+                    iconSize: [25, 41],
+                    iconAnchor: [13, 41],
                     iconUrl: 'assets/icon/marker.png',
                     // shadowUrl: '44a526eed258222515aa21eaffd14a96.png'
                 })
             });
 
-            map.addLayer (
+            map.addLayer(
                 marker
             );
 
-            group.addLayer (
+            group.addLayer(
                 marker
             );
-            
+
 
             marker.addEventListener('click', evt => {
 
                 var evts = [];
-                for(let event of commonPlace[key]){
+                for (let event of commonPlace[key]) {
                     evts.push(event);
                     // alert.addButton({
                     //     text: event.title,
@@ -398,44 +403,44 @@ export abstract class ElementListPage implements OnInit{
             });
         }
         // zoom to all visible markers...
-        map.fitBounds (group.getBounds());
+        map.fitBounds(group.getBounds());
     }
 
     enabledRefresh: boolean = true;
     switchSegment(segmentName: string) {
         // Mappa Leaflet
         // set up the map
-	    // var map = new L.Map('map');
-    
+        // var map = new L.Map('map');
+
         if (segmentName == "lista") {
             this.enabledRefresh = true;
         } else {
             this.enabledRefresh = false;
         }
 
-		return false;
+        return false;
     }
 
-    onSelect(event: eventType): void{
-        this.navCtrl.push(ElementDetailsPage, {id: event.id} )
+    onSelect(event: eventType): void {
+        this.navCtrl.push(ElementDetailsPage, { id: event.id })
     }
 
 }
 
-    
+
 
 
 export class LeafletCoreDemoModel {
-    
-        constructor(
-            public latitude: number = 0,
-            public longitude: number = 0,
-            public zoom: number = 4,
-            public zoomLevels: number[] = [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 ]
-        ) { }
-    
-    }
-    
+
+    constructor(
+        public latitude: number = 0,
+        public longitude: number = 0,
+        public zoom: number = 4,
+        public zoomLevels: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+    ) { }
+
+}
+
 @Component({
     selector: 'modal-page',
     template: `
@@ -456,21 +461,21 @@ export class LeafletCoreDemoModel {
       </ion-content>
       `
 })
-export class ModalContentPage { 
+export class ModalContentPage {
 
     evts;
-    title="Events in questo zona";
+    title = "Events in questo zona";
     ElementDetailsPage
-    constructor(public platform: Platform, public params: NavParams, public viewCtrl: ViewController, public navCtrl:NavController) { 
+    constructor(public platform: Platform, public params: NavParams, public viewCtrl: ViewController, public navCtrl: NavController) {
         this.evts = params.data;
     }
-     
+
     dismiss() {
         this.viewCtrl.dismiss();
     }
-    
-    onSelect(event: eventType): void{
-        this.navCtrl.push(ElementDetailsPage, {id: event.id} )
+
+    onSelect(event: eventType): void {
+        this.navCtrl.push(ElementDetailsPage, { id: event.id })
     }
 
 }

@@ -8,7 +8,7 @@ import { HomePage } from '../home/home';
 @Component({
     selector: 'terms',
     templateUrl: 'terms.html',
-    styleUrls: ['/pages/terms/terms-component.scss', 'build/main.css']
+    styleUrls: ['/pages/terms/terms-component.scss']
 })
 
 export class TermsPage {
