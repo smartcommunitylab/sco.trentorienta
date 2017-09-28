@@ -50,12 +50,12 @@
     </ion-refresher>
 
     <div [ngSwitch]="view" style="height: 100%; width: 100%">
-        <ion-searchbar #searchBox *ngIf="searching" (ionInput)="search(searchBox.value)"></ion-searchbar>
+        <ion-searchbar #searchBox *ngIf="searching" (search)="search(searchBox.value)"></ion-searchbar>
 
         <div *ngSwitchCase="'lista'" style="height: 100%; width: 100%">
 
             <div *ngIf="mainEvents.length==0 && charged" class="error">
-                <h2>{{'FilterNotFound'|translate}}</h2>
+                <h4>{{'FilterNotFound'|translate}}</h4>
                 <!-- <button ion-button (click)="goBack()">
                     OK
                 </button> -->
@@ -73,7 +73,7 @@
                 </ion-item>
             </ion-list>
             <ion-infinite-scroll *ngIf="enabled" (ionInfinite)="doInfinite($event)">
-                <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="{{'Loading'|translate}}">
+                <ion-infinite-scroll-content >
                 </ion-infinite-scroll-content>
             </ion-infinite-scroll>
         </div>

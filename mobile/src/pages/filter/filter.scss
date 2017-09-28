@@ -14,3 +14,8 @@
 .bar-buttons{
     text-align: center;
 }
+
+.searchbar-md .searchbar-input::-webkit-input-placeholder {
+    text-indent: 0;
+    color: white;
+  }

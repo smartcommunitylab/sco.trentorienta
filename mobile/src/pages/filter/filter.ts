@@ -23,7 +23,7 @@ export class FilterPage implements OnInit{
 
     constructor(public navCtrl: NavController, public navParams: NavParams, private eventService: EventService,
         public storage: Storage, public utils: ConfigSrv) {
-        this.utils.presentErrorToast();
+        
         this.storage.get('filterData')
             .then(filterData => {
                 this.sorChose = filterData && filterData.sorChosen ? filterData.sorChosen : [];

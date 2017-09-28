@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Storage } from '@ionic/storage';
 import { Headers, Http } from '@angular/http';
-import { NavController, ViewController, AlertController } from 'ionic-angular';
+import { NavController, ViewController, AlertController, Platform } from 'ionic-angular';
 import { HomePage } from '../home/home';
 
 @Component({
@@ -18,7 +18,7 @@ export class TermsPage {
     accepting: Boolean;
   
     constructor(private http: Http, public translate: TranslateService, public storage: Storage, public nav: NavController,
-        public viewCtrl: ViewController, public alertCtrl: AlertController) {
+        public viewCtrl: ViewController, public alertCtrl: AlertController, public platform: Platform) {
 
         // translate.addLangs(["it", "en"]);
 
@@ -55,7 +55,6 @@ export class TermsPage {
     }
 
     goToProposalsList = function () {
-        debugger;
         this.nav.setRoot(HomePage);
 
     }
@@ -77,7 +76,7 @@ export class TermsPage {
         prompt.present();
         setTimeout(function () {
             this.navigator.app.exitApp(); // sometimes doesn't work with Ionic View
-            this.Platform.exitApp();
+            // this.platform.exitApp();
             console.log('App closed');
             prompt.dismiss();
         }, 1800) //close the popup after 1.8 seconds for some reason

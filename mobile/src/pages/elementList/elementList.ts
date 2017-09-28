@@ -149,7 +149,29 @@ export abstract class ElementListPage implements OnInit {
 
     doInfinite(infiniteScroll) {
         console.log('Begin async operation');
-        this.getEvents(false, infiniteScroll);
+        this.getEventsForInfiniteScroll(false, infiniteScroll);
+    }
+
+    getEventsForInfiniteScroll(reset: boolean, infiniteScroll?: any): void {
+        let from = reset ? 0 : this.mainEvents.length;
+
+        this.getData(from, from + this.PAGE_SIZE, this.searchValue)
+            .then(mainEvents => {
+                if (reset == true && mainEvents.length < this.PAGE_SIZE) {
+                    this.enabled = false;
+                }
+                mainEvents.forEach(e => {
+                    e.createdDate = moment(e.created, 'YYYYMMDDHHmm').toDate();
+                });
+                this.mainEvents = reset ? mainEvents : this.mainEvents.concat(mainEvents);
+                this.charged = true;
+                if (infiniteScroll != null) {
+                    if (mainEvents == null || mainEvents.length == 0) {
+                        this.enabled = false;
+                    }
+                    infiniteScroll.complete();
+                }
+            });
     }
 
     doInfiniteCal(infiniteScroll) {
@@ -464,10 +486,11 @@ export class LeafletCoreDemoModel {
 export class ModalContentPage {
 
     evts;
-    title = "Events in questo zona";
+    title: string;
     ElementDetailsPage
-    constructor(public platform: Platform, public params: NavParams, public viewCtrl: ViewController, public navCtrl: NavController) {
+    constructor(public platform: Platform, public params: NavParams, public viewCtrl: ViewController, public navCtrl: NavController, public translateService: TranslateService) {
         this.evts = params.data;
+        this.title = translateService.instant('EventsArea');
     }
 
     dismiss() {

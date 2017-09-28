@@ -1,11 +1,13 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
-import { HttpModule, Http }    from '@angular/http';
+import { APP_INITIALIZER } from '@angular/core';
+import { AppConfig } from './app.config';
+import { HttpModule, Http } from '@angular/http';
 import { IonicStorageModule } from '@ionic/storage';
 import { DynamicComponentModule } from 'angular2-dynamic-component/index';
-
 import { EventService } from './event-service';
+import { OrderBy } from '../pipes/orderBy.pipe';
 
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
@@ -29,7 +31,7 @@ import { InAppBrowser } from '@ionic-native/in-app-browser';
 import { AppVersion } from '@ionic-native/app-version';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
-import {TranslateModule} from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 import { LeafletModule } from '@asymmetrik/angular2-leaflet';
@@ -50,7 +52,8 @@ import { LeafletModule } from '@asymmetrik/angular2-leaflet';
     ObjNgFor,
     FilterPage,
     TermsPage,
-    ModalContentPage
+    ModalContentPage,
+    OrderBy,
   ],
   imports: [
     BrowserModule,
@@ -60,7 +63,7 @@ import { LeafletModule } from '@asymmetrik/angular2-leaflet';
     DynamicComponentModule,
     TranslateModule.forRoot({}),
     LeafletModule,
-   ],
+  ],
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
@@ -86,9 +89,10 @@ import { LeafletModule } from '@asymmetrik/angular2-leaflet';
     InAppBrowser,
     AppVersion,
     EventService,
-    Globalization,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+    Globalization, { provide: ErrorHandler, useClass: IonicErrorHandler },
+    AppConfig//, { provide: APP_INITIALIZER, useFactory: (config: AppConfig) => () => config.load(), deps: [AppConfig], multi: true }
   ]
 })
-export class AppModule {}
+
+export class AppModule { }
 
