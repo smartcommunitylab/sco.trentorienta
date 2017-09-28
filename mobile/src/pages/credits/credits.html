@@ -8,34 +8,34 @@
 </ion-header>
 
 <ion-content class="padding">
-    <div class="row">
-        <div class="col">
+    <ion-row>
+        <ion-col>
             <div class="credits_title">{{'app_name'|translate}}</div>
-        </div>
-    </div>
-    <div class="row credits_row version">
-        <div class="col credits_version" >{{version}}</div>
+        </ion-col>
+    </ion-row>
+    <ion-row class="credits_row version">
+        <ion-col class="credits_version" >{{version}}</ion-col>
         <span></span>
-    </div>
-    <div class="row credits_row">
-        <div class="col col-center">
+    </ion-row>
+    <ion-row>
+        <ion-col>
             <a href="#" onclick="window.open('http://www.comune.trento.it/', '_system', 'location=yes'); return false;"><img class="image center" src="assets/credits/TN_logo.png" width="100%" />
             </a>
-        </div>
-         <div class="col col-center">
+        </ion-col>
+        <ion-col>
             <a href="#" onclick="window.open('http://www.welive.eu', '_system', 'location=yes'); return false;"><img class="image center" src="assets/credits/weLive_logo.png" width="63%" />
             </a>
-        </div>
-    </div>
+        </ion-col>
+    </ion-row>
     <div style="text-align:center">
         <div class="col cred">
             <p>{{'credit_info' | translate}}</p>
         </div>
     </div>
-    <div class="row credits_row" style="text-align:center;">
-        <div class="col col-center">
+    <ion-row class="credits_row" style="text-align:center;">
+        <ion-col >
             <a href="#" onclick="window.open('http://europa.eu/index_en.htm', '_system', 'location=yes'); return false;"><img class="image center" src="assets/credits/EU_logo.png" width="40%" />
             </a>
-        </div>
-    </div>
+        </ion-col>
+    </ion-row>
 </ion-content>
