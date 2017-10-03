@@ -3,6 +3,7 @@ import { Nav, Platform, AlertController } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Globalization } from '@ionic-native/globalization';
+import * as moment from 'moment'
 import { AppConfig } from './app.config';
 
 import { HomePage } from '../pages/home/home';
@@ -17,6 +18,7 @@ import { TermsPage } from '../pages/terms/terms';
 import { ConfigSrv } from '../services/config-service';
 
 
+
 @Component({
   templateUrl: 'app.html'
 })
@@ -24,6 +26,8 @@ export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
   rootPage: any;
+
+  navigator: any;
 
   pages: Array<{ icon: string, title: string, component: any }>;
 
@@ -73,7 +77,11 @@ export class MyApp {
       credit_info: "The WeLive project has been financed under European Commission's H2020 programme for research, development and innovation under agreement #64584",
       lbl_wait: "Please wait",
       trial_expired: "Your trial version has expired.",
-      trial_inprogress: " days left for this trial version."
+      trial_inprogress: " days left for this trial version.",
+      pop_up__expired_template: 'The actual version of the app has expired',
+      pop_up_not_expired_title: 'Trial version',
+      pop_up_not_expired_template: 'The actual version of the app end on '
+
 
     });
     translate.setTranslation('it', {
@@ -113,8 +121,11 @@ export class MyApp {
       credit_info: "Il progetto WeLive è stato finanziato dal programma H2020 della Commissione Europea per la ricerca, lo sviluppo tecnologico e l’ innovazione secondo l’accordo N° 645845",
       lbl_wait: "Attendere prego",
       trial_expired: "La versione trial è scaduta.",
-      trial_inprogress: " giorni rimasti per questa versione trial."
-
+      trial_inprogress: " giorni rimasti per questa versione trial.",
+      pop_up_expired_title: 'Versione scaduta',
+      pop_up__expired_template: 'Ci scusiamo ma non è più possibile utilizzare questa versione dell\'applicazione in quanto il periodo di prova è terminata',
+      pop_up_not_expired_title: 'Versione di prova',
+      pop_up_not_expired_template: 'Questa  è una versione di prova e terminerà il '
     });
 
 
@@ -168,30 +179,32 @@ export class MyApp {
       }
 
       this.config.load().then(() => {
-        
+
         let expiryDate = new Date(this.config.getConfig('expiryDate'));
         if (this.isDateAfterToday(expiryDate)) {
           var daysLeft = this.getNumberOfDays(expiryDate);
+          console.log(daysLeft + " days left for this trial")
           let prompt = this.alertCtrl.create({
-            title: '',
-            subTitle: daysLeft + this.translate.instant('trial_inprogress')
+            title: this.translate.instant('pop_up_not_expired_title'),
+            message: this.translate.instant('pop_up_not_expired_template') + moment(expiryDate).format('DD-MM-YYYY'),
+            buttons: ['Ok']
           });
           prompt.present();
-          setTimeout(function () {
-            prompt.dismiss();
-            console.log(daysLeft + " days left for this trial");
-          }, 3000) //close the popup after 1.8 seconds for some reason
         } else {
           let prompt = this.alertCtrl.create({
-            title: '',
-            subTitle: this.translate.instant('trial_expired')
+            title: this.translate.instant('pop_up_expired_title'),
+            message: this.translate.instant('pop_up__expired_template'),
+            buttons: [{
+              text: 'Ok',
+              role: 'cancel',
+              handler: () => {
+                console.log('Cancel clicked');
+                this.nav.pop();
+                this.platform.exitApp();
+              }
+            }]
           });
           prompt.present();
-          setTimeout(function () {
-            this.navigator.app.exitApp(); // sometimes doesn't work with Ionic View
-            console.log('App closed');
-            prompt.dismiss();
-          }, 3000) //close the popup after 1.8 seconds for some reason
         }
       });
 

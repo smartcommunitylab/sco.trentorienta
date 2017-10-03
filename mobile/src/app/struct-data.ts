@@ -3,6 +3,7 @@ export class eventType {
   title: string;
   description: string;
   image: string;
+  imageThumb?: string;
   tags: string [];
   source: string;
   themes: string [];
