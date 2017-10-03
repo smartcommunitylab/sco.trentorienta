@@ -1,9 +1,12 @@
 package it.smartcommunitylab.trentorienta.controllers;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.namespace.QName;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
@@ -22,6 +25,11 @@ import com.autentia.web.rest.wadl.builder.impl.springframework.SpringWadlBuilder
 import com.autentia.xml.schema.SchemaBuilder;
 
 import net.java.dev.wadl._2009._02.Application;
+import net.java.dev.wadl._2009._02.Method;
+import net.java.dev.wadl._2009._02.Representation;
+import net.java.dev.wadl._2009._02.Resource;
+import net.java.dev.wadl._2009._02.Resources;
+import net.java.dev.wadl._2009._02.Response;
 import springfox.documentation.annotations.ApiIgnore;
 
 @ApiIgnore
@@ -48,7 +56,41 @@ public class WadlController {
 	@ResponseBody
 	@RequestMapping(value = "spec/xwadl", method = RequestMethod.GET, produces = { "application/xml" })
 	public Application generateWadl(HttpServletRequest request) {
-		return applicationBuilder.build("https://tn.smartcommunitylab.it/trentorienta");
+		Application application = applicationBuilder.build("https://tn.smartcommunitylab.it");
+		
+		/**
+		 * its a bug of marketplace, it expect resources to be available inside
+		 * <resource path="<applicationName>">
+		 * 	<resource op1>
+		 * 	<request/>
+		 *  <response>
+		 *  	<representation mediaType="/"/>
+		 *  </response>
+		 *  </resource>
+		 *  <resource op2>
+		 *  </resource>
+		 * </resource>
+		 */
+		Resource trentOrienta = new Resource();
+		trentOrienta.setPath(request.getContextPath());
+
+		
+		for(Resource temp: application.getResources().get(0).getResource()) {
+			if (temp.getPath().startsWith("/api/")) {
+				
+				Representation representation = new Representation();
+				representation.getOtherAttributes().put(QName.valueOf("mediaType"), "*/*");
+				
+				Method method = (Method) temp.getMethodOrResource().get(0);
+				method.getResponse().get(0).getRepresentation().add(representation);
+				trentOrienta.getAny().add(temp);
+			}
+		}
+		
+		application.getResources().get(0).getResource().clear();
+		application.getResources().get(0).getResource().add(trentOrienta);
+		
+		return application;
 	}
 
 	@ResponseBody
