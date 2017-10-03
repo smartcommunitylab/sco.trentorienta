@@ -18,11 +18,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.annotations.ApiOperation;
 import it.smartcommunitylab.trentorienta.model.EventType;
 import it.smartcommunitylab.trentorienta.model.SearchRequest;
 import it.smartcommunitylab.trentorienta.repository.EventTypeRepositoryCustom;
 
-@RestController	
+@RestController
 public class DataController {
 
 	@Autowired
@@ -30,6 +31,7 @@ public class DataController {
 
 	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyyMMddHHmm");
 
+	@ApiOperation(value = "getAllEvents")
 	@CrossOrigin(origins = "*")
 	@GetMapping("/api/events")
 	public @ResponseBody Page<EventType> getAllEvents(
@@ -53,9 +55,10 @@ public class DataController {
 			return repo1.findAllEventType(themes, source, tag, fromDate, false, filter, new PageRequest(start / size, size));
 	}
 
+	@ApiOperation(value = "getAllEventsWithSearchRequest")
 	@CrossOrigin(origins = "*")
 	@PostMapping("/api/events")
-	public @ResponseBody Page<EventType> getAllEvents(
+	public @ResponseBody Page<EventType> getAllEventsWithSearchRequest(
 			@RequestBody SearchRequest params
 			) throws ParseException {
 		int start = params.getStart() == null ? 0 : params.getStart();  
@@ -71,7 +74,7 @@ public class DataController {
 			return repo1.findAllEventType(params.getThemes(), params.getSource(), params.getTag(), fromDate, false, params.getFilter(), new PageRequest(start / size, size));
 	}
 
-	
+	@ApiOperation(value = "getEvent")
 	@CrossOrigin(origins = "*")
 	@RequestMapping("/api/event")
 	public @ResponseBody EventType getEvent(
@@ -81,6 +84,7 @@ public class DataController {
 		return repo1.findEvent(id);
 	}
 	
+	@ApiOperation(value = "getThemeList")
 	@CrossOrigin(origins = "*")
 	@RequestMapping("/api/themes")
 	public @ResponseBody Map<String, Integer> getThemeList(
@@ -92,6 +96,7 @@ public class DataController {
 		return repo1.getThemes();
 	}
 	
+	@ApiOperation(value = "getTagList")
 	@CrossOrigin(origins = "*")
 	@RequestMapping("/api/tags")
 	public @ResponseBody Map<String, Integer> getTagList(
@@ -103,6 +108,7 @@ public class DataController {
 		return repo1.getTags();
 	}
 	
+	@ApiOperation(value = "getSourceList")
 	@CrossOrigin(origins = "*")
 	@RequestMapping("/api/sources")
 	public @ResponseBody Map<String, Integer> getSourceList(
