@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,7 +34,7 @@ public class DataController {
 
 	@ApiOperation(value = "getAllEvents")
 	@CrossOrigin(origins = "*")
-	@GetMapping("/api/events")
+	@RequestMapping(method = RequestMethod.GET, value ="/api/events")
 	public @ResponseBody Page<EventType> getAllEvents(
 			@RequestParam(required=false) Integer start, 
 			@RequestParam(required=false) Integer size,
@@ -57,6 +58,7 @@ public class DataController {
 
 	@ApiOperation(value = "getAllEventsWithSearchRequest")
 	@CrossOrigin(origins = "*")
+	@RequestMapping(method = RequestMethod.POST, value ="/api/events")
 	@PostMapping("/api/events")
 	public @ResponseBody Page<EventType> getAllEventsWithSearchRequest(
 			@RequestBody SearchRequest params
@@ -76,7 +78,7 @@ public class DataController {
 
 	@ApiOperation(value = "getEvent")
 	@CrossOrigin(origins = "*")
-	@RequestMapping("/api/event")
+	@RequestMapping(method = RequestMethod.GET, value="/api/event")
 	public @ResponseBody EventType getEvent(
 			@RequestParam(value="id") String id
 			) {
@@ -86,7 +88,7 @@ public class DataController {
 	
 	@ApiOperation(value = "getThemeList")
 	@CrossOrigin(origins = "*")
-	@RequestMapping("/api/themes")
+	@RequestMapping(method = RequestMethod.GET, value="/api/themes")
 	public @ResponseBody Map<String, Integer> getThemeList(
 			@RequestParam(required=false) Integer start, 
 			@RequestParam(required=false) Integer size
@@ -98,7 +100,7 @@ public class DataController {
 	
 	@ApiOperation(value = "getTagList")
 	@CrossOrigin(origins = "*")
-	@RequestMapping("/api/tags")
+	@RequestMapping(method = RequestMethod.GET, value="/api/tags")
 	public @ResponseBody Map<String, Integer> getTagList(
 			@RequestParam(required=false) Integer start, 
 			@RequestParam(required=false) Integer size
@@ -110,7 +112,7 @@ public class DataController {
 	
 	@ApiOperation(value = "getSourceList")
 	@CrossOrigin(origins = "*")
-	@RequestMapping("/api/sources")
+	@RequestMapping(method = RequestMethod.GET, value="/api/sources")
 	public @ResponseBody Map<String, Integer> getSourceList(
 			@RequestParam(required=false) Integer start, 
 			@RequestParam(required=false) Integer size
