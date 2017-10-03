@@ -23,10 +23,12 @@ public class TrentorientaServiceApplication {
 
 	@Bean
 	public Docket newsApi() {
+		return new Docket(DocumentationType.SWAGGER_2).groupName("TrentOrienta REST API").apiInfo(apiInfo()).select()
 				.paths(Predicates.not(PathSelectors.regex("/error"))).build();
 	}
 
 	private ApiInfo apiInfo() {
+		return new ApiInfoBuilder().title("TrentOrienta REST API with Swagger")
 				.description(
 						"This page contains an interactive representation of the TrentOrienta project's API using Swagger.")
 				.contact("SmartCommunity Lab FBK-ICT.").build();
