@@ -48,7 +48,7 @@ public class WadlController {
 	@ResponseBody
 	@RequestMapping(value = "spec/xwadl", method = RequestMethod.GET, produces = { "application/xml" })
 	public Application generateWadl(HttpServletRequest request) {
-		return applicationBuilder.build(request);
+		return applicationBuilder.build("https://tn.smartcommunitylab.it/trentorienta");
 	}
 
 	@ResponseBody
