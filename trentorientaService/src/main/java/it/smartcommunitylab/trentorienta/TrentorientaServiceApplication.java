@@ -3,28 +3,22 @@ package it.smartcommunitylab.trentorienta;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-
-import com.google.common.base.Predicates;
+import org.springframework.context.annotation.Configuration;
 
 import springfox.documentation.builders.ApiInfoBuilder;
-import springfox.documentation.builders.PathSelectors;
+import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
+@Configuration
 @EnableSwagger2
 public class TrentorientaServiceApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(TrentorientaServiceApplication.class, args);
-	}
-
-	@Bean
-	public Docket newsApi() {
-		return new Docket(DocumentationType.SWAGGER_2).groupName("TrentOrienta REST API").apiInfo(apiInfo()).select()
-				.paths(Predicates.not(PathSelectors.regex("/error"))).build();
 	}
 
 	private ApiInfo apiInfo() {
@@ -33,4 +27,15 @@ public class TrentorientaServiceApplication {
 						"This page contains an interactive representation of the TrentOrienta project's API using Swagger.")
 				.contact("SmartCommunity Lab FBK-ICT.").build();
 	}
+	
+	@Bean
+	public Docket newsApi() {
+		return new Docket(DocumentationType.SWAGGER_2).select()
+				.apis(RequestHandlerSelectors.basePackage("it.smartcommunitylab.trentorienta.controllers"))
+				.build()
+				.apiInfo(apiInfo());
+	}
+	     
+	
+	
 }
