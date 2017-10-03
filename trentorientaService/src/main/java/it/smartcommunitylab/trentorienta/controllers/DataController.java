@@ -31,7 +31,7 @@ public class DataController {
 
 	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyyMMddHHmm");
 
-	@ApiOperation(value = "getAllEvents")
+	@ApiOperation(value = "getAllEvents", nickname="getAllEvents")
 	@CrossOrigin(origins = "*")
 	@RequestMapping(method = RequestMethod.GET, value ="/api/events")
 	public @ResponseBody Page<EventType> getAllEvents(
@@ -55,7 +55,7 @@ public class DataController {
 			return repo1.findAllEventType(themes, source, tag, fromDate, false, filter, new PageRequest(start / size, size));
 	}
 
-	@ApiOperation(value = "getAllEventsWithSearchRequest")
+	@ApiOperation(value = "getAllEventsWithSearchRequest", nickname="getAllEventsWithSearchRequest")
 	@CrossOrigin(origins = "*")
 	@RequestMapping(method = RequestMethod.POST, value ="/api/events")
 	@PostMapping("/api/events")
@@ -75,7 +75,7 @@ public class DataController {
 			return repo1.findAllEventType(params.getThemes(), params.getSource(), params.getTag(), fromDate, false, params.getFilter(), new PageRequest(start / size, size));
 	}
 
-	@ApiOperation(value = "getEvent")
+	@ApiOperation(value = "getEvent", nickname="getEvent")
 	@CrossOrigin(origins = "*")
 	@RequestMapping(method = RequestMethod.GET, value="/api/event")
 	public @ResponseBody EventType getEvent(
@@ -85,7 +85,7 @@ public class DataController {
 		return repo1.findEvent(id);
 	}
 	
-	@ApiOperation(value = "getThemeList")
+	@ApiOperation(value = "getThemeList", nickname="getThemeList")
 	@CrossOrigin(origins = "*")
 	@RequestMapping(method = RequestMethod.GET, value="/api/themes")
 	public @ResponseBody Map<String, Integer> getThemeList(
@@ -97,7 +97,7 @@ public class DataController {
 		return repo1.getThemes();
 	}
 	
-	@ApiOperation(value = "getTagList")
+	@ApiOperation(value = "getTagList", nickname="getTagList")
 	@CrossOrigin(origins = "*")
 	@RequestMapping(method = RequestMethod.GET, value="/api/tags")
 	public @ResponseBody Map<String, Integer> getTagList(
@@ -109,7 +109,7 @@ public class DataController {
 		return repo1.getTags();
 	}
 	
-	@ApiOperation(value = "getSourceList")
+	@ApiOperation(value = "getSourceList", nickname="getSourceList")
 	@CrossOrigin(origins = "*")
 	@RequestMapping(method = RequestMethod.GET, value="/api/sources")
 	public @ResponseBody Map<String, Integer> getSourceList(

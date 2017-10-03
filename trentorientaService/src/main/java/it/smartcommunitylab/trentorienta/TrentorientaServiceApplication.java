@@ -22,9 +22,9 @@ public class TrentorientaServiceApplication {
 	}
 
 	private ApiInfo apiInfo() {
-		return new ApiInfoBuilder().title("TrentOrienta REST API with Swagger")
-				.description(
-						"This page contains an interactive representation of the TrentOrienta project's API using Swagger.")
+		return new ApiInfoBuilder()
+				.title("TrentOrienta REST API with Swagger")
+				.description("This page contains an interactive representation of the TrentOrienta project's API using Swagger.")
 				.contact("SmartCommunity Lab FBK-ICT.").build();
 	}
 	
