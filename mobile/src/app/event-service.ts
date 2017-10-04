@@ -15,7 +15,7 @@ export class EventService {
 
     //   private headers = new Headers({'Content-Type': 'application/json'});
     // private eventsUrl = 'api/mainEvents';  // URL to web api
-    private serverUrl = 'https://dev.smartcommunitylab.it/trentorienta/api/';
+    private serverUrl = 'https://tn.smartcommunitylab.it/trentorienta/api/';
     // private serverUrl = 'http://localhost:8080/api/';
     //private serverUrl = 'http://192.168.95.82:8080/api/';
 
