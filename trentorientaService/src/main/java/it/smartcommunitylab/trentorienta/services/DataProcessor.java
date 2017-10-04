@@ -86,9 +86,16 @@ public class DataProcessor {
 			evento.setCategory(categoria);
 			evento.setThemes(categoria);
 
+//			Object immagine = ((HashMap) fields.get("image")).get("value");
+//			if (immagine instanceof Map) {
+//				evento.setImage(immagine.toString());
+//			}
+			
 			Object immagine = ((HashMap) fields.get("image")).get("value");
-			if (immagine instanceof Map) {
-				evento.setImage(immagine.toString());
+			if (immagine != null && immagine instanceof String) {
+				if (!immagine.toString().isEmpty()) {
+					evento.setImage(immagine.toString());	
+				}
 			}
 
 			String eventDate = (String) ((HashMap) fields.get("data")).get("value");
@@ -378,10 +385,17 @@ public class DataProcessor {
 			evento.setCategory(categoria);
 			evento.setThemes(categoria);
 
+//			Object immagine = ((HashMap) fields.get("image")).get("value");
+//			if (immagine instanceof Map) {
+//				evento.setImage(immagine.toString());
+//			}
 			Object immagine = ((HashMap) fields.get("image")).get("value");
-			if (immagine instanceof Map) {
-				evento.setImage(immagine.toString());
+			if (immagine != null && immagine instanceof String) {
+				if (!immagine.toString().isEmpty()) {
+					evento.setImage(immagine.toString());	
+				}
 			}
+
 
 			String eventDate = (String) ((HashMap) fields.get("data")).get("value");
 			String dataInizio = new SimpleDateFormat("YYYMMddHHmm")
