@@ -360,11 +360,11 @@ public class DataProcessor {
 
 			evento.setSource("Avviso Oggetti Rinvenuti");
 
-			String descrizione = (String) ((HashMap) fields.get("descrizione")).get("string_value");
-			String abstr = (String) ((HashMap) fields.get("abstract")).get("string_value");
+			String descrizione = (String) ((HashMap) fields.get("descrizione")).get("value");
+			String abstr = (String) ((HashMap) fields.get("abstract")).get("value");
 			// in this case the most relevant description is that of abstract.
 			if (abstr != null && !abstr.isEmpty()) {
-				evento.setDescription((String) abstr);
+				evento.setDescription(descrizione + abstr);
 			} else {
 				evento.setDescription(descrizione);
 			}
