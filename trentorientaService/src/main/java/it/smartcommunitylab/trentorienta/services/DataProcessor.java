@@ -362,11 +362,11 @@ public class DataProcessor {
 
 			String descrizione = (String) ((HashMap) fields.get("descrizione")).get("string_value");
 			String abstr = (String) ((HashMap) fields.get("abstract")).get("string_value");
-			// for most of the events we have abstract(short description)
-			if (descrizione != null && !descrizione.isEmpty()) {
-				evento.setDescription((String) descrizione);
+			// in this case the most relevant description is that of abstract.
+			if (abstr != null && !abstr.isEmpty()) {
+				evento.setDescription((String) abstr);
 			} else {
-				evento.setDescription(abstr);
+				evento.setDescription(descrizione);
 			}
 			evento.setShortAbstract(abstr);
 
