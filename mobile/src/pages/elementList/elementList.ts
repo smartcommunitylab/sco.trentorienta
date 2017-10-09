@@ -176,14 +176,58 @@ export abstract class ElementListPage implements OnInit {
 
     doInfiniteCal(infiniteScroll) {
         console.log('Begin async operation');
-        this.loadCalendar(infiniteScroll);
+        this.loadCalendarForinfiniteScroll(infiniteScroll);
     }
 
     doInfiniteDate(infiniteScroll, date: string) {
         console.log('Begin async operation');
         let d = moment(date).format('YYYY.MM.DD');
         console.log(d);
-        this.loadCalendar(infiniteScroll, d);
+        this.loadCalendarForinfiniteScroll(infiniteScroll, d);
+    }
+
+    loadCalendarForinfiniteScroll(infiniteScroll?: any, data?: string): void {
+        if (this.calendarEvents == null) {
+            this.calendarEvents = {};
+        }
+        let from;
+        if (data) {
+            if (infiniteScroll == null) {
+                from = 0;
+                this.calendarSize = 0;
+            } else {
+                from = this.calendarSize;
+            }
+            this.hasDate = true;
+        } else {
+            from = this.calendarSize;
+            this.hasDate = false;
+        }
+
+        this.getCalData(from, from + this.PAGE_SIZE, data)
+            .then(events => {
+
+                if (infiniteScroll == null && data) {
+                    this.calendarEvents = {};
+                }
+                this.calendarSize += events.length;
+                events.forEach(event => {
+                    var date = moment(event.eventStart, "YYYYMMDDHHmm").format("YYYY.MM.DD");
+                    event.eventoDate = moment(event.eventStart, 'YYYYMMDDHHmm').toDate();
+                    event.createdDate = moment(event.created, 'YYYYMMDDHHmm').toDate();
+                    if (this.calendarEvents[date]) {
+                        this.calendarEvents[date].push(event);
+                    } else {
+                        this.calendarEvents[date] = [event];
+                    }
+                });
+                if (infiniteScroll != null) {
+                    if (events == null || events.length == 0) {
+                        infiniteScroll.enable(false);
+                    }
+                    infiniteScroll.complete();
+                }
+            });
     }
 
     abstract getData(from: number, to: number, filter: string): Promise<eventType[]>;

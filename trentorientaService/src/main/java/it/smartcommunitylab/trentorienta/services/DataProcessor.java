@@ -27,7 +27,7 @@ public class DataProcessor {
 
 		processEventsSource(template);
 		processAvvisiSource(template);
-		processAvvisiSource2(template);
+		processAvvisiOggettiRinvenuti(template);
 		processAvvisiVideoSource3(template);
 
 	}
@@ -329,7 +329,7 @@ public class DataProcessor {
 		}
 	}
 
-	private void processAvvisiSource2(RestTemplate template) {
+	private void processAvvisiOggettiRinvenuti(RestTemplate template) {
 		// source url:
 		// http://www.comune.trento.it/api/opendata/v1/content/class/avviso_oggetti_rinvenuti/offset/0/limit/100
 
@@ -358,7 +358,7 @@ public class DataProcessor {
 
 			evento.setTitle(titolo);
 
-			evento.setSource("Avvisi del Comune di Trento");
+			evento.setSource("Avviso Oggetti Rinvenuti");
 
 			String descrizione = (String) ((HashMap) fields.get("descrizione")).get("string_value");
 			String abstr = (String) ((HashMap) fields.get("abstract")).get("string_value");
