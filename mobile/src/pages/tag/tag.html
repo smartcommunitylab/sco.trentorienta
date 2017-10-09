@@ -14,7 +14,7 @@
         </ion-refresher-content>
     </ion-refresher>
     <ion-list>
-        <button ion-item *ngFor="let tag of tagType" (click)="onSelect(tag)">
+        <button ion-item *ngFor="let tag of tagType|orderBy:'name'" (click)="onSelect(tag)">
         {{tag.name}} <ion-badge item-end>{{tag.count}}</ion-badge>
       </button>
     </ion-list>

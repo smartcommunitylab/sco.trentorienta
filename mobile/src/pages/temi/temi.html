@@ -10,7 +10,7 @@
 
 <ion-content>
     <ion-list>
-      <ion-item *ngFor="let theme of themeType" (click)="onSelect(theme)">
+      <ion-item *ngFor="let theme of themeType|orderBy:'name'" (click)="onSelect(theme)">
             {{theme.name}} 
             <ion-badge item-end class="fav">
                 <ion-icon *ngIf="theme.fav" name="star"></ion-icon>
