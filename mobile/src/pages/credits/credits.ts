@@ -16,7 +16,7 @@ export class CreditsPage {
     appVersion.getVersionNumber().then((version) => {
       this.version = "v " + version;
     }).catch(function (error) {
-      this.version = "v " + '0.0.2beta';
+      this.version = "v " + '0.1.0';
     });
 
   }
