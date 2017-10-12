@@ -358,7 +358,7 @@ public class DataProcessor {
 
 			evento.setTitle(titolo);
 
-			evento.setSource("Avviso Oggetti Rinvenuti");
+			evento.setSource("Avviso oggetti rinvenuti");
 
 			String descrizione = (String) ((HashMap) fields.get("descrizione")).get("value");
 			String abstr = (String) ((HashMap) fields.get("abstract")).get("value");

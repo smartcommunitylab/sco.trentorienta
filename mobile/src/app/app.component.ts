@@ -47,7 +47,7 @@ export class MyApp {
       Themes: 'Themes',
       Sources: "Sources",
       Questionnaire: "Questionnaire",
-      Tag: 'Tag',
+      Tag: 'Tags',
       Filtercontent: 'Filter content',
       Cancel: 'Cancel',
       Published: 'Published on: ',
@@ -58,7 +58,7 @@ export class MyApp {
       FilterNotFound: 'There are no events based on your filters',
       FavoriteThemes: 'Favorite themes  ',
       FavoriteSources: 'Favorite sources  ',
-      FavoriteEvents: 'Favorite events  ',
+      FavoriteEvents: 'Favorite notifications  ',
       Filter: 'Filter',
       FilterCancel: 'Cancel',
       Time: 'Time: ',
@@ -72,21 +72,22 @@ export class MyApp {
       terms_refused_alert_text: 'Terms refused.',
       information: "Il progetto WeLive è stato finanziato dal programma H2020 della Commissione Europea per la ricerca, lo sviluppo tecnologico e l’ innovazione secondo l’accordo N° 645845",
       menu_about: 'Information',
-      app_name: 'TrentoInforma',
+      app_name: 'TrentoInformer',
       lbl_credit_p2: "What is it?",
       credit_info: "The WeLive project has been financed under European Commission's H2020 programme for research, development and innovation under agreement #64584",
       lbl_wait: "Please wait",
       trial_expired: "Your trial version has expired.",
       trial_inprogress: " days left for this trial version.",
-      pop_up__expired_template: 'The actual version of the app has expired',
+      pop_up__expired_template: 'The trial version of the app has expired',
       pop_up_not_expired_title: 'Trial version',
-      pop_up_not_expired_template: 'The actual version of the app end on '
+      pop_up_not_expired_template: 'This is a trial version expiring on ',
+      search_label: 'Search'
 
 
     });
     translate.setTranslation('it', {
       Home: 'Home',
-      Credits: 'INFORMAZIONI',
+      Credits: "Credits",
       Favorites: 'Preferiti',
       Themes: 'Temi',
       Sources: "Sorgenti",
@@ -102,7 +103,7 @@ export class MyApp {
       FilterNotFound: 'Non sono stati trovati eventi corrispondenti ai tuoi filtri',
       FavoriteThemes: 'Temi preferiti  ',
       FavoriteSources: 'Sorgenti preferite  ',
-      FavoriteEvents: 'Eventi preferiti  ',
+      FavoriteEvents: 'Notifiche preferite  ',
       Filter: 'Filtra',
       FilterCancel: 'Annulla',
       Time: 'Ora: ',
@@ -125,7 +126,8 @@ export class MyApp {
       pop_up_expired_title: 'Versione scaduta',
       pop_up__expired_template: 'Ci scusiamo ma non è più possibile utilizzare questa versione dell\'applicazione in quanto il periodo di prova è terminata',
       pop_up_not_expired_title: 'Versione di prova',
-      pop_up_not_expired_template: 'Questa  è una versione di prova e terminerà il '
+      pop_up_not_expired_template: 'Questa  è una versione di prova e terminerà il ',
+      search_label: 'Cerca'
     });
 
 
@@ -180,32 +182,33 @@ export class MyApp {
 
       this.config.load().then(() => {
 
-        let expiryDate = new Date(this.config.getConfig('expiryDate'));
-        if (this.isDateAfterToday(expiryDate)) {
-          var daysLeft = this.getNumberOfDays(expiryDate);
-          console.log(daysLeft + " days left for this trial")
-          let prompt = this.alertCtrl.create({
-            title: this.translate.instant('pop_up_not_expired_title'),
-            message: this.translate.instant('pop_up_not_expired_template') + moment(expiryDate).format('DD-MM-YYYY'),
-            buttons: ['Ok']
-          });
-          prompt.present();
-        } else {
-          let prompt = this.alertCtrl.create({
-            title: this.translate.instant('pop_up_expired_title'),
-            message: this.translate.instant('pop_up__expired_template'),
-            buttons: [{
-              text: 'Ok',
-              role: 'cancel',
-              handler: () => {
-                console.log('Cancel clicked');
-                this.nav.pop();
-                this.platform.exitApp();
-              }
-            }]
-          });
-          prompt.present();
-        }
+        // let expiryDate = new Date(this.config.getConfig('expiryDate'));
+        // if (this.isDateAfterToday(expiryDate)) {
+        //   var daysLeft = this.getNumberOfDays(expiryDate);
+        //   console.log(daysLeft + " days left for this trial")
+        //   let prompt = this.alertCtrl.create({
+        //     title: this.translate.instant('pop_up_not_expired_title'),
+        //     message: this.translate.instant('pop_up_not_expired_template') + moment(expiryDate).format('DD-MM-YYYY'),
+        //     buttons: ['Ok']
+        //   });
+        //   prompt.present();
+        // } else {
+        //   let prompt = this.alertCtrl.create({
+        //     title: this.translate.instant('pop_up_expired_title'),
+        //     message: this.translate.instant('pop_up__expired_template'),
+        //     buttons: [{
+        //       text: 'Ok',
+        //       role: 'cancel',
+        //       handler: () => {
+        //         console.log('Cancel clicked');
+        //         this.nav.pop();
+        //         this.platform.exitApp();
+        //       }
+        //     }]
+        //   });
+        //   prompt.present();
+        // }
+
       });
 
     });
