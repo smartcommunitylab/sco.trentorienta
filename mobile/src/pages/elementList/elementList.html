@@ -50,7 +50,7 @@
     </ion-refresher>
 
     <div [ngSwitch]="view" style="height: 100%; width: 100%">
-        <ion-searchbar #searchBox *ngIf="searching" (search)="search(searchBox.value)"></ion-searchbar>
+        <ion-searchbar #searchBox *ngIf="searching" placeholder="{{'search_label'|translate}}" (search)="search(searchBox.value)"></ion-searchbar>
 
         <div *ngSwitchCase="'lista'" style="height: 100%; width: 100%">
 
