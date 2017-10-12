@@ -39,6 +39,49 @@ page-favorites {
     }
 }
 
+page-temilist {
+    ion-icon {
+        font-size: xx-large;
+        vertical-align: middle;
+    }
+
+    ion-label {
+        font-size: large;
+    }
+
+    .bar-button-default-md {
+        font-size: x-large;
+    }
+}
+
+page-sorgentilist {
+    ion-icon {
+        font-size: xx-large;
+        vertical-align: middle;
+    }
+
+    ion-label {
+        font-size: large;
+    }
+    .bar-button-default-md {
+        font-size: x-large;
+    }
+}
+
+page-taglist {
+    ion-icon {
+        font-size: xx-large;
+        vertical-align: middle;
+    }
+
+    ion-label {
+        font-size: large;
+    }
+    
+    .bar-button-default-md {
+        font-size: x-large;
+    }
+}
 // App Global Sass
 // --------------------------------------------------
 // Put style rules here that you want to apply globally. These
