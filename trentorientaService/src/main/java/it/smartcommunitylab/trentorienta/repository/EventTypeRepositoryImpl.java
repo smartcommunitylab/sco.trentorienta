@@ -90,12 +90,15 @@ public class EventTypeRepositoryImpl implements EventTypeRepositoryCustom {
 		query.limit(pageRequest.getPageSize());
 		
 		List<EventType> list = template.find(query, EventType.class);
-		Date now = Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant());
+//		Date now = Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant());
+		// in case the startDate is in the past, set it to requested date contrary to previous logic of setting to current date.
 		list.forEach(evt -> {
 			if (evt.getEventStart() != null) {
 				try { 
 					Date d = DATE_FORMAT.parse(evt.getEventStart());
-					if (d.before(now)) evt.setEventStart(DATE_FORMAT.format(now));
+					if (d.before(fromDate)) {
+						evt.setEventStart(DATE_FORMAT.format(fromDate));
+					}
 				} catch(Exception e) {
 					e.printStackTrace();
 				} 
