@@ -8,13 +8,13 @@
         </ion-title>
         <ion-buttons end>
             <button ion-button *ngIf="view=='calendario' && hasDate" (click)='removeDate()'>
-                <ion-label>{{'Cancel'|translate}}</ion-label>
+                <!-- <ion-label>{{'Cancel'|translate}}</ion-label> -->
                 <ion-icon name="close-circle"></ion-icon>
             </button>
 
             <button ion-button icon-right *ngIf="view=='calendario'" (click)="picker.open()"> 
                 <ion-datetime #picker style="display:none" pickerFormat="DD.MM.YYYY" 
-                               min='{{currDate}}' max='2050' [(ngModel)]="myDate" (ionChange)="scrolling(myDate)">
+                               min='{{currDate}}' max='2050' [(ngModel)]="myDate" (ionChange)="scrolling(myDate)" doneText="{{'OK'|translate}}" cancelText="{{'Cancel'|translate}}">
                 </ion-datetime>
                 <ion-icon name="calendar"></ion-icon>
             </button>
@@ -91,7 +91,7 @@
                 </button>
             </div>
             <ion-list>
-                <ion-item-divider *ngFor="let key of calendarEvents | ObjNgFor" color="date" mode="md">
+                <ion-item-divider *ngFor="let key of keys" color="date" mode="md">
                     {{key | date: 'dd.MM.yyyy'}}
                     <ion-item *ngFor="let event of calendarEvents[key]" (click)="onSelect(event)" mode="md" class="noborder">
                         <ion-thumbnail item-start>

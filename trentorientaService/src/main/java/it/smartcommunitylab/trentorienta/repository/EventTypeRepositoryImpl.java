@@ -81,7 +81,7 @@ public class EventTypeRepositoryImpl implements EventTypeRepositoryCustom {
 		if (sortForList) { // == 1
 			query.with(new Sort(Sort.Direction.DESC, "created"));
 		} else {           // ** 0
-			query.with(new Sort(Sort.Direction.ASC, "eventDate"));
+			query.with(new Sort(Sort.Direction.ASC, "eventStart"));
 		}
 		
 		Long total = template.count(query, EventType.class);
@@ -96,7 +96,9 @@ public class EventTypeRepositoryImpl implements EventTypeRepositoryCustom {
 				try { 
 					Date d = DATE_FORMAT.parse(evt.getEventStart());
 					if (d.before(now)) evt.setEventStart(DATE_FORMAT.format(now));
-				} catch(Exception e) {} 
+				} catch(Exception e) {
+					e.printStackTrace();
+				} 
 			}
 		});
 		

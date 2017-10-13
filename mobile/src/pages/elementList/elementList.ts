@@ -136,6 +136,7 @@ export abstract class ElementListPage implements OnInit {
     };
 
 
+    keys = [];
 
     constructor(protected eventService: EventService, public navCtrl: NavController,
         public modalCtrl: ModalController, public storage: Storage, public loadingCtrl: LoadingController, public translate: TranslateService) {
@@ -180,7 +181,7 @@ export abstract class ElementListPage implements OnInit {
     }
 
     doInfiniteDate(infiniteScroll, date: string) {
-        console.log('Begin async operation');
+        console.log('Begin async operation with date' + date);
         let d = moment(date).format('YYYY.MM.DD');
         console.log(d);
         this.loadCalendarForinfiniteScroll(infiniteScroll, d);
@@ -221,6 +222,10 @@ export abstract class ElementListPage implements OnInit {
                         this.calendarEvents[date] = [event];
                     }
                 });
+
+                // order keys of map by date.
+                this.keys = this.orderMapKeys(this.calendarEvents);
+
                 if (infiniteScroll != null) {
                     if (events == null || events.length == 0) {
                         infiniteScroll.enable(false);
@@ -228,6 +233,14 @@ export abstract class ElementListPage implements OnInit {
                     infiniteScroll.complete();
                 }
             });
+    }
+
+    orderMapKeys = function (h) {
+        var keys = [];
+        for (var k in h) {
+            keys.push(k);
+        }
+        return keys.sort();
     }
 
     abstract getData(from: number, to: number, filter: string): Promise<eventType[]>;
@@ -308,6 +321,10 @@ export abstract class ElementListPage implements OnInit {
                         this.calendarEvents[date] = [event];
                     }
                 });
+
+                // order keys of map by date.
+                this.keys = this.orderMapKeys(this.calendarEvents);
+  
                 if (infiniteScroll != null) {
                     if (events == null || events.length == 0) {
                         infiniteScroll.enable(false);
