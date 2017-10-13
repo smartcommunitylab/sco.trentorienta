@@ -289,7 +289,7 @@ export abstract class ElementListPage implements OnInit {
         }
         let from;
         if (data) {
-            data = moment(data, "YYYYMMDDHHmm").format("YYYYMMDDHHmm");
+            // data = moment(data, "YYYYMMDDHHmm").format("YYYYMMDDHHmm");
             if (infiniteScroll == null) {
                 from = 0;
                 this.calendarSize = 0;
