@@ -1,7 +1,7 @@
 package it.smartcommunitylab.trentorienta.controllers;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.namespace.QName;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -24,23 +23,19 @@ import com.autentia.web.rest.wadl.builder.ApplicationBuilder;
 import com.autentia.web.rest.wadl.builder.impl.springframework.SpringWadlBuilderFactory;
 import com.autentia.xml.schema.SchemaBuilder;
 
+import io.swagger.annotations.ApiOperation;
 import net.java.dev.wadl._2009._02.Application;
 import net.java.dev.wadl._2009._02.Method;
 import net.java.dev.wadl._2009._02.Representation;
 import net.java.dev.wadl._2009._02.Resource;
-import net.java.dev.wadl._2009._02.Resources;
-import net.java.dev.wadl._2009._02.Response;
-import springfox.documentation.annotations.ApiIgnore;
 
-@ApiIgnore
 @Controller
-@RequestMapping(value = "/service")
-@Order(7)
 public class WadlController {
 
 	private final ApplicationBuilder applicationBuilder;
 	private final SchemaBuilder schemaBuilder;
-
+	private static final List<String> specs = Arrays.asList("xwadl", "swagger");
+	
 	@Autowired
 	public WadlController(RequestMappingHandlerMapping handlerMapping) {
 		final SpringWadlBuilderFactory wadlBuilderFactory = new SpringWadlBuilderFactory(handlerMapping);
@@ -48,11 +43,19 @@ public class WadlController {
 		schemaBuilder = wadlBuilderFactory.getSchemaBuilder();
 	}
 
+	@ApiOperation(value = "spec/list")
+	@RequestMapping(value = "spec/list", method = RequestMethod.GET)
+	@ResponseBody
+	public List<String> getSpecList(HttpServletResponse response) {
+		return specs;
+	}
+	
 	@RequestMapping(value = "spec/swagger", method = RequestMethod.GET)
 	public void generateSpec(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		response.sendRedirect( request.getContextPath()+ "/swagger-ui.html");
 	}
 
+	@ApiOperation(value = "spec/xwadl")
 	@ResponseBody
 	@RequestMapping(value = "spec/xwadl", method = RequestMethod.GET, produces = { "application/xml" })
 	public Application generateWadl(HttpServletRequest request) {
