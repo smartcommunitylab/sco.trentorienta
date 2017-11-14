@@ -1,13 +1,22 @@
 package it.smartcommunitylab.trentorienta.soapservice;
 
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 
+import io.swagger.annotations.ApiOperation;
+import it.smartcommunitylab.trentorienta.model.EventType;
 import it.smartcommunitylab.trentorienta.repository.EventTypeRepositoryCustom;
 
 @Endpoint
@@ -56,6 +65,27 @@ public class SOAPEndpoint {
 
 		return response;
 
+	}
+	
+	@PayloadRoot(namespace = NAMESPACE_URI, localPart = "themeRequestList")
+	@ResponsePayload
+	public ResponseList getThemeList(@RequestPayload ThemeRequestList request ) {
+		ResponseList response = new ResponseList();
+		response.setMap(repo1.getThemes());
+
+		return response;
+
+	}
+	
+	@PayloadRoot(namespace = NAMESPACE_URI, localPart = "eventRequest")
+	@ResponsePayload
+	public EventType getEvent(@RequestPayload EventRequest eventRequest) {
+
+		EventType response = null;
+		response = repo1.findEvent(eventRequest.getId());
+		
+		return response;
+		
 	}
 
 }

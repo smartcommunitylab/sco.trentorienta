@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<wsdl:definitions name="HelloWorld"
+<wsdl:definitions name="TrentOrienta"
 	targetNamespace="http://smartcommunitylab.it/trentorienta/soapservice"
 	xmlns:tns="http://smartcommunitylab.it/trentorienta/soapservice"
 	xmlns:types="http://smartcommunitylab.it/trentorienta/soapservice"
@@ -28,9 +28,8 @@
 				</xsd:complexType>
 			</xsd:element>
 
-			<xsd:element name="responseList">
-			</xsd:element>
-			
+			<xsd:element name="responseList" />
+
 			<xsd:element name="tagRequestList">
 				<xsd:complexType>
 					<xsd:sequence>
@@ -40,8 +39,28 @@
 				</xsd:complexType>
 			</xsd:element>
 
-			<xsd:element name="tagResponseList">
+			<xsd:element name="tagResponseList" />
+
+			<xsd:element name="themeRequestList">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="start" type="xsd:string" minOccurs="0" />
+						<xsd:element name="size" type="xsd:string" minOccurs="0" />
+					</xsd:sequence>
+				</xsd:complexType>
 			</xsd:element>
+
+			<xsd:element name="themeResponseList" />
+
+			<xsd:element name="eventRequest">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="id" type="xsd:string" minOccurs="1" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+		
+			<xsd:element name="eventType" />
 
 			<xsd:element name="greeting">
 				<xsd:complexType>
@@ -149,8 +168,7 @@
 		<soap:binding style="document"
 			transport="http://schemas.xmlsoap.org/soap/http" />
 		<wsdl:operation name="getTagList">
-			<soap:operation
-				soapAction="http://smartcommunitylab.it/trentorienta/getTagList" />
+			<soap:operation soapAction="http://smartcommunitylab.it/trentorienta/getTagList" />
 			<wsdl:input>
 				<soap:body use="literal" />
 			</wsdl:input>
@@ -167,6 +185,79 @@
 				location="http://localhost:8080/trentorienta/soapservice/service/wsdl/service.wsdl" />
 		</wsdl:port>
 	</wsdl:service>
-	<!-- OPERATION (GET TAGS) -->
+	<!-- OPERATION (GET THEME) -->
+	<wsdl:message name="GetThemeInput">
+		<wsdl:part name="themeRequestList" element="types:themeRequestList" />
+	</wsdl:message>
 
+	<wsdl:message name="GetThemeOutput">
+		<wsdl:part name="themeResponseList" element="types:themeResponseList" />
+	</wsdl:message>
+
+	<wsdl:portType name="GetTheme_PortType">
+		<wsdl:operation name="getThemeList">
+			<wsdl:input message="tns:GetThemeInput" />
+			<wsdl:output message="tns:GetThemeOutput" />
+		</wsdl:operation>
+	</wsdl:portType>
+
+	<wsdl:binding name="GetTheme_SoapBinding" type="tns:GetTheme_PortType">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="getThemeList">
+			<soap:operation
+				soapAction="http://smartcommunitylab.it/trentorienta/getThemeList" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+
+	<wsdl:service name="GetTheme_Service">
+		<wsdl:documentation>Get themes</wsdl:documentation>
+		<wsdl:port name="GetTheme_Port" binding="tns:GetTheme_SoapBinding">
+			<soap:address
+				location="http://localhost:8080/trentorienta/soapservice/service/wsdl/service.wsdl" />
+		</wsdl:port>
+	</wsdl:service>
+	<!-- OPERATION (GET EVENT) -->
+	<wsdl:message name="GetEventInput">
+		<wsdl:part name="eventRequest" element="types:eventRequest" />
+	</wsdl:message>
+
+	<wsdl:message name="GetEventOutput">
+		<wsdl:part name="eventType" element="types:eventType" />
+	</wsdl:message>
+
+	<wsdl:portType name="GetEvent_PortType">
+		<wsdl:operation name="getEvent">
+			<wsdl:input message="tns:GetEventInput" />
+			<wsdl:output message="tns:GetEventOutput" />
+		</wsdl:operation>
+	</wsdl:portType>
+
+	<wsdl:binding name="GetEvent_SoapBinding" type="tns:GetEvent_PortType">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="getEvent">
+			<soap:operation soapAction="http://smartcommunitylab.it/trentorienta/getEvent" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+
+	<wsdl:service name="GetEvent_Service">
+		<wsdl:documentation>Get Event</wsdl:documentation>
+		<wsdl:port name="GetEvent_Port" binding="tns:GetEvent_SoapBinding">
+			<soap:address
+				location="http://localhost:8080/trentorienta/soapservice/service/wsdl/service.wsdl" />
+		</wsdl:port>
+	</wsdl:service>
 </wsdl:definitions>
