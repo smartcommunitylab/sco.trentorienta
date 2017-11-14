@@ -7,7 +7,14 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -22,6 +29,7 @@ public class DataProcessor {
 	private EventTypeRepository repoEvent;
 
 	@Scheduled(initialDelay = 0, fixedRate = 60 * 60 * 1000)
+	@PostConstruct
 	public void getDataPeriodically() {
 		RestTemplate template = new RestTemplate();
 
@@ -142,9 +150,14 @@ public class DataProcessor {
 		Map<String, Object> input = new HashMap<>();
 		input.put("fromTime", new Date().getTime());
 
-		ArrayList list = template.postForObject(
-				"https://os.smartcommunitylab.it/comuneintasca-multi/events/TrentoInTasca", input, ArrayList.class);
-
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		HttpEntity<Map<String, Object>> request = new HttpEntity<>(input, headers);
+		ArrayList list = template.postForObject("https://os.smartcommunitylab.it/comuneintasca-multi/events/TrentoInTasca", request, ArrayList.class);
+		
+//		ArrayList list = template.postForObject(
+//				"https://os.smartcommunitylab.it/comuneintasca-multi/events/TrentoInTasca", input, ArrayList.class);
+		        
 		// System.out.println("*** Numero eventi trovati: " + list.size());
 
 		for (int i = 0; i < list.size(); i++) {
@@ -432,5 +445,10 @@ public class DataProcessor {
 			repoEvent.save(evento);
 		}
 	}
+	
+//	public static void main(String args[]) {
+//		DataProcessor dataProcessor = new DataProcessor();
+//		dataProcessor.getDataPeriodically();
+//	}
 
 }

@@ -1,9 +1,18 @@
 package it.smartcommunitylab.trentorienta;
 
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.MediaType;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -15,6 +24,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @SpringBootApplication
 @Configuration
 @EnableSwagger2
+@EnableScheduling
 public class TrentorientaServiceApplication {
 
 	public static void main(String[] args) {
@@ -22,21 +32,31 @@ public class TrentorientaServiceApplication {
 	}
 
 	private ApiInfo apiInfo() {
-		return new ApiInfoBuilder()
-				.title("TrentOrienta REST API with Swagger")
-				.version("1.0")
-				.description("This page contains an interactive representation of the TrentOrienta project's API using Swagger.")
+		return new ApiInfoBuilder().title("TrentOrienta REST API with Swagger").version("1.0")
+				.description(
+						"This page contains an interactive representation of the TrentOrienta project's API using Swagger.")
 				.contact("SmartCommunity Lab FBK-ICT.").build();
 	}
-	
+
 	@Bean
 	public Docket newsApi() {
 		return new Docket(DocumentationType.SWAGGER_2).select()
-				.apis(RequestHandlerSelectors.basePackage("it.smartcommunitylab.trentorienta.controllers"))
-				.build()
+				.apis(RequestHandlerSelectors.basePackage("it.smartcommunitylab.trentorienta.controllers")).build()
 				.apiInfo(apiInfo());
 	}
-	     
-	
-	
+
+	@Configuration
+	public class WebConfig extends WebMvcConfigurerAdapter {
+		@Override
+		public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+			MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+			List<MediaType> list = new ArrayList<>();
+			list.add(MediaType.APPLICATION_JSON_UTF8);
+			list.add(new MediaType("text", "html", Charset.forName("UTF-8")));
+			list.add(new MediaType("application", "*+json", Charset.forName("UTF-8")));
+			converter.setSupportedMediaTypes(list);
+			converters.add(converter);
+		}
+	}
+
 }

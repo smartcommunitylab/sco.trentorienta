@@ -30,14 +30,14 @@ import net.java.dev.wadl._2009._02.Representation;
 import net.java.dev.wadl._2009._02.Resource;
 
 @Controller
-public class WadlController {
+public class BuildingBlockController {
 
 	private final ApplicationBuilder applicationBuilder;
 	private final SchemaBuilder schemaBuilder;
 	private static final List<String> specs = Arrays.asList("xwadl", "swagger");
 	
 	@Autowired
-	public WadlController(RequestMappingHandlerMapping handlerMapping) {
+	public BuildingBlockController(RequestMappingHandlerMapping handlerMapping) {
 		final SpringWadlBuilderFactory wadlBuilderFactory = new SpringWadlBuilderFactory(handlerMapping);
 		applicationBuilder = wadlBuilderFactory.getApplicationBuilder();
 		schemaBuilder = wadlBuilderFactory.getSchemaBuilder();

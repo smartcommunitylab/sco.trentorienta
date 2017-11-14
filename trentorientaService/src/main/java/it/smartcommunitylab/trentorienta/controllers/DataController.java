@@ -31,95 +31,92 @@ public class DataController {
 
 	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyyMMddHHmm");
 
-	@ApiOperation(value = "getAllEvents", nickname="getAllEvents")
+	@ApiOperation(value = "getAllEvents", nickname = "getAllEvents", produces = "application/xml, application/json")
 	@CrossOrigin(origins = "*")
-	@RequestMapping(method = RequestMethod.GET, value ="/api/events")
-	public @ResponseBody Page<EventType> getAllEvents(
-			@RequestParam(required=false) Integer start, 
-			@RequestParam(required=false) Integer size,
-			@RequestParam(required=false) String[] source,
-			@RequestParam(required=false) String[] tag,
-			@RequestParam(required=false) String[] themes,
-			@RequestParam(required=false) String fromDateStr,
-			@RequestParam(required=false) Integer sortForList,
-			@RequestParam(required=false) String filter
-			) throws ParseException {
-		if (start == null) start = 0;
-		if (size == null) size = 15;
+	@RequestMapping(method = RequestMethod.GET, value = "/api/events")
+	public @ResponseBody Page<EventType> getAllEvents(@RequestParam(required = false) Integer start,
+			@RequestParam(required = false) Integer size, @RequestParam(required = false) String[] source,
+			@RequestParam(required = false) String[] tag, @RequestParam(required = false) String[] themes,
+			@RequestParam(required = false) String fromDateStr, @RequestParam(required = false) Integer sortForList,
+			@RequestParam(required = false) String filter) throws ParseException {
+		if (start == null)
+			start = 0;
+		if (size == null)
+			size = 15;
 		Date fromDate = StringUtils.isEmpty(fromDateStr) ? null : DATE_FORMAT.parse(fromDateStr);
 		if (sortForList == null)
 			sortForList = 1;
 		if (sortForList == 1)
-			return repo1.findAllEventType(themes, source, tag, fromDate, true, filter, new PageRequest(start / size, size));
+			return repo1.findAllEventType(themes, source, tag, fromDate, true, filter,
+					new PageRequest(start / size, size));
 		else
-			return repo1.findAllEventType(themes, source, tag, fromDate, false, filter, new PageRequest(start / size, size));
+			return repo1.findAllEventType(themes, source, tag, fromDate, false, filter,
+					new PageRequest(start / size, size));
 	}
 
-	@ApiOperation(value = "getAllEventsWithSearchRequest", nickname="getAllEventsWithSearchRequest")
+	@ApiOperation(value = "getAllEventsWithSearchRequest", nickname = "getAllEventsWithSearchRequest", produces = "application/xml, application/json")
 	@CrossOrigin(origins = "*")
-	@RequestMapping(method = RequestMethod.POST, value ="/api/events")
+	@RequestMapping(method = RequestMethod.POST, value = "/api/events")
 	@PostMapping("/api/events")
-	public @ResponseBody Page<EventType> getAllEventsWithSearchRequest(
-			@RequestBody SearchRequest params
-			) throws ParseException {
-		int start = params.getStart() == null ? 0 : params.getStart();  
+	public @ResponseBody Page<EventType> getAllEventsWithSearchRequest(@RequestBody SearchRequest params)
+			throws ParseException {
+		int start = params.getStart() == null ? 0 : params.getStart();
 		int size = params.getSize() == null ? 15 : params.getSize();
-		
+
 		Date fromDate = StringUtils.isEmpty(params.getFromDate()) ? null : DATE_FORMAT.parse(params.getFromDate());
-		
+
 		int sortForList = params.getSortForList() == null ? 1 : params.getSortForList();
-		
+
 		if (sortForList == 1)
-			return repo1.findAllEventType(params.getThemes(), params.getSource(), params.getTag(), fromDate, true, params.getFilter(), new PageRequest(start / size, size));
+			return repo1.findAllEventType(params.getThemes(), params.getSource(), params.getTag(), fromDate, true,
+					params.getFilter(), new PageRequest(start / size, size));
 		else
-			return repo1.findAllEventType(params.getThemes(), params.getSource(), params.getTag(), fromDate, false, params.getFilter(), new PageRequest(start / size, size));
+			return repo1.findAllEventType(params.getThemes(), params.getSource(), params.getTag(), fromDate, false,
+					params.getFilter(), new PageRequest(start / size, size));
 	}
 
-	@ApiOperation(value = "getEvent", nickname="getEvent")
+	@ApiOperation(value = "getEvent", nickname = "getEvent", produces = "application/xml, application/json")
 	@CrossOrigin(origins = "*")
-	@RequestMapping(method = RequestMethod.GET, value="/api/event")
-	public @ResponseBody EventType getEvent(
-			@RequestParam(value="id") String id
-			) {
-		
+	@RequestMapping(method = RequestMethod.GET, value = "/api/event")
+	public @ResponseBody EventType getEvent(@RequestParam(value = "id") String id) {
+
 		return repo1.findEvent(id);
 	}
-	
-	@ApiOperation(value = "getThemeList", nickname="getThemeList")
+
+	@ApiOperation(value = "getThemeList", nickname = "getThemeList", produces = "application/xml, application/json")
 	@CrossOrigin(origins = "*")
-	@RequestMapping(method = RequestMethod.GET, value="/api/themes")
-	public @ResponseBody Map<String, Integer> getThemeList(
-			@RequestParam(required=false) Integer start, 
-			@RequestParam(required=false) Integer size
-			) {
-		if (start == null) start = 0;
-		if (size == null) size = 5;
+	@RequestMapping(method = RequestMethod.GET, value = "/api/themes")
+	public @ResponseBody Map<String, Integer> getThemeList(@RequestParam(required = false) Integer start,
+			@RequestParam(required = false) Integer size) {
+		if (start == null)
+			start = 0;
+		if (size == null)
+			size = 5;
 		return repo1.getThemes();
 	}
-	
-	@ApiOperation(value = "getTagList", nickname="getTagList")
+
+	@ApiOperation(value = "getTagList", nickname = "getTagList", produces = "application/xml, application/json")
 	@CrossOrigin(origins = "*")
-	@RequestMapping(method = RequestMethod.GET, value="/api/tags")
-	public @ResponseBody Map<String, Integer> getTagList(
-			@RequestParam(required=false) Integer start, 
-			@RequestParam(required=false) Integer size
-			) {
-		if (start == null) start = 0;
-		if (size == null) size = 5;
+	@RequestMapping(method = RequestMethod.GET, value = "/api/tags")
+	public @ResponseBody Map<String, Integer> getTagList(@RequestParam(required = false) Integer start,
+			@RequestParam(required = false) Integer size) {
+		if (start == null)
+			start = 0;
+		if (size == null)
+			size = 5;
 		return repo1.getTags();
 	}
-	
-	@ApiOperation(value = "getSourceList", nickname="getSourceList")
+
+	@ApiOperation(value = "getSourceList", nickname = "getSourceList", produces = "application/xml, application/json")
 	@CrossOrigin(origins = "*")
-	@RequestMapping(method = RequestMethod.GET, value="/api/sources")
-	public @ResponseBody Map<String, Integer> getSourceList(
-			@RequestParam(required=false) Integer start, 
-			@RequestParam(required=false) Integer size
-			) {
-		if (start == null) start = 0;
-		if (size == null) size = 5;
+	@RequestMapping(method = RequestMethod.GET, value = "/api/sources")
+	public @ResponseBody Map<String, Integer> getSourceList(@RequestParam(required = false) Integer start,
+			@RequestParam(required = false) Integer size) {
+		if (start == null)
+			start = 0;
+		if (size == null)
+			size = 5;
 		return repo1.getSources();
 	}
-	
-	
+
 }
