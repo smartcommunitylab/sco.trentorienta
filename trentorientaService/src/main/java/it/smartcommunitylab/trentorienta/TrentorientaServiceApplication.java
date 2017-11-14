@@ -6,13 +6,20 @@ import java.util.List;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.ServletRegistrationBean;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.ws.config.annotation.EnableWs;
+import org.springframework.ws.transport.http.MessageDispatcherServlet;
+import org.springframework.ws.wsdl.wsdl11.SimpleWsdl11Definition;
+import org.springframework.ws.wsdl.wsdl11.Wsdl11Definition;
 
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -25,6 +32,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @Configuration
 @EnableSwagger2
 @EnableScheduling
+@EnableWs
 public class TrentorientaServiceApplication {
 
 	public static void main(String[] args) {
@@ -57,6 +65,22 @@ public class TrentorientaServiceApplication {
 			converter.setSupportedMediaTypes(list);
 			converters.add(converter);
 		}
+	}
+
+	@Bean
+	public ServletRegistrationBean messageDispatcherServlet(ApplicationContext applicationContext) {
+		MessageDispatcherServlet servlet = new MessageDispatcherServlet();
+		servlet.setApplicationContext(applicationContext);
+
+		return new ServletRegistrationBean(servlet, "/soapservice/*");
+	}
+
+	@Bean(name = "service")
+	public Wsdl11Definition defaultWsdl11Definition() {
+		SimpleWsdl11Definition wsdl11Definition = new SimpleWsdl11Definition();
+		wsdl11Definition.setWsdl(new ClassPathResource("/wsdl/trentorienta.wsdl"));
+
+		return wsdl11Definition;
 	}
 
 }
