@@ -29,7 +29,6 @@ public class DataProcessor {
 	private EventTypeRepository repoEvent;
 
 	@Scheduled(initialDelay = 0, fixedRate = 60 * 60 * 1000)
-	@PostConstruct
 	public void getDataPeriodically() {
 		RestTemplate template = new RestTemplate();
 
