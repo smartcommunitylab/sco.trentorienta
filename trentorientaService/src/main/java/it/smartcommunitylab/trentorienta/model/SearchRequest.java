@@ -1,5 +1,8 @@
 package it.smartcommunitylab.trentorienta.model;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement()
 public class SearchRequest {
 	private Integer start; 
 	private Integer size;

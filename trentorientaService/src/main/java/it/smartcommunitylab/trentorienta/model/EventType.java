@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
-@XmlRootElement(name = "EventType")
+@XmlRootElement
 public class EventType {
 
 	@Id
