@@ -1,9 +1,11 @@
 package it.smartcommunitylab.trentorienta.controllers;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.namespace.QName;
@@ -26,6 +28,7 @@ import com.autentia.web.rest.wadl.builder.impl.springframework.SpringWadlBuilder
 import com.autentia.xml.schema.SchemaBuilder;
 
 import io.swagger.annotations.ApiOperation;
+import it.smartcommunitylab.usdl.generator.USDLService;
 import net.java.dev.wadl._2009._02.Application;
 import net.java.dev.wadl._2009._02.Method;
 import net.java.dev.wadl._2009._02.Representation;
@@ -37,7 +40,15 @@ public class BuildingBlockController {
 
 	private final ApplicationBuilder applicationBuilder;
 	private final SchemaBuilder schemaBuilder;
+	private USDLService usdlService;
 	private static final List<String> specs = Arrays.asList("xwadl", "wsdl", "usdl", "swagger");
+	
+	@PostConstruct
+	public void BuildingBlockController() {
+		ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+		InputStream is = classloader.getResourceAsStream("artifact-reference.yml");
+		usdlService = new USDLService(is);
+	}
 	
 	@Autowired
 	public BuildingBlockController(RequestMappingHandlerMapping handlerMapping) {
@@ -51,6 +62,12 @@ public class BuildingBlockController {
 	@ResponseBody
 	public List<String> getSpecList(HttpServletResponse response) {
 		return specs;
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "spec/usdl", method = RequestMethod.GET, produces = { "application/rdf+xml" })
+	public String generateUSDL(HttpServletRequest request) {
+		return usdlService.generateBB();
 	}
 	
 	@RequestMapping(value = "spec/swagger", method = RequestMethod.GET)

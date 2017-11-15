@@ -43,11 +43,11 @@ public class TrentorientaServiceApplication {
 		return new ApiInfoBuilder().title("TrentOrienta REST API with Swagger").version("1.0")
 				.description(
 						"This page contains an interactive representation of the TrentOrienta project's API using Swagger."
-						+ " The project has been published as 5* building block conforming to welive consortium metamodel specification."
-						+ " The project has been released as opensource project on GitHub."
-						+ " For detailed information and source code visit https://github.com/smartcommunitylab/sco.trentorienta/wiki/Trento-Informer-(Trento-Orienta)")
-				.version("1.0")
-				.termsOfServiceUrl("http://redmine.welive.eu/documents/58")
+								+ " The project has been published as 5* building block conforming to welive consortium metamodel specification."
+								+ " The project has been released as opensource project on GitHub."
+								+ " For detailed information about API usage and source code visit"
+								+ " <a href=\"https://github.com/smartcommunitylab/sco.trentorienta/wiki/Trento-Informer-(Trento-Orienta)\" target=\"_blank\"> Project WIKI </a>")
+				.version("1.0").termsOfServiceUrl("http://redmine.welive.eu/documents/58")
 				.contact("SmartCommunity Lab FBK-ICT.").build();
 	}
 

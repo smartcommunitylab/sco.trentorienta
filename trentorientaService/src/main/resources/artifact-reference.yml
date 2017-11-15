@@ -1,0 +1,66 @@
+buildingblock:
+  namespace: http://platform.smartcommunitylab.it/openservice/services
+  title: Trento Informer (Trento Orienta)
+  created: 16/03/2017
+  abstractText: The building block (hereafter, BB) represents a standalone, self-contained component that is made available to the application developers and users within the WeLive ecosystem. The building blocks may expose different functionalities and may be of different types allowing for different usages and contexts
+  description: Trento Informer (Trento Orienta) delivers information (events, notifications) related to city of Trento and allows user to personalize their's choice of interested events/sources. The information is obtained from Trento city council using exposed APIs for fetching information in different categories like (Notifications from Comune of Trento,Notifications about found objects,Upcoming happenings, events in the city, and Videos of Trento Informer). Trento Informer provides a unique and always updated access point to information concerning the City of Trento (e.g alerts, events, lost and found, videos and much more).
+  type: WebService
+  pilot: Trento
+  webpage: https://github.com/smartcommunitylab/sco.trentorienta/wiki/Trento-Informer-(Trento-Orienta)
+  tags: 
+    - Trento Informer
+    - Trento Orienta
+  url: https://dev.welive.eu/marketplace/-/marketplace/view/20236
+  uses: 
+  businessRole:
+    - title: SmartCommunityLab
+      webpage: http://www.smartcommunitylab.it
+      email: info@smartcommunitylab.it
+      type: Owner
+    - title: SmartCommunityLab
+      webpage: http://www.smartcommunitylab.it
+      email: info@smartcommunitylab.it
+      type: SmartCommunityLab  
+    - title: WeLive Consortium
+      webpage: http://dev.welive.eu
+      email: welive@welive.eu
+      type: Provider
+  interactionPoint:
+    - title: REST Interaction Point
+      protocol: REST
+      description: Service URL for Starter Template App
+      url: https://tn.smartcommunitylab.it/trentorienta/swagger-ui.html 
+      metadata:
+      wadl: 
+      wsdl: 
+      technicalConstraints:
+        - language: java
+          body:
+          type: pre-condition
+  license:
+    title: CC-BY
+    description: Public domain Creative Commons BY license
+    type: Standard
+    url: https://creativecommons.org/licenses/by/4.0/legalcode
+  security:
+    communication:
+      protocol:
+       - http
+       - https
+      origin:
+       - ssss
+       - cccc
+    authentication:
+      title: 
+      description:
+      protocol:
+        - oauth
+        - cas
+      identityProvider:
+        - google
+        - facebook
+      accessType: user
+  serviceOffering:
+    - soffer1
+    - soffer2
+  
