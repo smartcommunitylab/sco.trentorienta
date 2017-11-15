@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.namespace.QName;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
+import org.springframework.ws.wsdl.wsdl11.SimpleWsdl11Definition;
 
 import com.autentia.web.rest.wadl.builder.ApplicationBuilder;
 import com.autentia.web.rest.wadl.builder.impl.springframework.SpringWadlBuilderFactory;
@@ -28,13 +30,14 @@ import net.java.dev.wadl._2009._02.Application;
 import net.java.dev.wadl._2009._02.Method;
 import net.java.dev.wadl._2009._02.Representation;
 import net.java.dev.wadl._2009._02.Resource;
+import springfox.documentation.annotations.ApiIgnore;
 
 @Controller
 public class BuildingBlockController {
 
 	private final ApplicationBuilder applicationBuilder;
 	private final SchemaBuilder schemaBuilder;
-	private static final List<String> specs = Arrays.asList("xwadl", "swagger");
+	private static final List<String> specs = Arrays.asList("xwadl", "wsdl", "usdl", "swagger");
 	
 	@Autowired
 	public BuildingBlockController(RequestMappingHandlerMapping handlerMapping) {
@@ -96,6 +99,14 @@ public class BuildingBlockController {
 		return application;
 	}
 
+	@ApiOperation(value = "spec/wsdl")
+	@ResponseBody
+	@RequestMapping(value = "spec/wsdl", method = RequestMethod.GET, produces = { "application/xml" })
+	public void generateWSDL(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		response.sendRedirect( request.getContextPath()+ "/soapservice/service/wsdl/service.wsdl");
+	}
+	
+	@ApiIgnore
 	@ResponseBody
 	@RequestMapping(value = "schema/{classTypeName}", method = RequestMethod.GET)
 	public String generateSchema(@PathVariable String classTypeName) {

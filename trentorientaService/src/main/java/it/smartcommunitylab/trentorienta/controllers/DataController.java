@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import it.smartcommunitylab.trentorienta.model.EventType;
 import it.smartcommunitylab.trentorienta.model.SearchRequest;
 import it.smartcommunitylab.trentorienta.repository.EventTypeRepositoryCustom;
@@ -34,11 +35,16 @@ public class DataController {
 	@ApiOperation(value = "getAllEvents", nickname = "getAllEvents", produces = "application/xml, application/json")
 	@CrossOrigin(origins = "*")
 	@RequestMapping(method = RequestMethod.GET, value = "/api/events")
-	public @ResponseBody Page<EventType> getAllEvents(@RequestParam(required = false) Integer start,
-			@RequestParam(required = false) Integer size, @RequestParam(required = false) String[] source,
-			@RequestParam(required = false) String[] tag, @RequestParam(required = false) String[] themes,
-			@RequestParam(required = false) String fromDateStr, @RequestParam(required = false) Integer sortForList,
-			@RequestParam(required = false) String filter) throws ParseException {
+	public @ResponseBody Page<EventType> getAllEvents(
+			@ApiParam(value = "Page number.", required = false) @RequestParam(required = false) Integer start,
+			@ApiParam(value = "Number of events to show in page.", required = false) @RequestParam(required = false) Integer size,
+			@ApiParam(value = "Array source for e.g. (Avvisi del Comune di Trento,Eventi del Comune di Trento).", required = false) @RequestParam(required = false) String[] source,
+			@ApiParam(value = "Array tags for e.g. (Economia e diritto,Sport).", required = false) @RequestParam(required = false) String[] tag,
+			@ApiParam(value = "Array themes for e.g. (Formazione, Economia e diritto).", required = false) @RequestParam(required = false) String[] themes,
+			@ApiParam(value = "YYYYMMddhhmm (201710130916)", required = false) @RequestParam(required = false) String fromDateStr,
+			@ApiParam(value = "Sorting Order 1-DESC/0-ASC", required = false) @RequestParam(required = false) Integer sortForList,
+			@ApiParam(value = "Filter text", required = false) @RequestParam(required = false) String filter)
+			throws ParseException {
 		if (start == null)
 			start = 0;
 		if (size == null)
@@ -58,8 +64,8 @@ public class DataController {
 	@CrossOrigin(origins = "*")
 	@RequestMapping(method = RequestMethod.POST, value = "/api/events")
 	@PostMapping("/api/events")
-	public @ResponseBody Page<EventType> getAllEventsWithSearchRequest(@RequestBody SearchRequest params)
-			throws ParseException {
+	public @ResponseBody Page<EventType> getAllEventsWithSearchRequest(
+			@ApiParam(value = "search body", required = true) @RequestBody SearchRequest params) throws ParseException {
 		int start = params.getStart() == null ? 0 : params.getStart();
 		int size = params.getSize() == null ? 15 : params.getSize();
 
@@ -78,7 +84,8 @@ public class DataController {
 	@ApiOperation(value = "getEvent", nickname = "getEvent", produces = "application/xml, application/json")
 	@CrossOrigin(origins = "*")
 	@RequestMapping(method = RequestMethod.GET, value = "/api/event")
-	public @ResponseBody EventType getEvent(@RequestParam(value = "id") String id) {
+	public @ResponseBody EventType getEvent(
+			@ApiParam(value = "Event id (avvisi_1126997)", required = true) @RequestParam(value = "id") String id) {
 
 		return repo1.findEvent(id);
 	}
@@ -86,8 +93,9 @@ public class DataController {
 	@ApiOperation(value = "getThemeList", nickname = "getThemeList", produces = "application/xml, application/json")
 	@CrossOrigin(origins = "*")
 	@RequestMapping(method = RequestMethod.GET, value = "/api/themes")
-	public @ResponseBody Map<String, Integer> getThemeList(@RequestParam(required = false) Integer start,
-			@RequestParam(required = false) Integer size) {
+	public @ResponseBody Map<String, Integer> getThemeList(
+			@ApiParam(value = "Page number.", required = false) @RequestParam(required = false) Integer start,
+			@ApiParam(value = "Number of events to show in page.", required = false) @RequestParam(required = false) Integer size) {
 		if (start == null)
 			start = 0;
 		if (size == null)
@@ -98,8 +106,9 @@ public class DataController {
 	@ApiOperation(value = "getTagList", nickname = "getTagList", produces = "application/xml, application/json")
 	@CrossOrigin(origins = "*")
 	@RequestMapping(method = RequestMethod.GET, value = "/api/tags")
-	public @ResponseBody Map<String, Integer> getTagList(@RequestParam(required = false) Integer start,
-			@RequestParam(required = false) Integer size) {
+	public @ResponseBody Map<String, Integer> getTagList(
+			@ApiParam(value = "Page number.", required = false) @RequestParam(required = false) Integer start,
+			@ApiParam(value = "Number of events to show in page.", required = false) @RequestParam(required = false) Integer size) {
 		if (start == null)
 			start = 0;
 		if (size == null)
@@ -110,8 +119,9 @@ public class DataController {
 	@ApiOperation(value = "getSourceList", nickname = "getSourceList", produces = "application/xml, application/json")
 	@CrossOrigin(origins = "*")
 	@RequestMapping(method = RequestMethod.GET, value = "/api/sources")
-	public @ResponseBody Map<String, Integer> getSourceList(@RequestParam(required = false) Integer start,
-			@RequestParam(required = false) Integer size) {
+	public @ResponseBody Map<String, Integer> getSourceList(
+			@ApiParam(value = "Page number.", required = false) @RequestParam(required = false) Integer start,
+			@ApiParam(value = "Number of events to show in page.", required = false) @RequestParam(required = false) Integer size) {
 		if (start == null)
 			start = 0;
 		if (size == null)
