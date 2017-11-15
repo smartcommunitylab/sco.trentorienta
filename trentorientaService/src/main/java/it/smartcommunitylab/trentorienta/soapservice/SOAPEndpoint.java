@@ -16,7 +16,6 @@ import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 
-import it.smartcommunitylab.trentorienta.model.EventType;
 import it.smartcommunitylab.trentorienta.repository.EventTypeRepositoryCustom;
 
 @Endpoint
@@ -83,10 +82,7 @@ public class SOAPEndpoint {
 	@ResponsePayload
 	public EventType getEvent(@RequestPayload EventRequest eventRequest) {
 
-		EventType response = null;
-		response = repo1.findEvent(eventRequest.getId());
-
-		return response;
+		return (getMappedEvent(repo1.findEvent(eventRequest.getId())));
 
 	}
 
@@ -95,32 +91,199 @@ public class SOAPEndpoint {
 	public EventTypeList getAllEventsWithSearchRequest(@RequestPayload SearchRequest searchRequest)
 			throws ParseException {
 
-		Page<EventType> pageList = null;
+		Page<it.smartcommunitylab.trentorienta.model.EventType> pageList = null;
+
 		EventTypeList list = new EventTypeList();
 
 		BigInteger start = searchRequest.getStart() == null ? BigInteger.valueOf(0) : searchRequest.getStart();
 		BigInteger size = searchRequest.getSize() == null ? BigInteger.valueOf(15) : searchRequest.getSize();
-		
+
 		Date fromDate = null;
 		if (searchRequest.getFromDateStr() != null && !searchRequest.getFromDateStr().isEmpty()) {
 			fromDate = StringUtils.isEmpty(searchRequest.getFromDateStr()) ? null
 					: DATE_FORMAT.parse(searchRequest.getFromDateStr());
 		}
-		
-		BigInteger sortForList = searchRequest.getSortForList() == null ? BigInteger.valueOf(1) : searchRequest.getSortForList();
+
+		BigInteger sortForList = searchRequest.getSortForList() == null ? BigInteger.valueOf(1)
+				: searchRequest.getSortForList();
 
 		if (sortForList.intValue() == 1)
 			pageList = repo1.findAllEventType(searchRequest.getThemes().toArray(new String[0]),
 					searchRequest.getSource().toArray(new String[0]), searchRequest.getTag().toArray(new String[0]),
-					fromDate, true, searchRequest.getFilter(), new PageRequest(start.intValue()  / size.intValue() , size.intValue() ));
+					fromDate, true, searchRequest.getFilter(),
+					new PageRequest(start.intValue() / size.intValue(), size.intValue()));
 		else
 			pageList = repo1.findAllEventType(searchRequest.getThemes().toArray(new String[0]),
 					searchRequest.getSource().toArray(new String[0]), searchRequest.getTag().toArray(new String[0]),
-					fromDate, false, searchRequest.getFilter(), new PageRequest(start.intValue()  / size.intValue() , size.intValue() ));
+					fromDate, false, searchRequest.getFilter(),
+					new PageRequest(start.intValue() / size.intValue(), size.intValue()));
 
-		list.setEventType(pageList.getContent());
+		for (it.smartcommunitylab.trentorienta.model.EventType internalEvt : pageList.getContent()) {
+			list.getEvent().add(getMappedEventForList(internalEvt));
+		}
 
 		return list;
+	}
+
+	private EventTypeList.Event getMappedEventForList(it.smartcommunitylab.trentorienta.model.EventType eventInternal) {
+		EventTypeList.Event response = new EventTypeList.Event();
+
+		if (eventInternal.getAddress() != null) {
+			response.setAddress(eventInternal.getAddress());
+		}
+
+		if (eventInternal.getCategory() != null) {
+			response.setCategory(eventInternal.getCategory());
+		}
+
+		if (eventInternal.getCoordX() != null) {
+			response.setCoordX(eventInternal.getCoordX());
+		}
+
+		if (eventInternal.getCoordY() != null) {
+			response.setCoordY(eventInternal.getCoordY());
+		}
+
+		if (eventInternal.getCreatedDate() != null) {
+			response.setCreatedDate(eventInternal.getCreatedDate());
+		}
+
+		if (eventInternal.getDescription() != null) {
+			response.setDescription(eventInternal.getDescription());
+		}
+
+		if (eventInternal.getEventDate() != null) {
+			response.setEventDate(eventInternal.getEventDate());
+		}
+
+		if (eventInternal.getEventoDate() != null) {
+			response.setEventoDate(eventInternal.getEventoDate());
+		}
+
+		if (eventInternal.getEventStart() != null) {
+			response.setEventStart(eventInternal.getEventStart());
+		}
+
+		if (eventInternal.getEventTiming() != null) {
+			response.setEventTiming(eventInternal.getEventTiming());
+		}
+
+		if (eventInternal.getId() != null) {
+			response.setId(eventInternal.getId());
+		}
+
+		if (eventInternal.getImage() != null) {
+			response.setImage(eventInternal.getImage());
+		}
+
+		if (eventInternal.getShortAbstract() != null) {
+			response.setShortAbstract(eventInternal.getShortAbstract());
+		}
+
+		if (eventInternal.getSource() != null) {
+			response.setSource(eventInternal.getSource());
+		}
+
+		if (eventInternal.getTags() != null && !eventInternal.getTags().isEmpty()) {
+			response.getTags().addAll(eventInternal.getTags());
+		}
+
+		if (eventInternal.getThemes() != null) {
+			response.setThemes(eventInternal.getThemes());
+		}
+
+		if (eventInternal.getTitle() != null) {
+			response.setTitle(eventInternal.getTitle());
+		}
+
+		response.setToTime(eventInternal.getToTime());
+
+		if (eventInternal.getWeb() != null) {
+			response.setWeb(eventInternal.getWeb());
+		}
+
+		return response;
+	}
+
+	private EventType getMappedEvent(it.smartcommunitylab.trentorienta.model.EventType eventInternal) {
+
+		EventType response = new EventType();
+
+		if (eventInternal.getAddress() != null) {
+			response.setAddress(eventInternal.getAddress());
+		}
+
+		if (eventInternal.getCategory() != null) {
+			response.setCategory(eventInternal.getCategory());
+		}
+
+		if (eventInternal.getCoordX() != null) {
+			response.setCoordX(eventInternal.getCoordX());
+		}
+
+		if (eventInternal.getCoordY() != null) {
+			response.setCoordY(eventInternal.getCoordY());
+		}
+
+		if (eventInternal.getCreatedDate() != null) {
+			response.setCreatedDate(eventInternal.getCreatedDate());
+		}
+
+		if (eventInternal.getDescription() != null) {
+			response.setDescription(eventInternal.getDescription());
+		}
+
+		if (eventInternal.getEventDate() != null) {
+			response.setEventDate(eventInternal.getEventDate());
+		}
+
+		if (eventInternal.getEventoDate() != null) {
+			response.setEventoDate(eventInternal.getEventoDate());
+		}
+
+		if (eventInternal.getEventStart() != null) {
+			response.setEventStart(eventInternal.getEventStart());
+		}
+
+		if (eventInternal.getEventTiming() != null) {
+			response.setEventTiming(eventInternal.getEventTiming());
+		}
+
+		if (eventInternal.getId() != null) {
+			response.setId(eventInternal.getId());
+		}
+
+		if (eventInternal.getImage() != null) {
+			response.setImage(eventInternal.getImage());
+		}
+
+		if (eventInternal.getShortAbstract() != null) {
+			response.setShortAbstract(eventInternal.getShortAbstract());
+		}
+
+		if (eventInternal.getSource() != null) {
+			response.setSource(eventInternal.getSource());
+		}
+
+		if (eventInternal.getTags() != null && !eventInternal.getTags().isEmpty()) {
+			response.getTags().addAll(eventInternal.getTags());
+		}
+
+		if (eventInternal.getThemes() != null) {
+			response.setThemes(eventInternal.getThemes());
+		}
+
+		if (eventInternal.getTitle() != null) {
+			response.setTitle(eventInternal.getTitle());
+		}
+
+		response.setToTime(eventInternal.getToTime());
+
+		if (eventInternal.getWeb() != null) {
+			response.setWeb(eventInternal.getWeb());
+		}
+
+		return response;
 	}
 
 }
