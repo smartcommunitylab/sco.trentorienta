@@ -81,13 +81,7 @@
 				</xsd:complexType>
 			</xsd:element>
 
-			<xsd:element name="eventTypeList" maxOccurs='unbounded'>
-				<xsd:complexType>
-					<xsd:sequence>
-						<xsd:element name="eventType"/>
-					</xsd:sequence>
-				</xsd:complexType>
-			</xsd:element>
+			<xsd:element name="eventTypeList"/>
 
 			<xsd:element name="eventType" />
 
