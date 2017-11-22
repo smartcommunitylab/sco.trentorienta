@@ -28,11 +28,20 @@ buildingblock:
   interactionPoint:
     - title: REST Interaction Point
       protocol: REST
-      description: Service URL for Starter Template App
+      description: Service URL for Trento Informer
       url: https://tn.smartcommunitylab.it/trentorienta/swagger-ui.html 
       metadata:
-      wadl: 
-      wsdl: 
+      wadl: https://tn.smartcommunitylab.it/trentorienta/spec/xwadl
+      technicalConstraints:
+        - language: java
+          body:
+          type: pre-condition
+    - title: SOAP webservice interaction Point
+      protocol: SOAP
+      description: Service URL for Trento Informer
+      url: https://tn.smartcommunitylab.it/trentorienta/spec/wsdl 
+      metadata:
+      wsdl: https://tn.smartcommunitylab.it/trentorienta/spec/wsdl
       technicalConstraints:
         - language: java
           body:
