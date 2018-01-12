@@ -56,6 +56,7 @@ export abstract class ElementListPage implements OnInit {
     data: string[] = [];
     myDate: string;
     currDate: string;
+    eventDate: any;
 
     temList: occurenciesType[] = [];
     sorList: occurenciesType[] = [];
