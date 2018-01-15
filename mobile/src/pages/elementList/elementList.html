@@ -38,7 +38,9 @@
                 <ion-icon *ngIf="searching" name="close-circle"></ion-icon>
             </button>
         </ion-buttons>
+        
     </ion-navbar>
+    <ion-searchbar #searchBox *ngIf="searching && view=='lista'" placeholder="{{'search_label'|translate}}" (search)="search(searchBox.value)"></ion-searchbar>
 </ion-header>
 
 
@@ -50,7 +52,7 @@
     </ion-refresher>
 
     <div [ngSwitch]="view" style="height: 100%; width: 100%">
-        <ion-searchbar #searchBox *ngIf="searching" placeholder="{{'search_label'|translate}}" (search)="search(searchBox.value)"></ion-searchbar>
+        
 
         <div *ngSwitchCase="'lista'" style="height: 100%; width: 100%">
 
@@ -70,6 +72,7 @@
                     <span *ngIf="tagging" class="tags">{{event.tags}}</span>
                     <h2>{{event.title}}</h2>
                     <p class="pubb">{{'Published'|translate}}<span class="crea">{{event.createdDate | date: 'dd/MM/yyyy'}}</span></p>
+                    <span *ngIf="event.eventStart" class="gre">{{'EventDate'|translate}}<span class="bla">{{event.eventoDate | date: 'dd.MM.yyyy'}}</span>{{'Time'|translate}} <span class="bla">{{event.eventoDate | date: 'HH.mm'}}</span></span>
                     <!--<p><span class="grey">{{'Time'|translate}} </span>{{ event.eventoDate | date: 'HH:mm'}} </p>-->
                 </ion-item>
             </ion-list>

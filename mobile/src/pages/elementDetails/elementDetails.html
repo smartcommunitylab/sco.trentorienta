@@ -11,15 +11,22 @@
 </ion-header>
 
 <ion-content>
-  <div *ngIf="!!event">  
-    <img *ngIf="event.image" src={{event.image}} width="100%" height="auto">
-    <img *ngIf="!event.image" src='assets/icon/comune.jpeg' width="100%" height="auto">
-    <p class="pub">{{'Published'|translate}}<span class="bla">{{createEvent}}</span></p>
-    <h2>{{event.title}}</h2>
-    <span *ngIf="event.eventStart" class="gre">{{'EventDate'|translate}}<span class="bla">{{dateEvent | date: 'dd.MM.yyyy'}}</span>{{'Time'|translate}} <span class="bla">{{dateEvent | date: 'HH.mm'}}</span></span>
-    <p *ngIf="event.address" class="gre">{{'Place'|translate}}<a href="{{url}}" target="_system" class="add">{{event.address}}</a></p>
-    <p *ngIf="!event.address" class="gre">{{'Place'|translate}}<a href="{{url}}" target="_system" class="add">{{'AddressNotFound'|translate}}</a></p>
+  <div *ngIf="!!event"> 
+    <ion-card>
+        <img *ngIf="event.image" src={{event.image}} width="100%" height="auto">
+        <img *ngIf="!event.image" src='assets/icon/comune.jpeg' width="100%" height="auto">
+        
+  </ion-card>
+  <ion-card>
+      <p class="pub">{{'Published'|translate}}<span class="bla">{{createEvent}}</span></p>
+      <ion-card-title>{{event.title}}</ion-card-title>
+      <span *ngIf="event.eventStart" class="gre">{{'EventDate'|translate}}<span class="bla">{{dateEvent | date: 'dd.MM.yyyy'}}</span>{{'Time'|translate}} <span class="bla">{{dateEvent | date: 'HH.mm'}}</span></span>
+      <p *ngIf="event.address" class="gre">{{'Place'|translate}}<a href="{{url}}" target="_system" class="add">{{event.address}}</a></p>
+      <p *ngIf="!event.address" class="gre">{{'Place'|translate}}<a href="{{url}}" target="_system" class="add">{{'AddressNotFound'|translate}}</a></p>
+  
+      <p class="des" [innerHTML]="event.description"></p>    
+  
+  </ion-card>
+</div>
 
-    <p class="des" [innerHTML]="event.description"></p>    
-  </div>
 </ion-content>

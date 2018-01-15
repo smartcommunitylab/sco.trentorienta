@@ -56,8 +56,6 @@ export abstract class ElementListPage implements OnInit {
     data: string[] = [];
     myDate: string;
     currDate: string;
-    eventDate: any;
-
     temList: occurenciesType[] = [];
     sorList: occurenciesType[] = [];
 
@@ -163,8 +161,9 @@ export abstract class ElementListPage implements OnInit {
                     this.enabled = false;
                 }
                 mainEvents.forEach(e => {
+                    console.log(e)
+                    e.eventoDate = moment(e.eventStart, 'YYYYMMDDHHmm').toDate();
                     e.createdDate = moment(e.created, 'YYYYMMDDHHmm').toDate();
-                    //e.eventoDate = moment(e.eventStart, 'YYYYMMDDHHmm').toDate();
                 });
                 this.mainEvents = reset ? mainEvents : this.mainEvents.concat(mainEvents);
                 this.charged = true;
