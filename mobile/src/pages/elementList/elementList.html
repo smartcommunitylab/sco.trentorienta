@@ -72,7 +72,10 @@
                     <span *ngIf="tagging" class="tags">{{event.tags}}</span>
                     <h2>{{event.title}}</h2>
                     <p class="pubb">{{'Published'|translate}}<span class="crea">{{event.createdDate | date: 'dd/MM/yyyy'}}</span></p>
-                    <span *ngIf="event.eventStart" class="gre">{{'EventDate'|translate}}<span class="bla">{{event.eventoDate | date: 'dd.MM.yyyy'}}</span>{{'Time'|translate}} <span class="bla">{{event.eventoDate | date: 'HH.mm'}}</span></span>
+                    <p *ngIf="event.eventStart" class="pubb">{{'EventDate'|translate}}
+                        <span class="crea">{{event.eventoDate | date: 'dd/MM/yyyy'}}</span>
+                    {{'Time'|translate}}
+                        <span class="crea">{{event.eventoDate | date: 'HH:mm'}}</span></p>
                     <!--<p><span class="grey">{{'Time'|translate}} </span>{{ event.eventoDate | date: 'HH:mm'}} </p>-->
                 </ion-item>
             </ion-list>
@@ -96,7 +99,7 @@
             </div>
             <ion-list>
                 <ion-item-divider *ngFor="let key of keys" color="date" mode="md">
-                    {{key | date: 'dd.MM.yyyy'}}
+                    {{key | date: 'dd/MM/yyyy'}}
                     <ion-item *ngFor="let event of calendarEvents[key]" (click)="onSelect(event)" mode="md" class="noborder">
                         <ion-thumbnail item-start>
                             <img *ngIf="event.image" src={{event.imageThumb}}>
