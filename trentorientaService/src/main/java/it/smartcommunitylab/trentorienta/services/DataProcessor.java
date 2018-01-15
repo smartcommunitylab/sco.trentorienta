@@ -124,8 +124,8 @@ public class DataProcessor {
 			// System.out.println( ( (HashMap) fields.get("gps") ).get("value")
 			// );
 
-			evento.setCoordX(new Float(46.0));
-			evento.setCoordY(new Float(11.0));
+			evento.setCoordX(new Float(46.070189));
+			evento.setCoordY(new Float(11.120252));
 
 			evento.setCreated(dataInizio);
 
@@ -224,7 +224,7 @@ public class DataProcessor {
 			String indirizzo = (String) ((LinkedHashMap) riga.get("address")).get("it");
 
 			input2.put("address", indirizzo);
-			input2.put("latlng", "46.0655,11.1086");
+			input2.put("latlng", "46.070135,11.120045");
 			input2.put("distance", "10");
 
 			// System.out.println("\n\n****" + indirizzo);
@@ -245,8 +245,8 @@ public class DataProcessor {
 				evento.setCoordX(Float.parseFloat(coord.split(",")[0]));
 				evento.setCoordY(Float.parseFloat(coord.split(",")[1]));
 			} catch (Exception e) {
-				evento.setCoordX(new Float(0));
-				evento.setCoordY(new Float(0));
+				evento.setCoordX(new Float(46.070189));
+				evento.setCoordY(new Float(11.120252));
 			}
 
 			// System.out.println("Coordinate trovate:" + evento.getCoordX() +
@@ -329,8 +329,8 @@ public class DataProcessor {
 				String durata = String.valueOf(durataMap.get("value"));
 				evento.setEventTiming(durata);
 			}
-			evento.setCoordX(new Float(46.0));
-			evento.setCoordY(new Float(11.0));
+			evento.setCoordX(new Float(46.070189));
+			evento.setCoordY(new Float(11.120252));
 			evento.setAddress("Comune di Trento");
 
 			evento.setCreated(new SimpleDateFormat("YYYMMddHHmm")
@@ -428,8 +428,8 @@ public class DataProcessor {
 			// System.out.println( ( (HashMap) fields.get("gps") ).get("value")
 			// );
 
-			evento.setCoordX(new Float(46.0));
-			evento.setCoordY(new Float(11.0));
+			evento.setCoordX(new Float(46.070189));
+			evento.setCoordY(new Float(11.120252));
 
 			evento.setCreated(dataInizio);
 
