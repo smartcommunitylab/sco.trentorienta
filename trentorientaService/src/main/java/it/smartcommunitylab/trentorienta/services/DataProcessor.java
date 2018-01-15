@@ -224,7 +224,7 @@ public class DataProcessor {
 			String indirizzo = (String) ((LinkedHashMap) riga.get("address")).get("it");
 
 			input2.put("address", indirizzo);
-			input2.put("latlng", "46.0655,11.1086");
+			input2.put("latlng", "46.070135,11.120045");
 			input2.put("distance", "10");
 
 			// System.out.println("\n\n****" + indirizzo);
