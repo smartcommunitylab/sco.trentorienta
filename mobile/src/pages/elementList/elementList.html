@@ -70,6 +70,7 @@
                     <span *ngIf="tagging" class="tags">{{event.tags}}</span>
                     <h2>{{event.title}}</h2>
                     <p class="pubb">{{'Published'|translate}}<span class="crea">{{event.createdDate | date: 'dd/MM/yyyy'}}</span></p>
+                    <!--<p><span class="grey">{{'Time'|translate}} </span>{{ event.eventoDate | date: 'HH:mm'}} </p>-->
                 </ion-item>
             </ion-list>
             <ion-infinite-scroll *ngIf="enabled" (ionInfinite)="doInfinite($event)">
@@ -99,8 +100,12 @@
                             <img *ngIf="!event.image" src='assets/icon/comune.jpeg'>
                         </ion-thumbnail>
                         <h2>{{event.title}}</h2>
-                        <span class="grey">{{'Published'|translate}}</span> {{event.createdDate | date: 'dd/MM/yyyy'}}
-                        <span class="grey">{{'Time'|translate}} </span>{{ event.eventoDate | date: 'HH:mm'}} 
+                        <div>
+                            <p><span class="grey">{{'Published'|translate}}</span> {{event.createdDate | date: 'dd/MM/yyyy'}}</p> <!--Could be cause of confusion for the user-->
+                            <p><span class="grey">{{'Time'|translate}} </span>{{ event.eventoDate | date: 'HH:mm'}} </p>
+                            
+                        </div>
+
                     </ion-item>
                 </ion-item-divider>
             </ion-list>
