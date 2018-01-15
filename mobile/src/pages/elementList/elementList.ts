@@ -90,7 +90,7 @@ export abstract class ElementListPage implements OnInit {
             },
         ],
         zoom: 12,
-        center: [46.0, 11.1]
+        center: [46.066933, 11.121511] //Trento's cathedral coords
     };
 
     // Fields for managing the form inputs and binding to leaflet zoom/center
@@ -164,6 +164,7 @@ export abstract class ElementListPage implements OnInit {
                 }
                 mainEvents.forEach(e => {
                     e.createdDate = moment(e.created, 'YYYYMMDDHHmm').toDate();
+                    //e.eventoDate = moment(e.eventStart, 'YYYYMMDDHHmm').toDate();
                 });
                 this.mainEvents = reset ? mainEvents : this.mainEvents.concat(mainEvents);
                 this.charged = true;
@@ -452,6 +453,7 @@ export abstract class ElementListPage implements OnInit {
         for (let key in commonPlace) {
             let event = this.mainEvents[key];
             let marker = L.marker([event.coordX, event.coordY], {
+            //let marker = L.marker([this.optionsSpec.center[0], this.optionsSpec.center[1] ], {
                 icon: L.icon({
                     iconSize: [25, 41],
                     iconAnchor: [13, 41],
