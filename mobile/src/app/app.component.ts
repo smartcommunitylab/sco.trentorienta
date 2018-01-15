@@ -5,6 +5,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { Globalization } from '@ionic-native/globalization';
 import * as moment from 'moment'
 import { AppConfig } from './app.config';
+import { ToastController } from 'ionic-angular';
 
 import { HomePage } from '../pages/home/home';
 import { TemiPage } from '../pages/temi/temi';
@@ -31,11 +32,31 @@ export class MyApp {
 
   pages: Array<{ icon: string, title: string, component: any }>;
 
+  private backButtonPressedOnceToExit: boolean = false;
+
   constructor(private translate: TranslateService, public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen,
     private configSrv: ConfigSrv, public questionnaireService: QuestionnaireService, public globalization: Globalization, public config: AppConfig,
-    public alertCtrl: AlertController) {
+    public alertCtrl: AlertController, private toastCtrl: ToastController) {
 
     this.initializeApp();
+
+    platform.ready().then(() => {
+
+      platform.registerBackButtonAction(() => {
+        if (this.backButtonPressedOnceToExit) {
+          this.platform.exitApp();
+        } else if (this.nav.canGoBack()) {
+          this.nav.pop({});
+        } else {
+          this.showToast();
+          this.backButtonPressedOnceToExit = true;
+          setTimeout(() => {
+
+            this.backButtonPressedOnceToExit = false;
+          },3000)
+        }
+      }, 100);
+    });
 
     translate.addLangs(["it", "en"]);
     // translate.setDefaultLang('it');
@@ -81,7 +102,8 @@ export class MyApp {
       pop_up__expired_template: 'The trial version of the app has expired',
       pop_up_not_expired_title: 'Trial version',
       pop_up_not_expired_template: 'This is a trial version expiring on ',
-      search_label: 'Search'
+      search_label: 'Search',
+      exit_app: 'Press again to exit'
 
 
     });
@@ -127,7 +149,8 @@ export class MyApp {
       pop_up__expired_template: 'Ci scusiamo ma non è più possibile utilizzare questa versione dell\'applicazione in quanto il periodo di prova è terminata',
       pop_up_not_expired_title: 'Versione di prova',
       pop_up_not_expired_template: 'Questa  è una versione di prova e terminerà il ',
-      search_label: 'Cerca'
+      search_label: 'Cerca',
+      exit_app: 'Premere di nuovo per uscire'
     });
 
 
@@ -239,4 +262,20 @@ export class MyApp {
     return (Math.round(Math.abs((date.getTime() - new Date(new Date().toDateString()).getTime()) / (oneDay))));
 
   }
+
+  showToast() {
+    let toast = this.toastCtrl.create({
+      message: this.translate.instant('exit_app'),
+      duration: 3000,
+      position: 'bottom'
+    });
+    
+    // toast.onDidDismiss((data, role) => {
+    //   if (role == "close") {
+    //     this.platform.exitApp();
+    //   }
+    // });
+    
+    toast.present();
+    }
 }
