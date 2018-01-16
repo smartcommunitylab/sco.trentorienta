@@ -54,30 +54,41 @@ public class EventTypeRepositoryImpl implements EventTypeRepositoryCustom {
 		// log 'SearchEvent'
 		log("SearchEvent", "SearchEvent", UUID.randomUUID().toString());
 
-		List<Criteria> criteria = new ArrayList<Criteria>();
-		Criteria SearchCriteria = new Criteria();
-
+		List<Criteria> criteriaSource = new ArrayList<Criteria>();
+		List<Criteria> criteriaTheme = new ArrayList<Criteria>();
+		List<Criteria> criteriaTag = new ArrayList<Criteria>();
+	
+		Criteria criteriaTh = new Criteria();
 		if (themes != null) {
 			for (int i = 0; i < themes.length; i++) {
-				criteria.add(Criteria.where("themes").is(themes[i]));
+				criteriaTheme.add(Criteria.where("themes").is(themes[i]));
 			}
+			criteriaTh.orOperator(criteriaTheme.toArray(new Criteria[criteriaTheme.size()]));
+
 		}
+
+		Criteria criteriaS = new Criteria();
 		if (sources != null) {
 			for (int i = 0; i < sources.length; i++) {
-				criteria.add(Criteria.where("source").is(sources[i]));
+				criteriaSource.add(Criteria.where("source").is(sources[i]));
 			}
+			criteriaS.orOperator(criteriaSource.toArray(new Criteria[criteriaSource.size()]));
+
 		}
+
+		Criteria criteriaTa = new Criteria();
 		if (tags != null) {
 			for (int i = 0; i < tags.length; i++) {
 				if (tags[i].compareTo("null") != 0)
-					criteria.add(Criteria.where("tags").in(tags[i]));
+					criteriaTag.add(Criteria.where("tags").in(tags[i]));
 			}
-		}
-		/*
-		 * if (fromDate != null) { criteria.add(Criteria.where("toTime").gte (
-		 * Long.parseLong(fromDate) )); }
-		 */
+			criteriaTa.orOperator(criteriaTag.toArray(new Criteria[criteriaTag.size()]));
 
+		}
+
+		Criteria SearchCriteria = new Criteria().andOperator(criteriaTh, criteriaS, criteriaTa);
+
+	
 		Query query = new Query();
 
 		if (filter != null && filter != "") {
@@ -85,14 +96,11 @@ public class EventTypeRepositoryImpl implements EventTypeRepositoryCustom {
 			query = TextQuery.queryText(criteriaTesto).sortByScore();
 		}
 
+	
 		if (fromDate != null)
 			SearchCriteria.andOperator(Criteria.where("toTime").gte(fromDate.getTime()));
 
-		if (criteria.size() > 0)
-			SearchCriteria.orOperator(criteria.toArray(new Criteria[criteria.size()]));
-
-		if (fromDate != null || criteria.size() > 0)
-			query.addCriteria(SearchCriteria);
+		query.addCriteria(SearchCriteria);
 
 		System.out.println(query.toString());
 
