@@ -112,15 +112,16 @@ public class EventTypeRepositoryImpl implements EventTypeRepositoryCustom {
 
 		Query query = new Query();
 
+		Criteria filterSearch = null;
 		if (filter != null && filter != "") {
-//			TextCriteria criteriaTesto = TextCriteria.forDefaultLanguage().matchingAny(filter);
-//			query = TextQuery.queryText(criteriaTesto).sortByScore();
-			Criteria textSearch = new Criteria().orOperator(Criteria.where("source").regex(filter), 
-					Criteria.where("title").regex(filter),
-					Criteria.where("description").regex(filter),
-					Criteria.where("shortAbstract").regex(filter),
-					Criteria.where("category").regex(filter));
-			query.addCriteria(textSearch);
+			// TextCriteria criteriaTesto =
+			// TextCriteria.forDefaultLanguage().matchingAny(filter);
+			// query = TextQuery.queryText(criteriaTesto).sortByScore();
+			// query.addCriteria(textSearch);
+			filterSearch = new Criteria().orOperator(Criteria.where("source").regex(filter),
+					Criteria.where("title").regex(filter), Criteria.where("description").regex(filter),
+					Criteria.where("shortAbstract").regex(filter), Criteria.where("category").regex(filter));
+
 		}
 
 		Criteria timeCriteria = null;
@@ -128,13 +129,24 @@ public class EventTypeRepositoryImpl implements EventTypeRepositoryCustom {
 			timeCriteria = new Criteria().andOperator(Criteria.where("toTime").gte(fromDate.getTime()));
 		}
 
-		if (timeCriteria != null && internal != null) {
-			Criteria withTime = new Criteria().andOperator(timeCriteria, internal);
+		if (timeCriteria != null && internal != null && filterSearch != null) {
+			Criteria withTime = new Criteria().andOperator(timeCriteria, internal, filterSearch);
 			query.addCriteria(withTime);
+		} else if (timeCriteria != null && internal != null) {
+			Criteria withTimeAndInternal = new Criteria().andOperator(timeCriteria, internal);
+			query.addCriteria(withTimeAndInternal);
+		} else if (timeCriteria != null && filterSearch != null) {
+			Criteria withTimeAndFilter = new Criteria().andOperator(timeCriteria, filterSearch);
+			query.addCriteria(withTimeAndFilter);
+		} else if (internal != null && filterSearch != null) {
+			Criteria internalAndFilter = new Criteria().andOperator(internal, filterSearch);
+			query.addCriteria(internalAndFilter);
 		} else if (timeCriteria != null) {
 			query.addCriteria(timeCriteria);
 		} else if (internal != null) {
 			query.addCriteria(internal);
+		} else if (filterSearch != null) {
+			query.addCriteria(filterSearch);
 		}
 
 		// if (criteria.size() > 0)
