@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { Nav, Platform, AlertController } from 'ionic-angular';
+import { Nav, Platform, AlertController, IonicApp } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Globalization } from '@ionic-native/globalization';
@@ -17,6 +17,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { QuestionnaireService } from '../services/questionnaire-service';
 import { TermsPage } from '../pages/terms/terms';
 import { ConfigSrv } from '../services/config-service';
+import { MenuController } from 'ionic-angular/components/app/menu-controller';
 
 
 
@@ -34,20 +35,43 @@ export class MyApp {
 
   private backButtonPressedOnceToExit: boolean = false;
 
+
+
   constructor(private translate: TranslateService, public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen,
     private configSrv: ConfigSrv, public questionnaireService: QuestionnaireService, public globalization: Globalization, public config: AppConfig,
-    public alertCtrl: AlertController, private toastCtrl: ToastController) {
+    public alertCtrl: AlertController, private toastCtrl: ToastController, private ionicApp: IonicApp, private menuCtrl: MenuController) {
 
     this.initializeApp();
 
     platform.ready().then(() => {
 
       platform.registerBackButtonAction(() => {
+
+
+        let activePortal = this.ionicApp._loadingPortal.getActive() ||
+        this.ionicApp._modalPortal.getActive() ||
+        this.ionicApp._toastPortal.getActive() ||
+        this.ionicApp._overlayPortal.getActive();
+
         if (this.backButtonPressedOnceToExit) {
           this.platform.exitApp();
-        } else if (this.nav.canGoBack()) {
+        } 
+        else if (this.nav.canGoBack()) 
+        {
           this.nav.pop({});
-        } else {
+        } 
+        else if(activePortal)
+        {
+          activePortal.dismiss();
+          return
+        }
+        else if (this.menuCtrl.isOpen()) // Close menu if open
+        { 
+          this.menuCtrl.close();
+          return
+        }
+        else 
+        {
           this.showToast();
           this.backButtonPressedOnceToExit = true;
           setTimeout(() => {
@@ -55,7 +79,58 @@ export class MyApp {
             this.backButtonPressedOnceToExit = false;
           },3000)
         }
+
+
+
+
+
+        if (activePortal) {
+          
+      }
+      
+/*
+      let view = this.nav.getActive(); // As none of the above have occurred, its either a page pushed from menu or tab
+    let activeVC = this.nav.getActive(); //get the active view
+   
+    let page = activeVC.instance; //page is the current view's instance i.e the current component I suppose
+*/
+
+
+      
+      
       }, 100);
+
+
+      /*if (this.keyboard.isOpen()) { // Handles the keyboard if open
+        this.keyboard.close();
+        return;
+    }*/
+
+    
+
+   //activePortal is the active overlay like a modal,toast,etc
+    
+
+    
+             
+
+    /*if (!(page instanceof TabsPage)) { // Check if the current page is pushed from a menu click
+        
+        if (this.nav.canGoBack() || view && view.isOverlay) {
+            this.nav.pop(); //pop if page can go back or if its an overlay over a menu page
+        }             
+        else {
+            this.showAlert();
+        }
+
+        return;
+    }*/
+    
+    /*let tabs = this.app.getActiveNav(); // So it must be a view from a tab. The current tab's nav can be accessed by this.app.getActiveNav();
+    if (!tabs.canGoBack()) {
+        return this.showToast();
+    }
+    return tabs.pop();*/
     });
 
     translate.addLangs(["it", "en"]);
@@ -103,7 +178,8 @@ export class MyApp {
       pop_up_not_expired_title: 'Trial version',
       pop_up_not_expired_template: 'This is a trial version expiring on ',
       search_label: 'Search',
-      exit_app: 'Press again to exit'
+      exit_app: 'Press again to exit',
+      video:'Video: '
 
 
     });
@@ -150,7 +226,8 @@ export class MyApp {
       pop_up_not_expired_title: 'Versione di prova',
       pop_up_not_expired_template: 'Questa  è una versione di prova e terminerà il ',
       search_label: 'Cerca',
-      exit_app: 'Premere di nuovo per uscire'
+      exit_app: 'Premere di nuovo per uscire',
+      video:'Video: '
     });
 
 

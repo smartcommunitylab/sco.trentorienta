@@ -1,6 +1,6 @@
 <ion-header>
     <ion-navbar color="primary">
-        <ion-title>{{!!event ? event.title : ''}}</ion-title>
+        <ion-title>{{event ? event.title : ''}}</ion-title>
         <ion-buttons end>
           <button ion-button (click)="addFav(event)">
             <ion-icon *ngIf="isFav" name="star"></ion-icon>
@@ -23,6 +23,7 @@
       <span *ngIf="event.eventStart" class="gre">{{'EventDate'|translate}}<span class="bla">{{dateEvent | date: 'dd/MM/yyyy'}}</span>{{'Time'|translate}} <span class="bla">{{dateEvent | date: 'HH:mm'}}</span></span>
       <p *ngIf="event.address" class="gre">{{'Place'|translate}}<a href="{{url}}" target="_system" class="add">{{event.address}}</a></p>
       <p *ngIf="!event.address" class="gre">{{'Place'|translate}}<a href="{{url}}" target="_system" class="add">{{'AddressNotFound'|translate}}</a></p>
+      <p *ngIf="event.videoLink" class="gre">{{'video'|translate}}<a href="{{event.videoLink}}" target="_system" class="add">{{event.title}}</a></p>
   
       <p class="des" [innerHTML]="event.description"></p>    
   
