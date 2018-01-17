@@ -71,11 +71,15 @@
                     </ion-thumbnail>
                     <span *ngIf="tagging" class="tags">{{event.tags}}</span>
                     <h2>{{event.title}}</h2>
-                    <p class="pubb">{{'Published'|translate}}<span class="crea">{{event.createdDate | date: 'dd/MM/yyyy'}}</span></p>
-                    <p *ngIf="event.eventStart" class="pubb">{{'EventDate'|translate}}
+                    <p class="grey">{{'Published'|translate}}<span class="crea">{{event.createdDate | date: 'dd/MM/yyyy'}}</span></p>
+                    
+                    <p *ngIf="event.eventStart" class="grey">{{'EventDate'|translate}}
                         <span class="crea">{{event.eventoDate | date: 'dd/MM/yyyy'}}</span>
-                    {{'Time'|translate}}
-                        <span class="crea">{{event.eventoDate | date: 'HH:mm'}}</span></p>
+                    </p>
+                    <p *ngIf="event.eventTiming != null" class="grey">{{'Time'|translate}}
+                        <span class="crea">{{event.eventTiming}}</span>
+                    </p>
+                    
                     <!--<p><span class="grey">{{'Time'|translate}} </span>{{ event.eventoDate | date: 'HH:mm'}} </p>-->
                 </ion-item>
             </ion-list>
@@ -108,7 +112,7 @@
                         <h2>{{event.title}}</h2>
                         <div>
                             <p><span class="grey">{{'Published'|translate}}</span> {{event.createdDate | date: 'dd/MM/yyyy'}}</p> <!--Could be cause of confusion for the user-->
-                            <p><span class="grey">{{'Time'|translate}} </span>{{ event.eventoDate | date: 'HH:mm'}} </p>
+                            <p><span class="grey">{{'Time'|translate}} </span>{{event.eventTiming}} </p>
                             
                         </div>
 
