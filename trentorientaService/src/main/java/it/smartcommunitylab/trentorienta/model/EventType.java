@@ -5,7 +5,7 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.TextIndexed;
+//import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
@@ -17,12 +17,12 @@ public class EventType {
 
 	private String source; // sorgenti
 
-	@TextIndexed
+//	@TextIndexed
 	private String title;
 
-	@TextIndexed
+//	@TextIndexed
 	private String description;
-	@TextIndexed
+//	@TextIndexed
 	private String shortAbstract;
 
 	private String category; // temi
@@ -41,6 +41,17 @@ public class EventType {
 	private String address;
 	private String web;
 	private String videoLink;
+	
+	/** coordinates. **/
+	private double[] coordinates;
+
+	public double[] getCoordinates() {
+		return coordinates;
+	}
+
+	public void setCoordinates(double[] coordinates) {
+		this.coordinates = coordinates;
+	}
 
 	public String getVideoLink() {
 		return videoLink;

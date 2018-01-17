@@ -43,7 +43,10 @@ public class DataController {
 			@ApiParam(value = "Array themes for e.g. (Formazione, Economia e diritto).", required = false) @RequestParam(required = false) String[] themes,
 			@ApiParam(value = "YYYYMMddhhmm (201710130916)", required = false) @RequestParam(required = false) String fromDateStr,
 			@ApiParam(value = "Sorting Order 1-DESC/0-ASC", required = false) @RequestParam(required = false) Integer sortForList,
-			@ApiParam(value = "Filter text", required = false) @RequestParam(required = false) String filter)
+			@ApiParam(value = "Filter text", required = false) @RequestParam(required = false) String filter,
+			@ApiParam(value = "Filter text", required = false) @RequestParam(required = false) String lat,
+			@ApiParam(value = "Filter text", required = false) @RequestParam(required = false) String lon,
+			@ApiParam(value = "Filter text", required = false) @RequestParam(required = false) String radius)
 			throws ParseException {
 		if (start == null)
 			start = 0;
@@ -53,10 +56,10 @@ public class DataController {
 		if (sortForList == null)
 			sortForList = 1;
 		if (sortForList == 1)
-			return repo1.findAllEventType(themes, source, tag, fromDate, true, filter,
+			return repo1.findAllEventType(themes, source, tag, fromDate, true, filter, lat, lon, radius,
 					new PageRequest(start / size, size));
 		else
-			return repo1.findAllEventType(themes, source, tag, fromDate, false, filter,
+			return repo1.findAllEventType(themes, source, tag, fromDate, false, filter, lat, lon, radius,
 					new PageRequest(start / size, size));
 	}
 
@@ -75,10 +78,10 @@ public class DataController {
 
 		if (sortForList == 1)
 			return repo1.findAllEventType(params.getThemes(), params.getSource(), params.getTag(), fromDate, true,
-					params.getFilter(), new PageRequest(start / size, size));
+					params.getFilter(), params.getLat(), params.getLon(), params.getRadius(), new PageRequest(start / size, size));
 		else
 			return repo1.findAllEventType(params.getThemes(), params.getSource(), params.getTag(), fromDate, false,
-					params.getFilter(), new PageRequest(start / size, size));
+					params.getFilter(), params.getLat(), params.getLon(), params.getRadius(), new PageRequest(start / size, size));
 	}
 
 	@ApiOperation(value = "getEvent", nickname = "getEvent", produces = "application/xml, application/json")

@@ -10,7 +10,8 @@ import it.smartcommunitylab.trentorienta.model.EventType;
 
 public interface EventTypeRepositoryCustom {
 
-	Page<EventType> findAllEventType(String[] themes, String[] sources, String[] tags, Date fromDate, Boolean sortForList, String filter, Pageable pageRequest);
+	Page<EventType> findAllEventType(String[] themes, String[] sources, String[] tags, Date fromDate, Boolean sortForList, String filter, String lat, String lon,
+			String radius, Pageable pageRequest);
 	
 	EventType findEvent(String id);
 	
