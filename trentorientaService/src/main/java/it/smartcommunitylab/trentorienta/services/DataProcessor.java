@@ -93,15 +93,15 @@ public class DataProcessor {
 			evento.setCategory(categoria);
 			evento.setThemes(categoria);
 
-//			Object immagine = ((HashMap) fields.get("image")).get("value");
-//			if (immagine instanceof Map) {
-//				evento.setImage(immagine.toString());
-//			}
-			
+			// Object immagine = ((HashMap) fields.get("image")).get("value");
+			// if (immagine instanceof Map) {
+			// evento.setImage(immagine.toString());
+			// }
+
 			Object immagine = ((HashMap) fields.get("image")).get("value");
 			if (immagine != null && immagine instanceof String) {
 				if (!immagine.toString().isEmpty()) {
-					evento.setImage(immagine.toString());	
+					evento.setImage(immagine.toString());
 				}
 			}
 
@@ -124,8 +124,8 @@ public class DataProcessor {
 			// System.out.println( ( (HashMap) fields.get("gps") ).get("value")
 			// );
 
-			evento.setCoordX(new Float(46.0));
-			evento.setCoordY(new Float(11.0));
+			evento.setCoordX(new Float(46.070189));
+			evento.setCoordY(new Float(11.120252));
 
 			evento.setCreated(dataInizio);
 
@@ -152,11 +152,13 @@ public class DataProcessor {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<Map<String, Object>> request = new HttpEntity<>(input, headers);
-		ArrayList list = template.postForObject("https://os.smartcommunitylab.it/comuneintasca-multi/events/TrentoInTasca", request, ArrayList.class);
-		
-//		ArrayList list = template.postForObject(
-//				"https://os.smartcommunitylab.it/comuneintasca-multi/events/TrentoInTasca", input, ArrayList.class);
-		        
+		ArrayList list = template.postForObject(
+				"https://os.smartcommunitylab.it/comuneintasca-multi/events/TrentoInTasca", request, ArrayList.class);
+
+		// ArrayList list = template.postForObject(
+		// "https://os.smartcommunitylab.it/comuneintasca-multi/events/TrentoInTasca",
+		// input, ArrayList.class);
+
 		// System.out.println("*** Numero eventi trovati: " + list.size());
 
 		for (int i = 0; i < list.size(); i++) {
@@ -245,8 +247,8 @@ public class DataProcessor {
 				evento.setCoordX(Float.parseFloat(coord.split(",")[0]));
 				evento.setCoordY(Float.parseFloat(coord.split(",")[1]));
 			} catch (Exception e) {
-				evento.setCoordX(new Float(0));
-				evento.setCoordY(new Float(0));
+				evento.setCoordX(new Float(46.070189));
+				evento.setCoordY(new Float(11.120252));
 			}
 
 			// System.out.println("Coordinate trovate:" + evento.getCoordX() +
@@ -288,6 +290,18 @@ public class DataProcessor {
 			String descrizione = (String) ((LinkedHashMap) fields.get("descrizione")).get("string_value");
 			String abstr = (String) ((LinkedHashMap) fields.get("abstract")).get("string_value");
 
+			
+			// video link
+			if (riga != null && riga.containsKey("objectId") && fields.containsKey("ezflowmedia")) {
+				String objectId = String.valueOf(riga.get("objectId"));
+				HashMap video = (HashMap) fields.get("ezflowmedia");
+				if (video.containsKey("id")) {
+					String videoLink = "http://www.comune.trento.it/content/download/" + objectId + "/"
+							+ video.get("id") + "/video";
+					evento.setVideoLink(videoLink);
+				}
+			}
+			
 			// for most of the events we have abstract(short description)
 			if (descrizione != null && !descrizione.isEmpty()) {
 				evento.setDescription((String) descrizione);
@@ -329,8 +343,8 @@ public class DataProcessor {
 				String durata = String.valueOf(durataMap.get("value"));
 				evento.setEventTiming(durata);
 			}
-			evento.setCoordX(new Float(46.0));
-			evento.setCoordY(new Float(11.0));
+			evento.setCoordX(new Float(46.070189));
+			evento.setCoordY(new Float(11.120252));
 			evento.setAddress("Comune di Trento");
 
 			evento.setCreated(new SimpleDateFormat("YYYMMddHHmm")
@@ -397,17 +411,16 @@ public class DataProcessor {
 			evento.setCategory(categoria);
 			evento.setThemes(categoria);
 
-//			Object immagine = ((HashMap) fields.get("image")).get("value");
-//			if (immagine instanceof Map) {
-//				evento.setImage(immagine.toString());
-//			}
+			// Object immagine = ((HashMap) fields.get("image")).get("value");
+			// if (immagine instanceof Map) {
+			// evento.setImage(immagine.toString());
+			// }
 			Object immagine = ((HashMap) fields.get("image")).get("value");
 			if (immagine != null && immagine instanceof String) {
 				if (!immagine.toString().isEmpty()) {
-					evento.setImage(immagine.toString());	
+					evento.setImage(immagine.toString());
 				}
 			}
-
 
 			String eventDate = (String) ((HashMap) fields.get("data")).get("value");
 			String dataInizio = new SimpleDateFormat("YYYMMddHHmm")
@@ -428,8 +441,8 @@ public class DataProcessor {
 			// System.out.println( ( (HashMap) fields.get("gps") ).get("value")
 			// );
 
-			evento.setCoordX(new Float(46.0));
-			evento.setCoordY(new Float(11.0));
+			evento.setCoordX(new Float(46.070189));
+			evento.setCoordY(new Float(11.120252));
 
 			evento.setCreated(dataInizio);
 
@@ -444,10 +457,10 @@ public class DataProcessor {
 			repoEvent.save(evento);
 		}
 	}
-	
-//	public static void main(String args[]) {
-//		DataProcessor dataProcessor = new DataProcessor();
-//		dataProcessor.getDataPeriodically();
-//	}
+
+//	 public static void main(String args[]) {
+//	 DataProcessor dataProcessor = new DataProcessor();
+//	 dataProcessor.getDataPeriodically();
+//	 }
 
 }
