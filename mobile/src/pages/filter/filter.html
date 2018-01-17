@@ -5,20 +5,55 @@
 </ion-header>
 
 <ion-content>
-    <ion-list>
+    <!-- <ion-list>
         <ion-item>
-            <ion-label>{{'Themes'|translate}}</ion-label>
-                <ion-select multiple="true" [(ngModel)]="temChose">
-                    <ion-option *ngFor="let theme of temList |orderBy:'name'" value={{theme.name}}>{{theme.name}}</ion-option>
+            <ion-label>
+                {{'Themes'|translate}}
+            </ion-label>
+                <ion-select multiple="true" [(ngModel)]="temChose" [selectOptions] = "selectOptions">
+                    <ion-option *ngFor="let theme of temList |orderBy:'name'" value={{theme.name}}>
+                        {{theme.name}}
+                    </ion-option>
                 </ion-select>
+
         </ion-item>
+        
         <ion-item>
             <ion-label>{{'Sources'|translate}}</ion-label>
                 <ion-select multiple="true" [(ngModel)]="sorChose">
                     <ion-option *ngFor="let source of sorList |orderBy:'name'" value={{source.name}}>{{source.name}}</ion-option>
                 </ion-select>
         </ion-item>
-    </ion-list>
+    </ion-list> -->
+
+    <ion-card>
+        <button ion-button clear class="specific-button" block (click) = "modal(1)">
+            <span class="button-inner">
+                {{'Themes'|translate}}
+            </span>
+            <ion-icon item-right name = "arrow-down"></ion-icon>
+        </button>
+    </ion-card> 
+    <ion-card>
+        <button ion-button clear class="specific-button" block (click) = "modal(0)">
+            <span class="button-inner">
+                {{'Sources'|translate}}
+            </span>
+            <ion-icon item-right name = "arrow-down"></ion-icon>
+        </button>
+    </ion-card>
+    <ion-card>
+        <ion-item>
+            <ion-label style="text-transform: uppercase; color: grey; font-size: 83%; font-weight:bold">
+                {{'Distance'|translate}}<h2 *ngIf = "distance != -1" style="text-transform: lowercase; color: grey">: {{distance}} km</h2>
+            </ion-label>
+            <ion-toggle (ionChange)="dist()"></ion-toggle>
+        </ion-item>
+        <ion-range *ngIf = "distance != -1" [(ngModel)]="value" min="0" max="4" step="1" snaps="true" (ionChange)="change()">
+            <div range-left>5 km</div>
+            <div range-right>100 km</div>
+        </ion-range>
+    </ion-card>
     <div>
         <ion-buttons>
             <button ion-button (click)="filterCancel()">{{'FilterCancel'|translate}}</button>

@@ -103,9 +103,11 @@ export class MyApp {
       pop_up_not_expired_title: 'Trial version',
       pop_up_not_expired_template: 'This is a trial version expiring on ',
       search_label: 'Search',
-      exit_app: 'Press again to exit'
-
-
+      exit_app: 'Press again to exit',
+      select_all: 'All',
+      unselect_all: 'None',
+      invert_selection : 'Invert',
+      Distance: 'Distance'
     });
     translate.setTranslation('it', {
       Home: 'Home',
@@ -150,7 +152,11 @@ export class MyApp {
       pop_up_not_expired_title: 'Versione di prova',
       pop_up_not_expired_template: 'Questa  è una versione di prova e terminerà il ',
       search_label: 'Cerca',
-      exit_app: 'Premere di nuovo per uscire'
+      exit_app: 'Premere di nuovo per uscire',
+      select_all: 'Tutti',
+      unselect_all: 'Nessuno',
+      invert_selection : 'Inverti',
+      Distance: 'Distanza'
     });
 
 

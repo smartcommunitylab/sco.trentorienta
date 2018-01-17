@@ -18,4 +18,9 @@
 .searchbar-md .searchbar-input::-webkit-input-placeholder {
     text-indent: 0;
     color: white;
-  }
+}
+
+.specific-button .button-inner {
+    justify-content:flex-start;
+    color: grey;
+}

@@ -32,6 +32,7 @@ import { AppVersion } from '@ionic-native/app-version';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { TranslateModule } from '@ngx-translate/core';
+import { ModalPage } from '../pages/filter/modal/modal';
 
 
 import { LeafletModule } from '@asymmetrik/angular2-leaflet';
@@ -54,6 +55,7 @@ import { LeafletModule } from '@asymmetrik/angular2-leaflet';
     TermsPage,
     ModalContentPage,
     OrderBy,
+    ModalPage
   ],
   imports: [
     BrowserModule,
@@ -79,7 +81,8 @@ import { LeafletModule } from '@asymmetrik/angular2-leaflet';
     SorgentiListPage,
     FilterPage,
     TermsPage,
-    ModalContentPage
+    ModalContentPage,
+    ModalPage
   ],
   providers: [
     StatusBar,
