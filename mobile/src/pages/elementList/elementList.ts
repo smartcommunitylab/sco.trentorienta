@@ -22,6 +22,7 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
 
+
 @Pipe({ name: 'ObjNgFor', pure: false })
 export class ObjNgFor implements PipeTransform {
     transform(value: any, args: any[] = null): any {
@@ -56,8 +57,6 @@ export abstract class ElementListPage implements OnInit {
     data: string[] = [];
     myDate: string;
     currDate: string;
-    eventDate: any;
-
     temList: occurenciesType[] = [];
     sorList: occurenciesType[] = [];
 
@@ -163,8 +162,9 @@ export abstract class ElementListPage implements OnInit {
                     this.enabled = false;
                 }
                 mainEvents.forEach(e => {
+                    console.log(e) //DEBUGGING
+                    e.eventoDate = moment(e.eventStart, 'YYYYMMDDHHmm').toDate();
                     e.createdDate = moment(e.created, 'YYYYMMDDHHmm').toDate();
-                    //e.eventoDate = moment(e.eventStart, 'YYYYMMDDHHmm').toDate();
                 });
                 this.mainEvents = reset ? mainEvents : this.mainEvents.concat(mainEvents);
                 this.charged = true;
@@ -259,6 +259,7 @@ export abstract class ElementListPage implements OnInit {
         this.getData(from, from + this.PAGE_SIZE, this.searchValue)
             .then(mainEvents => {
                 loading.dismiss();
+                
                 if (reset == true && mainEvents.length < this.PAGE_SIZE) {
                     this.enabled = false;
                 }
@@ -401,12 +402,13 @@ export abstract class ElementListPage implements OnInit {
         this.myDate = new Date().toISOString();
         this.currDate = moment(new Date()).format('YYYY-MM-DD');
         this.termsObs = this.searchTerms.debounceTime(300)        // wait 300ms after each keystroke before considering the term
-            .distinctUntilChanged();
+.distinctUntilChanged();
 
         this.termsObs.forEach(v => {
             this.searchValue = v;
             this.enabled = true;
             this.getEvents(true);
+
         });
         this.storage.set('temChosen', []);
         this.storage.set('sorChosen', []);

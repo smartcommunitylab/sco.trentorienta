@@ -38,7 +38,9 @@
                 <ion-icon *ngIf="searching" name="close-circle"></ion-icon>
             </button>
         </ion-buttons>
+        
     </ion-navbar>
+    <ion-searchbar #searchBox *ngIf="searching && view=='lista'" placeholder="{{'search_label'|translate}}" (search)="search(searchBox.value)"></ion-searchbar>
 </ion-header>
 
 
@@ -50,7 +52,7 @@
     </ion-refresher>
 
     <div [ngSwitch]="view" style="height: 100%; width: 100%">
-        <ion-searchbar #searchBox *ngIf="searching" placeholder="{{'search_label'|translate}}" (search)="search(searchBox.value)"></ion-searchbar>
+        
 
         <div *ngSwitchCase="'lista'" style="height: 100%; width: 100%">
 
@@ -69,7 +71,15 @@
                     </ion-thumbnail>
                     <span *ngIf="tagging" class="tags">{{event.tags}}</span>
                     <h2>{{event.title}}</h2>
-                    <p class="pubb">{{'Published'|translate}}<span class="crea">{{event.createdDate | date: 'dd/MM/yyyy'}}</span></p>
+                    <p class="grey">{{'Published'|translate}}<span class="crea">{{event.createdDate | date: 'dd/MM/yyyy'}}</span></p>
+                    
+                    <p *ngIf="event.eventStart" class="grey">{{'EventDate'|translate}}
+                        <span class="crea">{{event.eventoDate | date: 'dd/MM/yyyy'}}</span>
+                    </p>
+                    <p *ngIf="event.eventTiming != null" class="grey">{{'Time'|translate}}
+                        <span class="crea">{{event.eventTiming}}</span>
+                    </p>
+                    
                     <!--<p><span class="grey">{{'Time'|translate}} </span>{{ event.eventoDate | date: 'HH:mm'}} </p>-->
                 </ion-item>
             </ion-list>
@@ -93,7 +103,7 @@
             </div>
             <ion-list>
                 <ion-item-divider *ngFor="let key of keys" color="date" mode="md">
-                    {{key | date: 'dd.MM.yyyy'}}
+                    {{key | date: 'dd/MM/yyyy'}}
                     <ion-item *ngFor="let event of calendarEvents[key]" (click)="onSelect(event)" mode="md" class="noborder">
                         <ion-thumbnail item-start>
                             <img *ngIf="event.image" src={{event.imageThumb}}>
@@ -102,7 +112,7 @@
                         <h2>{{event.title}}</h2>
                         <div>
                             <p><span class="grey">{{'Published'|translate}}</span> {{event.createdDate | date: 'dd/MM/yyyy'}}</p> <!--Could be cause of confusion for the user-->
-                            <p><span class="grey">{{'Time'|translate}} </span>{{ event.eventoDate | date: 'HH:mm'}} </p>
+                            <p><span class="grey">{{'Time'|translate}} </span>{{event.eventTiming}} </p>
                             
                         </div>
 

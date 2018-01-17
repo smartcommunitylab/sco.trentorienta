@@ -4,13 +4,19 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.index.GeospatialIndex;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -21,6 +27,9 @@ import org.springframework.ws.transport.http.MessageDispatcherServlet;
 import org.springframework.ws.wsdl.wsdl11.SimpleWsdl11Definition;
 import org.springframework.ws.wsdl.wsdl11.Wsdl11Definition;
 
+import com.mongodb.MongoClient;
+
+import it.smartcommunitylab.trentorienta.model.EventType;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
@@ -60,6 +69,10 @@ public class TrentorientaServiceApplication {
 
 	@Configuration
 	public class WebConfig extends WebMvcConfigurerAdapter {
+
+		@Autowired
+		private Environment env;
+
 		@Override
 		public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
 			MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
@@ -70,6 +83,20 @@ public class TrentorientaServiceApplication {
 			converter.setSupportedMediaTypes(list);
 			converters.add(converter);
 		}
+
+		@Bean(name = "mongoTemplate")
+		public MongoTemplate getMongoTemplate() {
+			MongoTemplate template = new MongoTemplate(
+					new MongoClient(env.getProperty("spring.data.mongodb.host"),
+							Integer.parseInt(env.getProperty("spring.data.mongodb.port"))),
+					env.getProperty("spring.data.mongodb.database"));
+
+			template.indexOps(EventType.class).ensureIndex(new GeospatialIndex("coordinates"));
+
+			return template;
+
+		}
+
 	}
 
 	@Bean

@@ -1,6 +1,6 @@
 <ion-header>
     <ion-navbar color="primary">
-        <ion-title>{{!!event ? event.title : ''}}</ion-title>
+        <ion-title>{{event ? event.title : ''}}</ion-title>
         <ion-buttons end>
           <button ion-button (click)="addFav(event)">
             <ion-icon *ngIf="isFav" name="star"></ion-icon>
@@ -11,15 +11,66 @@
 </ion-header>
 
 <ion-content>
-  <div *ngIf="!!event">  
-    <img *ngIf="event.image" src={{event.image}} width="100%" height="auto">
-    <img *ngIf="!event.image" src='assets/icon/comune.jpeg' width="100%" height="auto">
-    <p class="pub">{{'Published'|translate}}<span class="bla">{{createEvent}}</span></p>
-    <h2>{{event.title}}</h2>
-    <span *ngIf="event.eventStart" class="gre">{{'EventDate'|translate}}<span class="bla">{{dateEvent | date: 'dd.MM.yyyy'}}</span>{{'Time'|translate}} <span class="bla">{{dateEvent | date: 'HH.mm'}}</span></span>
-    <p *ngIf="event.address" class="gre">{{'Place'|translate}}<a href="{{url}}" target="_system" class="add">{{event.address}}</a></p>
-    <p *ngIf="!event.address" class="gre">{{'Place'|translate}}<a href="{{url}}" target="_system" class="add">{{'AddressNotFound'|translate}}</a></p>
+  <div *ngIf="!!event"> 
+    <ion-card>
+      <img *ngIf="event.image" src={{event.image}} width="100%" height="auto">
+      <img *ngIf="!event.image" src='assets/icon/comune.jpeg' width="100%" height="auto">  
 
-    <p class="des" [innerHTML]="event.description"></p>    
+      <p class="pub">{{'Published'|translate}}<span class="bla">{{event.createdDate}}</span></p>
+      <ion-card-title>{{event.title}}</ion-card-title>
+
+      <ion-card *ngIf="event.eventStart != null">
+        <p ion-button clear block outline icon-start  class="left">
+          <span class="button-inner">
+            <ion-icon name="calendar"></ion-icon>
+            {{'EventDate'|translate}} {{event.eventoDate | date: 'dd/MM/yyyy'}}
+          </span>
+        </p>
+      </ion-card>
+      <ion-card *ngIf="event.eventTiming != null">
+        <p ion-button clear block outline icon-start  class="left">
+          <span class="button-inner">
+            <ion-icon name="watch"></ion-icon>
+            {{'Time'|translate}} {{event.eventTiming}}
+          </span>
+        </p>
+      </ion-card>
+      <ion-card *ngIf="event.address">
+        <a ion-button clear block icon-start  href="{{url}}" target="_system" class="left">
+          <span class="button-inner">
+          <ion-icon name="pin"></ion-icon>
+          {{'Place'|translate}} {{event.address}}
+          </span>
+        </a>
+      </ion-card>
+
+      <ion-card *ngIf="!event.address">
+          <a ion-button clear block icon-start  href="{{url}}" target="_system" class="left">
+              <span class="button-inner">
+                <ion-icon name="pin"></ion-icon>{{'Place'|translate}} {{'AddressNotFound'|translate}}
+              </span>
+            </a>
+      </ion-card>
+      <ion-card  *ngIf="event.videoLink">
+          <a ion-button clear block icon-start href="{{event.videoLink}}" target="_system" class="left">
+              <span class="button-inner">
+                <ion-icon name="play"></ion-icon>
+                {{'video'|translate}}
+              </span>
+            </a>
+      </ion-card>
+
+
+      <!--
+      <p *ngIf="event.address" class="gre">{{'Place'|translate}}<a href="{{url}}" target="_system" class="add">{{event.address}}</a></p>
+      <p *ngIf="!event.address" class="gre">{{'Place'|translate}}<a href="{{url}}" target="_system" class="add">{{'AddressNotFound'|translate}}</a></p>
+      <span *ngIf="event.eventTiming != null" class="gre">{{'EventDate'|translate}}<span class="bla">{{event.eventoDate}}</span>{{'Time'|translate}} <span class="bla">{{event.eventTiming}}</span></span>
+      -->
+      <ion-card>
+        <p class="des" [innerHTML]="event.description"></p> 
+      </ion-card>
+   
+    </ion-card>
   </div>
+
 </ion-content>

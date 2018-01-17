@@ -20,14 +20,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.geo.Circle;
+import org.springframework.data.geo.Point;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
+import org.springframework.data.mongodb.core.geo.Sphere;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.TextCriteria;
-import org.springframework.data.mongodb.core.query.TextQuery;
 
 import it.smartcommunitylab.trentorienta.model.EventType;
 
@@ -49,30 +50,62 @@ public class EventTypeRepositoryImpl implements EventTypeRepositoryCustom {
 
 	@Override
 	public Page<EventType> findAllEventType(String[] themes, String[] sources, String[] tags, Date fromDate,
-			Boolean sortForList, String filter, Pageable pageRequest) {
+			Boolean sortForList, String filter, String lat, String lon, String radius, Pageable pageRequest) {
 
 		// log 'SearchEvent'
 		log("SearchEvent", "SearchEvent", UUID.randomUUID().toString());
 
-		List<Criteria> criteria = new ArrayList<Criteria>();
-		Criteria SearchCriteria = new Criteria();
+		// List<Criteria> criteria = new ArrayList<Criteria>();
 
-		if (themes != null) {
+		List<Criteria> criteriaSource = new ArrayList<Criteria>();
+		List<Criteria> criteriaTheme = new ArrayList<Criteria>();
+		List<Criteria> criteriaTag = new ArrayList<Criteria>();
+
+		Criteria criteriaTh = null;
+		if (themes != null && themes.length > 0) {
 			for (int i = 0; i < themes.length; i++) {
-				criteria.add(Criteria.where("themes").is(themes[i]));
+				criteriaTheme.add(Criteria.where("themes").is(themes[i]));
 			}
+			criteriaTh = new Criteria().orOperator(criteriaTheme.toArray(new Criteria[criteriaTheme.size()]));
+
 		}
-		if (sources != null) {
+
+		Criteria criteriaS = null;
+		if (sources != null && sources.length > 0) {
 			for (int i = 0; i < sources.length; i++) {
-				criteria.add(Criteria.where("source").is(sources[i]));
+				criteriaSource.add(Criteria.where("source").is(sources[i]));
 			}
+			criteriaS = new Criteria().orOperator(criteriaSource.toArray(new Criteria[criteriaSource.size()]));
+
 		}
-		if (tags != null) {
+
+		Criteria criteriaTa = null;
+		if (tags != null && tags.length > 0) {
 			for (int i = 0; i < tags.length; i++) {
 				if (tags[i].compareTo("null") != 0)
-					criteria.add(Criteria.where("tags").in(tags[i]));
+					criteriaTag.add(Criteria.where("tags").in(tags[i]));
 			}
+			criteriaTa = new Criteria().orOperator(criteriaTag.toArray(new Criteria[criteriaTag.size()]));
+
 		}
+
+		Criteria internal = null;
+		if (criteriaTa != null && criteriaS != null && criteriaTh != null)
+			internal = new Criteria().andOperator(criteriaTh, criteriaS, criteriaTa);
+		else if (criteriaTa != null && criteriaS != null)
+			internal = new Criteria().andOperator(criteriaS, criteriaTa);
+		else if (criteriaS != null && criteriaTh != null)
+			internal = new Criteria().andOperator(criteriaS, criteriaTh);
+		else if (criteriaTa != null && criteriaTh != null) {
+			internal = new Criteria().andOperator(criteriaTa, criteriaTh);
+		} else if (criteriaTa != null) {
+			internal = new Criteria().andOperator(criteriaTa);
+		} else if (criteriaS != null) {
+			internal = new Criteria().andOperator(criteriaS);
+		} else if (criteriaTh != null) {
+			internal = new Criteria().andOperator(criteriaTh);
+		}
+
 		/*
 		 * if (fromDate != null) { criteria.add(Criteria.where("toTime").gte (
 		 * Long.parseLong(fromDate) )); }
@@ -80,19 +113,50 @@ public class EventTypeRepositoryImpl implements EventTypeRepositoryCustom {
 
 		Query query = new Query();
 
+		Criteria filterSearch = null;
 		if (filter != null && filter != "") {
-			TextCriteria criteriaTesto = TextCriteria.forDefaultLanguage().matchingAny(filter);
-			query = TextQuery.queryText(criteriaTesto).sortByScore();
+			// TextCriteria criteriaTesto =
+			// TextCriteria.forDefaultLanguage().matchingAny(filter);
+			// query = TextQuery.queryText(criteriaTesto).sortByScore();
+			// query.addCriteria(textSearch);
+			filterSearch = new Criteria().orOperator(Criteria.where("source").regex(filter),
+					Criteria.where("title").regex(filter), Criteria.where("description").regex(filter),
+					Criteria.where("shortAbstract").regex(filter), Criteria.where("category").regex(filter));
+
 		}
 
-		if (fromDate != null)
-			SearchCriteria.andOperator(Criteria.where("toTime").gte(fromDate.getTime()));
+		Criteria timeCriteria = null;
+		if (fromDate != null) {
+			timeCriteria = new Criteria().andOperator(Criteria.where("toTime").gte(fromDate.getTime()));
+		}
 
-		if (criteria.size() > 0)
-			SearchCriteria.orOperator(criteria.toArray(new Criteria[criteria.size()]));
+		if (timeCriteria != null && internal != null && filterSearch != null) {
+			Criteria withTime = new Criteria().andOperator(timeCriteria, internal, filterSearch);
+			query.addCriteria(withTime);
+		} else if (timeCriteria != null && internal != null) {
+			Criteria withTimeAndInternal = new Criteria().andOperator(timeCriteria, internal);
+			query.addCriteria(withTimeAndInternal);
+		} else if (timeCriteria != null && filterSearch != null) {
+			Criteria withTimeAndFilter = new Criteria().andOperator(timeCriteria, filterSearch);
+			query.addCriteria(withTimeAndFilter);
+		} else if (internal != null && filterSearch != null) {
+			Criteria internalAndFilter = new Criteria().andOperator(internal, filterSearch);
+			query.addCriteria(internalAndFilter);
+		} else if (timeCriteria != null) {
+			query.addCriteria(timeCriteria);
+		} else if (internal != null) {
+			query.addCriteria(internal);
+		} else if (filterSearch != null) {
+			query.addCriteria(filterSearch);
+		}
 
-		if (fromDate != null || criteria.size() > 0)
-			query.addCriteria(SearchCriteria);
+		if (lat != null && lon != null && isDouble(lat) && isDouble(lon) && radius != null && isDouble(radius)) {
+			Point pFrom = new Point(Double.parseDouble(lat), Double.parseDouble(lon));
+			Circle circleFrom = new Circle(pFrom, Double.parseDouble(radius) / 6371);
+			Sphere sphereFrom = new Sphere(circleFrom);
+			Criteria zoneCriteria = new Criteria().where("coordinates").within(sphereFrom);
+			query.addCriteria(zoneCriteria);
+		}
 
 		System.out.println(query.toString());
 
@@ -240,6 +304,15 @@ public class EventTypeRepositoryImpl implements EventTypeRepositoryCustom {
 		}
 		return result;
 
+	}
+
+	boolean isDouble(String str) {
+		try {
+			Double.parseDouble(str);
+			return true;
+		} catch (NumberFormatException e) {
+			return false;
+		}
 	}
 
 }
