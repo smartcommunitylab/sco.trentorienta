@@ -56,14 +56,14 @@ export class MyApp {
         if (this.backButtonPressedOnceToExit) {
           this.platform.exitApp();
         } 
-        else if (this.nav.canGoBack()) 
-        {
-          this.nav.pop({});
-        } 
         else if(activePortal)
         {
           activePortal.dismiss();
           return
+        }
+        else if (this.nav.canGoBack()) 
+        {
+          this.nav.pop({});
         }
         else if (this.menuCtrl.isOpen()) // Close menu if open
         { 
@@ -157,7 +157,7 @@ export class MyApp {
       FavoriteEvents: 'Favorite notifications  ',
       Filter: 'Filter',
       FilterCancel: 'Cancel',
-      Time: 'Time: ',
+      Time: 'Schedule: ',
       EventsArea: 'Events in this area',
       Loading: 'Loading',
       lbl_error: 'error',
@@ -183,7 +183,8 @@ export class MyApp {
       unselect_all: 'None',
       invert_selection : 'Invert',
       Distance: 'Distance',
-      video:'Video'
+      video:'Video',
+      Duration:'Duration: '
 
 
     });
@@ -208,7 +209,7 @@ export class MyApp {
       FavoriteEvents: 'Notifiche preferite  ',
       Filter: 'Filtra',
       FilterCancel: 'Annulla',
-      Time: 'Ora: ',
+      Time: 'Orario: ',
       EventsArea: 'Eventi in questa zona',
       Loading: 'Caricamento',
       lbl_error: 'errore',
@@ -235,7 +236,8 @@ export class MyApp {
       unselect_all: 'Nessuno',
       invert_selection : 'Inverti',
       Distance: 'Distanza',
-      video:'Video'
+      video:'Video', 
+      Duration:'Durata: '
     });
 
 

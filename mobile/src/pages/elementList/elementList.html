@@ -19,7 +19,7 @@
                 <ion-icon name="calendar"></ion-icon>
             </button>
 
-            <button ion-button *ngIf="view=='lista' && isHome" (click)='toggleFilters()'>
+            <button ion-button *ngIf="(view=='lista' || view =='mappa') && isHome" (click)='toggleFilters()'>
                 <ion-icon name="ios-funnel"></ion-icon>
             </button>
 
@@ -33,7 +33,7 @@
                 <ion-icon *ngIf="!theme.fav" name="star-outline"></ion-icon>
             </button>
 
-            <button ion-button *ngIf="view=='lista'" (click)='toggleSearch()'>
+            <button ion-button *ngIf="view=='lista'|| view =='mappa'" (click)='toggleSearch()'>
                 <ion-icon *ngIf="!searching" name="search"></ion-icon>
                 <ion-icon *ngIf="searching" name="close-circle"></ion-icon>
             </button>
@@ -47,7 +47,7 @@
 <ion-content>
 
     <ion-refresher *ngIf="enabledRefresh" (ionRefresh)="doRefresh($event)">
-        <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="circles" refreshingText="Refreshing...">
+        <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingText="Refreshing...">
         </ion-refresher-content>
     </ion-refresher>
 
@@ -70,13 +70,16 @@
                         <img *ngIf="!event.image" src='assets/icon/comune.jpeg'>
                     </ion-thumbnail>
                     <span *ngIf="tagging" class="tags">{{event.tags}}</span>
-                    <h2>{{event.title}}</h2>
-                    <p class="grey">{{'Published'|translate}}<span class="crea">{{event.createdDate | date: 'dd/MM/yyyy'}}</span></p>
+                    <h2 text-wrap text-left>{{event.title}}</h2>
+                    <p class="grey" text-wrap text-left>{{'Published'|translate}}<span class="crea">{{event.createdDate | date: 'dd/MM/yyyy'}}</span></p>
                     
-                    <p *ngIf="event.eventStart" class="grey">{{'EventDate'|translate}}
-                        <span class="crea">{{event.eventoDate | date: 'dd/MM/yyyy'}}</span>
+                    <p *ngIf="event.eventStart" class="grey" text-wrap text-left>{{'EventDate'|translate}}
+                        <span class="crea" >{{event.eventoDate | date: 'dd/MM/yyyy'}}</span>
                     </p>
-                    <p *ngIf="event.eventTiming != null" class="grey">{{'Time'|translate}}
+                    <p *ngIf="event.eventTiming != null && event.videoLink == null" class="grey" text-wrap text-left>{{'Time'|translate}}
+                        <span class="crea">{{event.eventTiming}}</span>
+                    </p>
+                    <p *ngIf="event.eventTiming != null && event.videoLink != null" class="grey" text-wrap text-left>{{'Duration'|translate}}
                         <span class="crea">{{event.eventTiming}}</span>
                     </p>
                     
@@ -111,8 +114,8 @@
                         </ion-thumbnail>
                         <h2>{{event.title}}</h2>
                         <div>
-                            <p><span class="grey">{{'Published'|translate}}</span> {{event.createdDate | date: 'dd/MM/yyyy'}}</p> <!--Could be cause of confusion for the user-->
-                            <p><span class="grey">{{'Time'|translate}} </span>{{event.eventTiming}} </p>
+                            <p text-wrap text-left><span class="grey">{{'Published'|translate}}</span> {{event.createdDate | date: 'dd/MM/yyyy'}}</p> <!--Could be cause of confusion for the user-->
+                            <p text-wrap text-left><span class="grey">{{'Time'|translate}} </span>{{event.eventTiming}} </p>
                             
                         </div>
 
@@ -120,11 +123,11 @@
                 </ion-item-divider>
             </ion-list>
             <ion-infinite-scroll *ngIf="!hasDate" (ionInfinite)="doInfiniteCal($event)">
-                <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="{{'Loading'|translate}}">
+                <ion-infinite-scroll-content loadingText="{{'Loading'|translate}}">
                 </ion-infinite-scroll-content>
             </ion-infinite-scroll>
             <ion-infinite-scroll *ngIf="hasDate" (ionInfinite)="doInfiniteDate($event, myDate)">
-                <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="{{'Loading'|translate}}">
+                <ion-infinite-scroll-content loadingText="{{'Loading'|translate}}">
                 </ion-infinite-scroll-content>
             </ion-infinite-scroll>
         </div>
@@ -140,7 +143,7 @@
             <ion-segment-button value="mappa">
                 <ion-icon name="ios-map"></ion-icon>
             </ion-segment-button>
-            <ion-segment-button value="calendario" (click)='loadCalendar()'>
+            <ion-segment-button value="calendario" (click)='loadCalendar(true,false)'>
                 <ion-icon name="md-calendar"></ion-icon>
             </ion-segment-button>
         </ion-segment>

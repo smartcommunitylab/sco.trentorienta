@@ -21,41 +21,59 @@
 
       <ion-card *ngIf="event.eventStart != null">
         <p ion-button clear block outline icon-start  class="left">
-          <span class="button-inner">
+          <span class="button-inner" text-wrap text-left>
             <ion-icon name="calendar"></ion-icon>
             {{'EventDate'|translate}} {{event.eventoDate | date: 'dd/MM/yyyy'}}
           </span>
         </p>
       </ion-card>
-      <ion-card *ngIf="event.eventTiming != null">
+      <ion-card *ngIf="event.eventTiming != null && event.videoLink == null">
         <p ion-button clear block outline icon-start  class="left">
-          <span class="button-inner">
+          <span class="button-inner"text-wrap text-left>
             <ion-icon name="watch"></ion-icon>
             {{'Time'|translate}} {{event.eventTiming}}
           </span>
         </p>
       </ion-card>
+      <ion-card *ngIf="event.eventTiming != null && event.videoLink != null">
+        <p ion-button clear block outline icon-start class="left">
+          <span class="button-inner" text-wrap text-left>
+            <ion-icon name="watch"></ion-icon>
+            {{'Duration'|translate}} {{event.eventTiming}}
+          </span>
+        </p>
+      </ion-card>
+
       <ion-card *ngIf="event.address">
         <a ion-button clear block icon-start  href="{{url}}" target="_system" class="left">
-          <span class="button-inner">
+          <span class="button-inner" text-wrap text-left>
           <ion-icon name="pin"></ion-icon>
-          {{'Place'|translate}} {{event.address}}
+          <p style="color:inherit">
+            {{'Place'|translate}} {{event.address}}
+          </p>
+
           </span>
         </a>
       </ion-card>
 
       <ion-card *ngIf="!event.address">
           <a ion-button clear block icon-start  href="{{url}}" target="_system" class="left">
-              <span class="button-inner">
-                <ion-icon name="pin"></ion-icon>{{'Place'|translate}} {{'AddressNotFound'|translate}}
+              <span class="button-inner" text-wrap text-left>
+                <ion-icon name="pin"></ion-icon>
+                <p style="color:inherit">
+                  {{'Place'|translate}} {{'AddressNotFound'|translate}}
+                </p>
+                
               </span>
             </a>
       </ion-card>
       <ion-card  *ngIf="event.videoLink">
           <a ion-button clear block icon-start href="{{event.videoLink}}" target="_system" class="left">
-              <span class="button-inner">
+              <span class="button-inner" text-wrap text-left>
                 <ion-icon name="play"></ion-icon>
-                {{'video'|translate}}
+                <p style="color:inherit">
+                  {{'video'|translate}}
+                </p>
               </span>
             </a>
       </ion-card>

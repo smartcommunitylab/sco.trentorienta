@@ -21,6 +21,8 @@ import 'rxjs/add/observable/fromPromise';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
+import { Segment } from 'ionic-angular/components/segment/segment';
+import { first } from 'rxjs/operator/first';
 
 
 @Pipe({ name: 'ObjNgFor', pure: false })
@@ -42,7 +44,7 @@ export abstract class ElementListPage implements OnInit {
     view: string = "lista";
 
     mainEvents: eventType[] = [];
-    calendarEvents = null;
+    calendarEvents: eventType[] = [];
     calendarSize: number = 0;
 
     searching: boolean = false;
@@ -150,10 +152,10 @@ export abstract class ElementListPage implements OnInit {
 
     doInfinite(infiniteScroll) {
         console.log('Begin async operation');
-        this.getEventsForInfiniteScroll(false, infiniteScroll);
+        this.getEvents(false, infiniteScroll);
     }
 
-    getEventsForInfiniteScroll(reset: boolean, infiniteScroll?: any): void {
+    /*getEventsForInfiniteScroll(reset: boolean, infiniteScroll?: any): void {
         let from = reset ? 0 : this.mainEvents.length;
 
         this.getData(from, from + this.PAGE_SIZE, this.searchValue)
@@ -175,43 +177,50 @@ export abstract class ElementListPage implements OnInit {
                     infiniteScroll.complete();
                 }
             });
-    }
+    }*/
 
     doInfiniteCal(infiniteScroll) {
         console.log('Begin async operation');
-        this.loadCalendarForinfiniteScroll(infiniteScroll);
+        this.loadCalendar(false,false, infiniteScroll);
     }
 
     doInfiniteDate(infiniteScroll, date: string) {
         console.log('Begin async operation with date' + date);
         let d = moment(date).format('YYYY.MM.DD');
         console.log(d);
-        this.loadCalendarForinfiniteScroll(infiniteScroll, d);
+        this.loadCalendar(false,false, infiniteScroll, d);
     }
 
-    loadCalendarForinfiniteScroll(infiniteScroll?: any, data?: string): void {
+    /*loadCalendarForinfiniteScroll(infiniteScroll?: any, data?: string): void {
+
         if (this.calendarEvents == null) {
-            this.calendarEvents = {};
+            this.calendarEvents = [];
         }
+        
+
         let from;
+
         if (data) {
-            if (infiniteScroll == null) {
-                from = 0;
-                this.calendarSize = 0;
-            } else {
-                from = this.calendarSize;
-            }
+            
             this.hasDate = true;
         } else {
             from = this.calendarSize;
             this.hasDate = false;
         }
 
+        if (infiniteScroll == null) {
+            from = 0;
+            this.calendarSize = 0;
+        } else {
+            from = this.calendarSize;
+        }
+
+
         this.getCalData(from, from + this.PAGE_SIZE, data)
             .then(events => {
 
                 if (infiniteScroll == null && data) {
-                    this.calendarEvents = {};
+                    this.calendarEvents = [];
                 }
                 this.calendarSize += events.length;
                 events.forEach(event => {
@@ -235,7 +244,7 @@ export abstract class ElementListPage implements OnInit {
                     infiniteScroll.complete();
                 }
             });
-    }
+    }*/
 
     orderMapKeys = function (h) {
         var keys = [];
@@ -250,15 +259,26 @@ export abstract class ElementListPage implements OnInit {
     abstract getCalData(from: number, to: number, data?: string): Promise<eventType[]>;
 
     getEvents(reset: boolean, infiniteScroll?: any): void {
-        let from = reset ? 0 : this.mainEvents.length;
 
-        let loading = this.loadingCtrl.create({
-            content: this.translate.instant('lbl_wait') + '...'
-        });
-        loading.present();
+        let from = reset ? 0 : this.mainEvents.length;
+        let loading;
+
+        if (reset)
+        {
+            loading = this.loadingCtrl.create({
+                content: this.translate.instant('lbl_wait') + '...'
+            });
+            loading.present();
+        }
+
+
         this.getData(from, from + this.PAGE_SIZE, this.searchValue)
             .then(mainEvents => {
-                loading.dismiss();
+                if (reset)
+                {
+                    loading.dismiss();
+                }
+                
                 
                 if (reset == true && mainEvents.length < this.PAGE_SIZE) {
                     this.enabled = false;
@@ -278,42 +298,60 @@ export abstract class ElementListPage implements OnInit {
     }
 
     doRefresh(refresher) {
-        console.log('element list refresh', refresher);
+
         setTimeout(() => {
-            this.getEvents(true);
+            if(this.view == "lista")
+            {
+                console.log('element list refresh', refresher);
+                this.getEvents(true);
+            }
             refresher.complete();
         });
 
     }
 
-    loadCalendar(infiniteScroll?: any, data?: string): void {
-        if (this.calendarEvents == null) {
-            this.calendarEvents = {};
-        }
-        let from;
+    loadCalendar(firstLoading: boolean, reset?:boolean, infiniteScroll?: any, data?: string): void {
+
+        /*if (this.calendarEvents == null) {
+            this.calendarEvents = [];
+        }*/
+
+        let from, loading;
         if (data) {
             // data = moment(data, "YYYYMMDDHHmm").format("YYYYMMDDHHmm");
-            if (infiniteScroll == null) {
-                from = 0;
-                this.calendarSize = 0;
-            } else {
-                from = this.calendarSize;
-            }
             this.hasDate = true;
         } else {
             from = this.calendarSize;
             this.hasDate = false;
         }
-        let loading = this.loadingCtrl.create({
-            content: this.translate.instant('lbl_wait') + '...'
-        });
-        loading.present();
+
+        if (infiniteScroll == null || reset) {
+            from = 0;
+            this.calendarSize = 0;
+            this.calendarEvents = [];
+        } else {
+            from = this.calendarSize;
+        }
+        if(firstLoading || reset)
+        {
+            loading = this.loadingCtrl.create({
+                content: this.translate.instant('lbl_wait') + '...'
+            });
+            loading.present();
+        }
+
+
+        
         this.getCalData(from, from + this.PAGE_SIZE, data)
             .then(events => {
-                loading.dismiss();
-                if (infiniteScroll == null && data) {
-                    this.calendarEvents = {};
+                if(firstLoading)
+                {
+                    loading.dismiss();
                 }
+                /*if (infiniteScroll == null && data) {
+                    this.calendarEvents = [];
+                }*/
+                //console.log(this.calendarEvents.length+ "  "+ events.length);
                 this.calendarSize += events.length;
                 events.forEach(event => {
                     var date = moment(event.eventStart, "YYYYMMDDHHmm").format("YYYY.MM.DD");
@@ -360,6 +398,7 @@ export abstract class ElementListPage implements OnInit {
         this.searching = !this.searching;
         this.enabled = true;
         this.searchValue = "";
+        //this.search(this.searchValue);
         this.searchTerms.next(this.searchValue);
     }
 
@@ -383,11 +422,11 @@ export abstract class ElementListPage implements OnInit {
         this.navCtrl.push(FilterPage);
     }
 
-    removeDate(): void {
+    /*removeDate(): void {
+        
         this.calendarSize = 0;
-        this.calendarEvents = {};
-        this.loadCalendar();
-    }
+        this.calendarEvents = [];
+    }*/
 
     search(filter: string): void {
         this.searchTerms.next(filter);
@@ -395,19 +434,20 @@ export abstract class ElementListPage implements OnInit {
 
     scrolling(date: string) {
         let scrollDate = moment(date).format('YYYY.MM.DD');
-        this.loadCalendar(null, scrollDate);
+        this.loadCalendar(null, false,scrollDate);
     }
 
     ngOnInit(): void {
         this.myDate = new Date().toISOString();
         this.currDate = moment(new Date()).format('YYYY-MM-DD');
-        this.termsObs = this.searchTerms.debounceTime(300)        // wait 300ms after each keystroke before considering the term
-.distinctUntilChanged();
+        this.termsObs = this.searchTerms.asObservable().debounceTime(300)        // wait 300ms after each keystroke before considering the term
+//.distinctUntilChanged();
 
         this.termsObs.forEach(v => {
             this.searchValue = v;
             this.enabled = true;
             this.getEvents(true);
+            this.loadCalendar(true,true);
 
         });
         this.storage.set('temChosen', []);
@@ -501,7 +541,7 @@ export abstract class ElementListPage implements OnInit {
         // set up the map
         // var map = new L.Map('map');
 
-        if (segmentName == "lista") {
+        if (segmentName == "lista" || segmentName == "calendario") {
             this.enabledRefresh = true;
         } else {
             this.enabledRefresh = false;
