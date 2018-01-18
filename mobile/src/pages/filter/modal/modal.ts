@@ -3,7 +3,7 @@ import { IonicPage, NavController, NavParams, ViewController, LoadingController 
 import { TranslateService } from '@ngx-translate/core';
 import { ModalController } from 'ionic-angular/components/modal/modal-controller';
 
-import { eventType,occurenciesType } from '../../../app/struct-data';
+import { eventType,occurenciesType,district } from '../../../app/struct-data';
 
 /**
  * Generated class for the ModalPage page.
@@ -20,10 +20,10 @@ export class ModalPage {
 
   title: string;
 
-  theOrSor: boolean;
-  s: string[] = [];
+  theOrSor: number;
+  s: any;
 
-  List: occurenciesType[] = null;
+  List: any[] = null;
 
   checked: number;
 
@@ -32,15 +32,31 @@ export class ModalPage {
   constructor(public viewCtrl: ViewController, params: NavParams, public navParams: NavParams, public translate: TranslateService, public loadingCtrl: LoadingController) {
     this.theOrSor = params.get('theOrSor');
     this.List = params.get('List');
-    this.s = params.get('Chose');
+
+    this.checked = 2;
     
-    if(this.theOrSor) {
+    if(this.theOrSor == 1) {
       this.title = this.translate.instant('Themes');
+      this.s = params.get('Chose');
+    }
+    else if(this.theOrSor == 0) {
+      this.title = this.translate.instant('Sources');
+      this.s = params.get('Chose');
     }
     else {
-      this.title = this.translate.instant('Sources');
+      this.title = this.translate.instant('Districts');
+      this.s = params.get('Chose');
+      this.List.forEach(element => {
+        if(element.coordinates == this.s) {
+          this.s = element.name;
+          this.checked = 3;
+        }
+      });
+      if(this.checked != 3) {
+        this.s = this.List[0]
+      }
+      this.checked = 3;
     }
-    this.checked = 2;
   }
 
   all() {
@@ -85,6 +101,11 @@ export class ModalPage {
     }
   }
 
+  radio(element: string) {
+    this.s = element;
+    console.log(this.s);
+  }
+
   contains(obj) {
     if(this.s == undefined || this.s == null) {
       this.s = [];
@@ -99,11 +120,16 @@ export class ModalPage {
   }
 
   ok() {
-    var copy = [];
-    for (var i = 0; i < this.s.length; i++) {
-      if (this.s[i] != undefined) copy.push(this.s[i]);
-    } 
-    this.viewCtrl.dismiss(copy);
+    if(this.checked != 3){
+      var copy = [];
+      for (var i = 0; i < this.s.length; i++) {
+        if (this.s[i] != undefined) copy.push(this.s[i]);
+      } 
+      this.viewCtrl.dismiss(copy);  
+    }
+    else {
+      this.viewCtrl.dismiss(this.s);
+    }
   }
 
   back() {

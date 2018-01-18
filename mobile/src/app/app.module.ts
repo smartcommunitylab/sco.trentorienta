@@ -8,6 +8,7 @@ import { IonicStorageModule } from '@ionic/storage';
 import { DynamicComponentModule } from 'angular2-dynamic-component/index';
 import { EventService } from './event-service';
 import { OrderBy } from '../pipes/orderBy.pipe';
+import { ScreenOrientation } from '@ionic-native/screen-orientation';
 
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
@@ -93,7 +94,8 @@ import { LeafletModule } from '@asymmetrik/angular2-leaflet';
     AppVersion,
     EventService,
     Globalization, { provide: ErrorHandler, useClass: IonicErrorHandler },
-    AppConfig//, { provide: APP_INITIALIZER, useFactory: (config: AppConfig) => () => config.load(), deps: [AppConfig], multi: true }
+    AppConfig,//, { provide: APP_INITIALIZER, useFactory: (config: AppConfig) => () => config.load(), deps: [AppConfig], multi: true }
+    ScreenOrientation
   ]
 })
 

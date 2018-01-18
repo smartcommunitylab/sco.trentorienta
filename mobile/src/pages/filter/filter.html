@@ -45,19 +45,35 @@
     <ion-card>
         <ion-item>
             <ion-label style="text-transform: uppercase; color: grey; font-size: 83%; font-weight:bold">
-                {{'Distance'|translate}}<h2 *ngIf = "distance != -1" style="text-transform: lowercase; color: grey">: {{distance}} km</h2>
+                {{'Distance'|translate}} {{'from_position' | translate}}<h2 *ngIf = "dist_active == 0" style="text-transform: lowercase; color: grey">{{distance}} km</h2>
             </ion-label>
-            <ion-toggle (ionChange)="dist()"></ion-toggle>
+            <ion-toggle [disabled]="isToggle1" (ionChange)="dist(0)"></ion-toggle>
         </ion-item>
-        <ion-range *ngIf = "distance != -1" [(ngModel)]="value" min="0" max="4" step="1" snaps="true" (ionChange)="change()">
+        <ion-range *ngIf = "dist_active == 0" [(ngModel)]="value" min="0" max="4" step="1" snaps="true" (ionChange)="change()">
             <div range-left>5 km</div>
             <div range-right>100 km</div>
         </ion-range>
     </ion-card>
+    <ion-card>
+        <ion-item>
+            <ion-label style="text-transform: uppercase; color: grey; font-size: 83%; font-weight:bold">
+                    5 km {{'from_district'|translate}}
+            </ion-label>
+            <ion-toggle [disabled]="isToggle2" (ionChange)="dist(1)"></ion-toggle>
+        </ion-item>
+        <button *ngIf ="dist_active == 1" ion-button clear class="specific-button" block (click) = "modal(2)">
+            <span class="button-inner">
+                Scegli
+            </span>
+            <ion-icon item-right name = "arrow-down"></ion-icon>
+        </button>
+    </ion-card>
     <div>
         <ion-buttons>
-            <button ion-button (click)="filterCancel()">{{'FilterCancel'|translate}}</button>
-            <button ion-button color="sbar" (click)="filter()">{{'Filter'|translate}}</button>
+            <ion-row>
+                <ion-col><button ion-button block (click)="filterCancel()">{{'FilterCancel'|translate}}</button></ion-col>
+                <ion-col><button ion-button block color="sbar" (click)="filter()">{{'Filter'|translate}}</button></ion-col>
+            </ion-row>
         </ion-buttons>
     </div>
 </ion-content>
