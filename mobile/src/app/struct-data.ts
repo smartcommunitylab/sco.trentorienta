@@ -23,3 +23,8 @@ export class occurenciesType {
   count: number;
   fav: boolean;
 }
+
+export class district {
+  name: string;
+  coordinates: number[];
+}

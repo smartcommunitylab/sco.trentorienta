@@ -30158,6 +30158,13 @@ h2 {
   font-weight: 500;
 }
 
+.left .button-inner {
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
 page-elementdetails ion-icon {
   font-size: xx-large;
   vertical-align: middle;
@@ -30175,7 +30182,7 @@ page-elementdetails .bar-button-default-md {
   background-color: #fcc010;
 }
 
-p.pubb {
+p.grey {
   color: #bdbcbc;
 }
 
@@ -30451,6 +30458,24 @@ modal-page .item {
 .searchbar-md .searchbar-input::-webkit-input-placeholder {
   text-indent: 0;
   color: white;
+}
+
+.specific-button .button-inner {
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  color: grey;
+}
+
+ion-modal {
+  position: absolute;
+  padding-bottom: 80px;
+  padding-top: 80px;
+  padding-left: 35px;
+  padding-right: 35px;
+  background: rgba(0, 0, 0, 0.5);
+  display: block;
 }
 
 .maiusc {

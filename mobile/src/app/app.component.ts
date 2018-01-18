@@ -5,7 +5,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { Globalization } from '@ionic-native/globalization';
 import * as moment from 'moment'
 import { AppConfig } from './app.config';
-import { ToastController } from 'ionic-angular';
+import { ScreenOrientation } from '@ionic-native/screen-orientation';
 
 import { HomePage } from '../pages/home/home';
 import { TemiPage } from '../pages/temi/temi';
@@ -18,6 +18,8 @@ import { QuestionnaireService } from '../services/questionnaire-service';
 import { TermsPage } from '../pages/terms/terms';
 import { ConfigSrv } from '../services/config-service';
 import { MenuController } from 'ionic-angular/components/app/menu-controller';
+import { ToastController } from 'ionic-angular';
+
 
 
 
@@ -39,11 +41,13 @@ export class MyApp {
 
   constructor(private translate: TranslateService, public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen,
     private configSrv: ConfigSrv, public questionnaireService: QuestionnaireService, public globalization: Globalization, public config: AppConfig,
-    public alertCtrl: AlertController, private toastCtrl: ToastController, private ionicApp: IonicApp, private menuCtrl: MenuController) {
+    public alertCtrl: AlertController, private toastCtrl: ToastController, private ionicApp: IonicApp, private menuCtrl: MenuController, private screenOrientation: ScreenOrientation) {
 
     this.initializeApp();
 
     platform.ready().then(() => {
+
+      this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
 
       platform.registerBackButtonAction(() => {
 
@@ -183,7 +187,10 @@ export class MyApp {
       unselect_all: 'None',
       invert_selection : 'Invert',
       Distance: 'Distance',
-      video:'Video'
+      video:'Video',
+      Districts: 'Districts',
+      from_position: 'from current position',
+      from_district: 'from a district'
 
 
     });
@@ -235,7 +242,10 @@ export class MyApp {
       unselect_all: 'Nessuno',
       invert_selection : 'Inverti',
       Distance: 'Distanza',
-      video:'Video'
+      video:'Video',
+      Districts: 'Circoscrizioni',
+      from_position: 'dalla posizione corrente',
+      from_district: 'da una circoscrizione'
     });
 
 
