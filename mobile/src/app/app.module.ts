@@ -37,6 +37,7 @@ import { ModalPage } from '../pages/filter/modal/modal';
 
 
 import { LeafletModule } from '@asymmetrik/angular2-leaflet';
+import { Geolocation } from '@ionic-native/geolocation';
 
 @NgModule({
   declarations: [
@@ -95,7 +96,8 @@ import { LeafletModule } from '@asymmetrik/angular2-leaflet';
     EventService,
     Globalization, { provide: ErrorHandler, useClass: IonicErrorHandler },
     AppConfig,//, { provide: APP_INITIALIZER, useFactory: (config: AppConfig) => () => config.load(), deps: [AppConfig], multi: true }
-    ScreenOrientation
+    ScreenOrientation,
+    Geolocation,
   ]
 })
 

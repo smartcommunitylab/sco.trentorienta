@@ -3,6 +3,7 @@ import { NavController, NavParams } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 import { ModalController } from 'ionic-angular';
 import { TranslateService } from '@ngx-translate/core';
+import { Geolocation } from '@ionic-native/geolocation';
 
 import { EventService } from '../../app/event-service';
 import { eventType,occurenciesType,district } from '../../app/struct-data';
@@ -23,18 +24,18 @@ export class FilterPage implements OnInit{
     temList: occurenciesType[] = [];
     sorList: occurenciesType[] = [];
     disList: district[] = [      //circoscrizioni/districts Trento
-        {name: 'Gardolo', coordinates:[0,1]}, 
-        {name: 'Meano', coordinates:[0,2]},
-        {name: 'Bondone', coordinates:[0,3]},
-        {name: 'Sardagna', coordinates:[0,4]},
-        {name: 'Ravina-Romagnano', coordinates:[0,5]},
-        {name: 'Argentario', coordinates:[0,6]},
-        {name: 'Povo', coordinates:[0,7]},
-        {name: 'Mattarello', coordinates:[0,8]},
-        {name: 'Villazzano', coordinates:[0,9]},
-        {name: 'Oltrefersina', coordinates:[0,10]},
-        {name: 'Giuseppe S.Chiara', coordinates:[0,11]},
-        {name: 'Centro storico-Piedicastello', coordinates:[0,12]}
+        {name: 'Gardolo', coordinates:[46.1069, 11.1121]}, 
+        {name: 'Meano', coordinates:[46.1247, 11.1173]},
+        {name: 'Bondone', coordinates:[45.8074, 10.5513]},
+        {name: 'Sardagna', coordinates:[46.063508, 11.096803]},
+        {name: 'Ravina-Romagnano', coordinates:[46.01807, 11.10563]},
+        {name: 'Cognola', coordinates:[46.076389, 11.141944]},
+        {name: 'Povo', coordinates:[46.06698, 11.15503]},
+        {name: 'Mattarello', coordinates:[46.0085, 11.1304]},
+        {name: 'Villazzano', coordinates:[46.066667, 11.150000]},
+        {name: 'Oltrefersina', coordinates:[46.0085, 11.1304]},
+        {name: 'Giuseppe S.Chiara', coordinates:[46.065149, 11.124435]},
+        {name: 'Centro storico-Piedicastello', coordinates:[46.071018, 11.113013]}
     ];
 
     tryout: eventType[];
@@ -47,23 +48,54 @@ export class FilterPage implements OnInit{
     value: number = 0;
 
     dist_active: number = 2; //0 = distance from position, 1 = distance from district, 2 = unactive
-    isToggle1: boolean;
-    isToggle2: boolean;
+
+    isUnactive1: boolean = false;
+    isUnactive2: boolean = false;
+
+    isToggle1: boolean = false;
+    isToggle2: boolean = false;
 
     constructor(public navCtrl: NavController, public navParams: NavParams, private eventService: EventService,
-        public storage: Storage, public utils: ConfigSrv, public modalCtrl: ModalController, public translate: TranslateService, public alertCtrl: AlertController) {
+        public storage: Storage, public utils: ConfigSrv, public modalCtrl: ModalController, public translate: TranslateService, public alertCtrl: AlertController, public geolocation: Geolocation) {
         
         this.storage.get('filterData')
             .then(filterData => {
                 this.sorChose = filterData && filterData.sorChosen ? filterData.sorChosen : [];
                 this.temChose = filterData && filterData.temChosen ? filterData.temChosen : [];
+                this.coordinates = filterData && filterData.posChosen ? filterData.posChosen : [];
+                this.distance = filterData && filterData.disChosen ? filterData.disChosen : [];
+
+                switch (this.distance) { //set the initial value of the range
+                    case 5:
+                        this.value = 0;
+                        break;
+                    case 10:
+                        this.value = 1;
+                        break;
+                    case 20:
+                        this.value = 2;
+                        break;
+                    case 50:
+                        this.value = 3;
+                        break;
+                    case 100:
+                        this.value = 4;
+                        break;
+                }
             });
-            
-        this.isToggle1 = false;
-        this.isToggle2 = false;
     }
 
     filter(): void {
+        if(this.isToggle1) {
+            this.geolocation.getCurrentPosition().then((resp) => {
+                this.coordinates = [resp.coords.latitude, resp.coords.longitude];
+               }).catch((error) => {
+                 this.coordinates = [46.072559, 11.119443];
+               });
+        }
+        else if (!this.isToggle2) {
+            this.coordinates = [];
+        }
         let filterData = {
            temChosen: this.temChose,
            sorChosen: this.sorChose,
@@ -97,7 +129,7 @@ export class FilterPage implements OnInit{
             modal = this.modalCtrl.create(ModalPage, { 'theOrSor': theOrSor, 'List': this.disList, 'Chose': this.coordinates });
         }
 
-        modal.onDidDismiss( (Chose: any) => { 
+        modal.onDidDismiss( (Chose: any[]) => { 
             if(theOrSor == 1) {
                 if(Chose != null) {
                     this.temChose = Chose;
@@ -110,11 +142,7 @@ export class FilterPage implements OnInit{
             }
             else {
                 if(Chose != null) {
-                    this.disList.forEach(element => {
-                        if(Chose == element.name) {
-                            this.coordinates = element.coordinates;
-                        }
-                    });
+                    this.coordinates = Chose;
                 }
             }
             console.log(this.coordinates);
@@ -146,19 +174,19 @@ export class FilterPage implements OnInit{
 
     dist(dist : number) {
         if(dist == 0 && this.dist_active == 0) {
-            this.isToggle2 = false;
+            this.isUnactive2 = false;
             this.dist_active = 2;
         }
         else if(dist == 1 && this.dist_active == 1) {
-            this.isToggle1 = false;
+            this.isUnactive1 = false;
             this.dist_active = 2;
         }
         else if(dist == 0 && this.dist_active != 0) {
-            this.isToggle2 = true;
+            this.isUnactive2 = true;
             this.dist_active = 0;
         }
         else if(dist == 1 && this.dist_active != 1) {
-            this.isToggle1 = true;
+            this.isUnactive1 = true;
             this.dist_active = 1;
         }
     }

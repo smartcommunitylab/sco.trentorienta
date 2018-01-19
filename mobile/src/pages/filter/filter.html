@@ -47,7 +47,7 @@
             <ion-label style="text-transform: uppercase; color: grey; font-size: 83%; font-weight:bold">
                 {{'Distance'|translate}} {{'from_position' | translate}}<h2 *ngIf = "dist_active == 0" style="text-transform: lowercase; color: grey">{{distance}} km</h2>
             </ion-label>
-            <ion-toggle [disabled]="isToggle1" (ionChange)="dist(0)"></ion-toggle>
+            <ion-toggle [disabled]="isUnactive1" [(ngModel)] = "isToggle1" (ionChange)="dist(0)"></ion-toggle>
         </ion-item>
         <ion-range *ngIf = "dist_active == 0" [(ngModel)]="value" min="0" max="4" step="1" snaps="true" (ionChange)="change()">
             <div range-left>5 km</div>
@@ -59,11 +59,11 @@
             <ion-label style="text-transform: uppercase; color: grey; font-size: 83%; font-weight:bold">
                     5 km {{'from_district'|translate}}
             </ion-label>
-            <ion-toggle [disabled]="isToggle2" (ionChange)="dist(1)"></ion-toggle>
+            <ion-toggle [disabled]="isUnactive2" [(ngModel)] = "isToggle2" (ionChange)="dist(1)"></ion-toggle>
         </ion-item>
         <button *ngIf ="dist_active == 1" ion-button clear class="specific-button" block (click) = "modal(2)">
             <span class="button-inner">
-                Scegli
+                {{'choose' | translate}}
             </span>
             <ion-icon item-right name = "arrow-down"></ion-icon>
         </button>

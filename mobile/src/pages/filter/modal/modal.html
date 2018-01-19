@@ -4,7 +4,7 @@
 
 
 <ion-content>
-  <ion-buttons *ngIf = "checked != 3">
+  <ion-buttons *ngIf = "!checkOrRadio">
     <ion-row>
       <ion-col><button ion-button outline block small (click) = "all()">{{ 'select_all' | translate }}</button></ion-col>
       <ion-col><button ion-button outline block small (click) = "none()">{{ 'unselect_all' | translate }}</button></ion-col>
@@ -12,48 +12,33 @@
     </ion-row>
   </ion-buttons>
 
-  <ion-content *ngIf = "checked == 0" scroll="true" style="width:auto; height:75%">
-      <ion-list *ngFor = "let element of List |orderBy: 'name'">
-        <ion-item>
-          <ion-label>{{element.name}}</ion-label>
-          <ion-checkbox (ionChange) = "change(element.name)"></ion-checkbox>
-        </ion-item>
-      </ion-list>
-  </ion-content>
-
-  <ion-content *ngIf = "checked == 1" scroll="true" style="width:auto; height:75%"> 
-    <ion-list *ngFor = "let element of List |orderBy: 'name'">
-      <ion-item>
-        <ion-label>{{element.name}}</ion-label>
-        <ion-checkbox checked = "true" (ionChange) = "change(element.name)"></ion-checkbox>
-      </ion-item>
-    </ion-list>
-  </ion-content>
-
-  <ion-content *ngIf = "checked == 2" scroll="true" style="width:auto; height:75%"> 
-    <ion-list *ngFor = "let element of List |orderBy: 'name'">
-      <ion-item>
-        <ion-label>{{element.name}}</ion-label>
+  <ion-content *ngIf = "!checkOrRadio" scroll="true" style="width:auto; height: 90%"> 
+    <ion-list>
+      <ion-item *ngFor = "let element of List |orderBy: 'name'">
+        <ion-label text-wrap text-left>{{element.name}}</ion-label>
         <ion-checkbox *ngIf = "contains(element.name)" checked = "true" (ionChange) = "change(element.name)"></ion-checkbox>
         <ion-checkbox *ngIf = "!contains(element.name)" (ionChange) = "change(element.name)"></ion-checkbox>
       </ion-item>
     </ion-list>
   </ion-content>
 
-  <ion-content *ngIf = "checked == 3" scroll="true" style="width:auto; height:85%">
-    <ion-list radio-group *ngFor = "let element of List |orderBy: 'name'">
-      <ion-item>
+  <ion-content *ngIf = "checkOrRadio" scrollY scroll="true" style="width:auto; height:100%">
+    <ion-list radio-group>
+      <ion-item *ngFor = "let element of List |orderBy: 'name'">
         <ion-label>{{element.name}}</ion-label>
-        <ion-radio *ngIf = "s == element.name" checked = true></ion-radio>
-        <ion-radio *ngIf = "s != element.name" checked = false (ionSelect) = "radio(element.name)"></ion-radio>
+        <ion-radio *ngIf = "coordinates == element.coordinates" checked = "true" (ionSelect) = "radio(element.coordinates)"></ion-radio>
+        <ion-radio *ngIf = "!(coordinates == element.coordinates)" (ionSelect) = "radio(element.coordinates)"></ion-radio>
       </ion-item>
     </ion-list>
   </ion-content>
 
+</ion-content>
+
+<ion-footer>
   <ion-buttons>
     <ion-row>
       <ion-col><button ion-button block (click) = "back()">{{ 'Cancel' | translate }}</button></ion-col>
       <ion-col><button ion-button block color = "sbar" (click) = "ok()">{{ 'OK' | translate }}</button></ion-col>
     </ion-row>
   </ion-buttons>
-</ion-content>
+</ion-footer>

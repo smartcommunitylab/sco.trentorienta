@@ -21,19 +21,18 @@ export class ModalPage {
   title: string;
 
   theOrSor: number;
-  s: any;
+  s: string[];
+  coordinates: number[];
 
   List: any[] = null;
 
-  checked: number;
+  checkOrRadio: boolean = false;
 
   copy: string[];
 
   constructor(public viewCtrl: ViewController, params: NavParams, public navParams: NavParams, public translate: TranslateService, public loadingCtrl: LoadingController) {
     this.theOrSor = params.get('theOrSor');
     this.List = params.get('List');
-
-    this.checked = 2;
     
     if(this.theOrSor == 1) {
       this.title = this.translate.instant('Themes');
@@ -45,17 +44,16 @@ export class ModalPage {
     }
     else {
       this.title = this.translate.instant('Districts');
-      this.s = params.get('Chose');
+      this.coordinates = params.get('Chose');
       this.List.forEach(element => {
-        if(element.coordinates == this.s) {
-          this.s = element.name;
-          this.checked = 3;
+        if(element.coordinates == this.coordinates) {
+          this.checkOrRadio = true;
         }
       });
-      if(this.checked != 3) {
-        this.s = this.List[0]
+      if(!this.checkOrRadio) {
+        this.coordinates = this.List[2].coordinates;
       }
-      this.checked = 3;
+      this.checkOrRadio = true;
     }
   }
 
@@ -66,7 +64,6 @@ export class ModalPage {
     loading.present();
     this.s = [];
     this.List.forEach( element => { this.s.push(element.name); } );
-    this.checked = 1;
     loading.dismiss();
   }
 
@@ -76,7 +73,6 @@ export class ModalPage {
     });
     loading.present();
     this.s = [];
-    this.checked = 0;
     loading.dismiss();
   }
 
@@ -88,7 +84,6 @@ export class ModalPage {
     this.List.forEach(element => {
       this.change(element.name);
     });
-    this.checked = 2;
     loading.dismiss();
   }
 
@@ -101,9 +96,9 @@ export class ModalPage {
     }
   }
 
-  radio(element: string) {
-    this.s = element;
-    console.log(this.s);
+  radio(element: number[]) {
+    this.coordinates = element;
+    console.log(this.coordinates);
   }
 
   contains(obj) {
@@ -112,7 +107,7 @@ export class ModalPage {
       return false;
     }
     for (var i = 0; i < this.s.length; i++) {
-      if (this.s[i] === obj) {
+      if (this.s[i] == obj) {
           return true;
       }
     }
@@ -120,7 +115,7 @@ export class ModalPage {
   }
 
   ok() {
-    if(this.checked != 3){
+    if(!this.checkOrRadio){
       var copy = [];
       for (var i = 0; i < this.s.length; i++) {
         if (this.s[i] != undefined) copy.push(this.s[i]);
@@ -128,12 +123,17 @@ export class ModalPage {
       this.viewCtrl.dismiss(copy);  
     }
     else {
-      this.viewCtrl.dismiss(this.s);
+      this.viewCtrl.dismiss(this.coordinates);
     }
   }
 
   back() {
-    this.viewCtrl.dismiss();
+    this.viewCtrl.dismiss(null);
   }
 
 }
+
+
+
+
+

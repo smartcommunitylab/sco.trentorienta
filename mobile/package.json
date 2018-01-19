@@ -23,6 +23,7 @@
     "@asymmetrik/angular2-leaflet": "^2.1.5",
     "@ionic-native/app-version": "^4.1.0",
     "@ionic-native/core": "^3.12.1",
+    "@ionic-native/geolocation": "^4.5.2",
     "@ionic-native/globalization": "^4.1.0",
     "@ionic-native/in-app-browser": "^4.1.0",
     "@ionic-native/screen-orientation": "^4.5.2",
@@ -39,6 +40,7 @@
     "cordova-plugin-calendar": "^4.6.0",
     "cordova-plugin-console": "^1.0.7",
     "cordova-plugin-device": "^1.1.6",
+    "cordova-plugin-geolocation": "^2.4.3",
     "cordova-plugin-globalization": "^1.0.9",
     "cordova-plugin-inappbrowser": "^1.7.1",
     "cordova-plugin-screen-orientation": "^3.0.1",
@@ -96,7 +98,10 @@
       "cordova-plugin-inappbrowser": {},
       "cordova-plugin-app-version": {},
       "cordova-plugin-globalization": {},
-      "cordova-plugin-screen-orientation": {}
+      "cordova-plugin-screen-orientation": {},
+      "cordova-plugin-geolocation": {
+        "GEOLOCATION_USAGE_DESCRIPTION": "To locate you"
+      }
     },
     "platforms": [
       "android",

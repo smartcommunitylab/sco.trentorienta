@@ -191,7 +191,8 @@ export class MyApp {
       Duration:'Duration: ',
       Districts: 'Districts',
       from_position: 'from current position',
-      from_district: 'from a district'
+      from_district: 'from a district',
+      choose: 'Choose'
 
 
     });
@@ -247,7 +248,8 @@ export class MyApp {
       Duration:'Durata: ',
       Districts: 'Circoscrizioni',
       from_position: 'dalla posizione corrente',
-      from_district: 'da una circoscrizione'
+      from_district: 'da una circoscrizione',
+      choose: 'Scegli'
     });
 
 
