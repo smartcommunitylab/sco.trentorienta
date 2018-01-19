@@ -63,6 +63,8 @@ export abstract class ElementListPage implements OnInit {
     sorList: occurenciesType[] = [];
 
 
+    isUnique: any;
+
     private searchTerms = new Subject<string>();
     private termsObs: Observable<string>;
     private searchValue: string = null;
@@ -179,17 +181,6 @@ export abstract class ElementListPage implements OnInit {
             });
     }*/
 
-    doInfiniteCal(infiniteScroll) {
-        console.log('Begin async operation');
-        this.loadCalendar(false,false, infiniteScroll);
-    }
-
-    doInfiniteDate(infiniteScroll, date: string) {
-        console.log('Begin async operation with date' + date);
-        let d = moment(date).format('YYYY.MM.DD');
-        console.log(d);
-        this.loadCalendar(false,false, infiniteScroll, d);
-    }
 
     /*loadCalendarForinfiniteScroll(infiniteScroll?: any, data?: string): void {
 
@@ -246,17 +237,26 @@ export abstract class ElementListPage implements OnInit {
             });
     }*/
 
-    orderMapKeys = function (h) {
-        var keys = [];
-        for (var k in h) {
-            keys.push(k);
-        }
-        return keys.sort();
+
+
+    doInfiniteCal(infiniteScroll) {
+        console.log('Begin async operation');
+        this.loadCalendar(false,false, infiniteScroll);
     }
+
+    doInfiniteDate(infiniteScroll, date: string) {
+        console.log('Begin async operation with date' + date);
+        let d = moment(date).format('YYYY.MM.DD');
+        console.log(d);
+        this.loadCalendar(false,false, infiniteScroll, d);
+    }
+
+    
 
     abstract getData(from: number, to: number, filter: string): Promise<eventType[]>;
 
     abstract getCalData(from: number, to: number, data?: string): Promise<eventType[]>;
+
 
     getEvents(reset: boolean, infiniteScroll?: any): void {
 
@@ -271,14 +271,12 @@ export abstract class ElementListPage implements OnInit {
             loading.present();
         }
 
-
         this.getData(from, from + this.PAGE_SIZE, this.searchValue)
             .then(mainEvents => {
                 if (reset)
                 {
                     loading.dismiss();
                 }
-                
                 
                 if (reset == true && mainEvents.length < this.PAGE_SIZE) {
                     this.enabled = false;
@@ -310,12 +308,11 @@ export abstract class ElementListPage implements OnInit {
 
     }
 
-    loadCalendar(firstLoading: boolean, reset?:boolean, infiniteScroll?: any, data?: string): void {
+    loadCalendar(firstLoading: boolean, reset:boolean, infiniteScroll?: any, data?: string): void {
 
         /*if (this.calendarEvents == null) {
             this.calendarEvents = [];
         }*/
-
         let from, loading;
         if (data) {
             // data = moment(data, "YYYYMMDDHHmm").format("YYYYMMDDHHmm");
@@ -325,7 +322,7 @@ export abstract class ElementListPage implements OnInit {
             this.hasDate = false;
         }
 
-        if (infiniteScroll == null || reset) {
+        if (reset) {
             from = 0;
             this.calendarSize = 0;
             this.calendarEvents = [];
@@ -340,40 +337,64 @@ export abstract class ElementListPage implements OnInit {
             loading.present();
         }
 
-
-        
         this.getCalData(from, from + this.PAGE_SIZE, data)
             .then(events => {
-                if(firstLoading)
+                if(firstLoading || reset)
                 {
                     loading.dismiss();
                 }
+
                 /*if (infiniteScroll == null && data) {
                     this.calendarEvents = [];
                 }*/
                 //console.log(this.calendarEvents.length+ "  "+ events.length);
-                this.calendarSize += events.length;
-                events.forEach(event => {
-                    var date = moment(event.eventStart, "YYYYMMDDHHmm").format("YYYY.MM.DD");
-                    event.eventoDate = moment(event.eventStart, 'YYYYMMDDHHmm').toDate();
-                    event.createdDate = moment(event.created, 'YYYYMMDDHHmm').toDate();
-                    if (this.calendarEvents[date]) {
-                        this.calendarEvents[date].push(event);
-                    } else {
-                        this.calendarEvents[date] = [event];
-                    }
-                });
+                if (events.length < this.PAGE_SIZE) {
+                    infiniteScroll.enable(false);
+                    //infiniteScroll.complete();
+
+                }
+                    this.calendarSize += events.length;
+                    events.forEach(event => {
+                        var date = moment(event.eventStart, "YYYYMMDDHHmm").format("YYYY.MM.DD");
+                        event.eventoDate = moment(event.eventStart, 'YYYYMMDDHHmm').toDate();
+                        event.createdDate = moment(event.created, 'YYYYMMDDHHmm').toDate();
+                        
+                        console.log(event.id);
+                        //this.isUnique = event.id;
+                        
+
+                            if (this.calendarEvents[date] /*&& this.calendarEvents.findIndex((evento) => evento.id == event.id) == -1*/) {
+                                this.calendarEvents[date].push(event);
+                            } else {
+                                this.calendarEvents[date] = [event];
+                            }
+                        
+
+                        
+                    });
+
+                //if(events[events.length-1].id != this.isUnique)
 
                 // order keys of map by date.
                 this.keys = this.orderMapKeys(this.calendarEvents);
   
-                if (infiniteScroll != null) {
+                if (infiniteScroll != null ) {
                     if (events == null || events.length == 0) {
                         infiniteScroll.enable(false);
                     }
                     infiniteScroll.complete();
                 }
             });
+            console.log(this.calendarSize);
+    }
+
+
+    orderMapKeys = function (h) {
+        var keys = [];
+        for (var k in h) {
+            keys.push(k);
+        }
+        return keys.sort();
     }
 
     distance(lat1: number, lon1: number, lat2: number, lon2: number): number {
@@ -442,12 +463,13 @@ export abstract class ElementListPage implements OnInit {
         this.currDate = moment(new Date()).format('YYYY-MM-DD');
         this.termsObs = this.searchTerms.asObservable().debounceTime(300)        // wait 300ms after each keystroke before considering the term
 //.distinctUntilChanged();
-
+//this.loadCalendar(true,true);
         this.termsObs.forEach(v => {
             this.searchValue = v;
             this.enabled = true;
             this.getEvents(true);
-            this.loadCalendar(true,true);
+
+            
 
         });
         this.storage.set('temChosen', []);
@@ -541,7 +563,7 @@ export abstract class ElementListPage implements OnInit {
         // set up the map
         // var map = new L.Map('map');
 
-        if (segmentName == "lista" || segmentName == "calendario") {
+        if (segmentName == "lista") {
             this.enabledRefresh = true;
         } else {
             this.enabledRefresh = false;

@@ -192,7 +192,9 @@ export class MyApp {
       Districts: 'Districts',
       from_position: 'from current position',
       from_district: 'from a district',
-      choose: 'Choose'
+      choose: 'Choose',
+      pullTorefresh: 'Pull to Refresh',
+      refreshing: 'Refreshing...'
 
 
     });
@@ -249,7 +251,9 @@ export class MyApp {
       Districts: 'Circoscrizioni',
       from_position: 'dalla posizione corrente',
       from_district: 'da una circoscrizione',
-      choose: 'Scegli'
+      choose: 'Scegli',
+      pullToRefresh: 'Scorri per Aggiornare',
+      refreshing: 'Aggiornando...'
     });
 
 
