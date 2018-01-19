@@ -47,7 +47,7 @@
 <ion-content>
 
     <ion-refresher *ngIf="enabledRefresh" (ionRefresh)="doRefresh($event)">
-        <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingText="Refreshing...">
+        <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="{{'pullToRefresh' | translate }}" refreshingText="{{'refreshing' | translate }}">
         </ion-refresher-content>
     </ion-refresher>
 
@@ -87,7 +87,7 @@
                 </ion-item>
             </ion-list>
             <ion-infinite-scroll *ngIf="enabled" (ionInfinite)="doInfinite($event)">
-                <ion-infinite-scroll-content >
+                <ion-infinite-scroll-content loadingText="{{'Loading'|translate}}">
                 </ion-infinite-scroll-content>
             </ion-infinite-scroll>
         </div>
@@ -143,7 +143,7 @@
             <ion-segment-button value="mappa">
                 <ion-icon name="ios-map"></ion-icon>
             </ion-segment-button>
-            <ion-segment-button value="calendario" (click)='loadCalendar(true,false)'>
+            <ion-segment-button value="calendario" (click)='loadCalendar(true,true)'>
                 <ion-icon name="md-calendar"></ion-icon>
             </ion-segment-button>
         </ion-segment>

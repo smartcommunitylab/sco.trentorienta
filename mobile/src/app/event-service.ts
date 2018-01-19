@@ -102,7 +102,7 @@ export class EventService {
         }
     }
 
-    searchEvents(filter: string, from = 0, to = 65535, theme?: string[], tag?: string[], source?: string[], date?: string, sortForList?: number): Promise<eventType[]> {
+    searchEvents(filter: string, from = 0, to = 65535, theme?: string[], tag?: string[], source?: string[], date?: string, sortForList?: number, lat?:string, lon?:string, radius?:string): Promise<eventType[]> {
 
         if (sortForList == null)
             sortForList = 1;
@@ -115,7 +115,10 @@ export class EventService {
             tag: tag,
             fromDate: date,
             sortForList: sortForList,
-            filter: filter
+            filter: filter,
+            lat: lat,
+            lon: lon,
+            radius: radius 
         })
             .toPromise()
             // .then(response => (response.json().content as eventType[]))
