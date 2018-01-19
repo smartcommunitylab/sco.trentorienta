@@ -148,7 +148,8 @@ export abstract class ElementListPage implements OnInit {
     }
 
     ionViewWillEnter() {
-        this.getEvents(true);
+        //this.getEvents(true);
+        this.getEventsMap(true);
         this.enabled = true;
     }
 
@@ -270,7 +271,7 @@ export abstract class ElementListPage implements OnInit {
             });
             loading.present();
         }
-
+        
         this.getData(from, from + this.PAGE_SIZE, this.searchValue)
             .then(mainEvents => {
                 if (reset)
@@ -283,6 +284,7 @@ export abstract class ElementListPage implements OnInit {
                 }
                 mainEvents.forEach(e => {
                     e.createdDate = moment(e.created, 'YYYYMMDDHHmm').toDate();
+                    e.eventoDate = moment(e.eventStart, 'YYYYMMDD').toDate();
                 });
                 this.mainEvents = reset ? mainEvents : this.mainEvents.concat(mainEvents);
                 this.charged = true;
@@ -307,6 +309,51 @@ export abstract class ElementListPage implements OnInit {
         });
 
     }
+
+    getEventsMap(reset: boolean, infiniteScroll?: any): void {
+
+        //let from = reset ? 0 : this.mainEvents.length;
+        let loading;
+
+
+        if (reset)
+        {
+            loading = this.loadingCtrl.create({
+                content: this.translate.instant('lbl_wait') + '...'
+            });
+            loading.present();
+        }
+
+        this.getData(0, 1000, this.searchValue)
+            .then(mainEvents => {
+                if (reset)
+                {
+                    loading.dismiss();
+                }
+                
+                /*if (reset == true && mainEvents.length < this.PAGE_SIZE) {
+                    this.enabled = false;
+                }*/
+                mainEvents.forEach(e => {
+                    e.createdDate = moment(e.created, 'YYYYMMDDHHmm').toDate();
+                    e.eventoDate = moment(e.eventStart, 'YYYYMMDD').toDate();
+                    //console.log("1  "+e.title);
+                    console.log(e.title);
+                });
+                this.mainEvents = reset ? mainEvents : this.mainEvents.concat(mainEvents);
+     
+                this.charged = true;
+                /*if (infiniteScroll != null) {
+                    if (mainEvents == null || mainEvents.length == 0) {
+                        this.enabled = false;
+                    }
+                    infiniteScroll.complete();
+                }*/
+
+            });
+    }
+
+    
 
     loadCalendar(firstLoading: boolean, reset:boolean, infiniteScroll?: any, data?: string): void {
 
@@ -359,7 +406,7 @@ export abstract class ElementListPage implements OnInit {
                         event.eventoDate = moment(event.eventStart, 'YYYYMMDDHHmm').toDate();
                         event.createdDate = moment(event.created, 'YYYYMMDDHHmm').toDate();
                         
-                        console.log(event.id);
+                        //console.log(event.id);
                         //this.isUnique = event.id;
                         
 
@@ -385,7 +432,7 @@ export abstract class ElementListPage implements OnInit {
                     infiniteScroll.complete();
                 }
             });
-            console.log(this.calendarSize);
+            //console.log(this.calendarSize);
     }
 
 
@@ -467,8 +514,8 @@ export abstract class ElementListPage implements OnInit {
         this.termsObs.forEach(v => {
             this.searchValue = v;
             this.enabled = true;
-            this.getEvents(true);
-
+            //this.getEvents(true);
+            this.getEventsMap(true);
             
 
         });
@@ -481,6 +528,7 @@ export abstract class ElementListPage implements OnInit {
     // onMapReady: called when leaflet map is drawn.
     // Resolves a bug vith gray maps (when I change segment page...)
     onMapReady(map: L.Map) {
+
         // remove ALL layers
         map.eachLayer(layer => (map.removeLayer(layer)));
 
@@ -489,6 +537,8 @@ export abstract class ElementListPage implements OnInit {
 
         // I create a group of markers, so I can view all markers in the map
         let group = L.featureGroup();
+
+        //this.getEventsMap(true);
 
         let commonPlace = { 0: [this.mainEvents[0]] };
         for (let i = 0; i < this.mainEvents.length; i++) {

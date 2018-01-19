@@ -40,7 +40,7 @@
         </ion-buttons>
         
     </ion-navbar>
-    <ion-searchbar #searchBox *ngIf="searching && view=='lista'" placeholder="{{'search_label'|translate}}" (search)="search(searchBox.value)"></ion-searchbar>
+    <ion-searchbar #searchBox *ngIf="searching && (view=='lista' || view=='mappa')" placeholder="{{'search_label'|translate}}" (search)="search(searchBox.value)"></ion-searchbar>
 </ion-header>
 
 
@@ -138,12 +138,12 @@
     <ion-toolbar no-border-top color="primary">
         <ion-segment [(ngModel)]="view" (ionChange)="switchSegment(view)" color="light" mode="md">
             <ion-segment-button value="lista">
-                <ion-icon name="md-list"></ion-icon>
+                <ion-icon name="md-list" (click)='getEvents(true)'></ion-icon>
             </ion-segment-button>
-            <ion-segment-button value="mappa">
+            <ion-segment-button value="mappa" (click)='getEventsMap(true)'>
                 <ion-icon name="ios-map"></ion-icon>
             </ion-segment-button>
-            <ion-segment-button value="calendario" (click)='loadCalendar(true,true)'>
+            <ion-segment-button value="calendario" (click)='loadCalendar(false,false)'>
                 <ion-icon name="md-calendar"></ion-icon>
             </ion-segment-button>
         </ion-segment>
