@@ -6,7 +6,7 @@ import { Pipe, PipeTransform } from '@angular/core';
     
 export class OrderBy{
     
-     transform(array, orderBy, asc = true){
+     transform(array:any, orderBy:any, asc = true){
      
          if (!orderBy || orderBy.trim() == ""){
            return array;
@@ -42,7 +42,7 @@ export class OrderBy{
      
          return 0; //equal each other
      }
-     resolve(o, s) {
+     resolve(o:any, s:any) {
         s = s.replace(/\[(\w+)\]/g, '.$1'); // convert indexes to properties
         s = s.replace(/^\./, '');           // strip a leading dot
         var a = s.split('.');

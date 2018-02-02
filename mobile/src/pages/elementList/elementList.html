@@ -19,7 +19,7 @@
                 <ion-icon name="calendar"></ion-icon>
             </button>
 
-            <button ion-button *ngIf="(view=='lista' || view =='mappa') && isHome" (click)='toggleFilters()'>
+            <button ion-button *ngIf="(view=='lista') && isHome" (click)='toggleFilters()'>
                 <ion-icon name="ios-funnel"></ion-icon>
             </button>
 
@@ -33,14 +33,14 @@
                 <ion-icon *ngIf="!theme.fav" name="star-outline"></ion-icon>
             </button>
 
-            <button ion-button *ngIf="view=='lista'|| view =='mappa'" (click)='toggleSearch()'>
+            <button ion-button *ngIf="view=='lista'" (click)='toggleSearch()'>
                 <ion-icon *ngIf="!searching" name="search"></ion-icon>
                 <ion-icon *ngIf="searching" name="close-circle"></ion-icon>
             </button>
         </ion-buttons>
         
     </ion-navbar>
-    <ion-searchbar #searchBox *ngIf="searching && (view=='lista' || view=='mappa')" placeholder="{{'search_label'|translate}}" (search)="search(searchBox.value)"></ion-searchbar>
+    <ion-searchbar #searchBox *ngIf="searching && (view=='lista')" placeholder="{{'search_label'|translate}}" (search)="search(searchBox.value)"></ion-searchbar>
 </ion-header>
 
 

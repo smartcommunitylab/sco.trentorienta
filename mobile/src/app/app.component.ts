@@ -340,7 +340,7 @@ export class MyApp {
     });
   }
 
-  openPage(page) {
+  openPage(page:any) {
     // Reset the content nav to have just this page
     // we wouldn't want the back button to show in this scenario
     if (page.component)
@@ -351,16 +351,16 @@ export class MyApp {
     }
   }
 
-  getSuitableLanguage(language) {
+  getSuitableLanguage(language:string) {
     return language.substring(0, 2).toLowerCase();
     // return availableLanguages.some(x => x.code == language) ? language : defaultLanguage;
   }
 
-  isDateAfterToday(date) {
+  isDateAfterToday(date:Date) {
     return new Date(date.toDateString()) >= new Date(new Date().toDateString());
   }
 
-  getNumberOfDays(date) {
+  getNumberOfDays(date:Date) {
     var oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
     return (Math.round(Math.abs((date.getTime() - new Date(new Date().toDateString()).getTime()) / (oneDay))));
 

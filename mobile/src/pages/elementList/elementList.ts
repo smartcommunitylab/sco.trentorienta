@@ -429,7 +429,9 @@ export abstract class ElementListPage implements OnInit {
                     if (events == null || events.length == 0) {
                         infiniteScroll.enable(false);
                     }
-                    infiniteScroll.complete();
+                    if (infiniteScroll.state == 'loading') {
+                        infiniteScroll.complete();
+                    } 
                 }
             });
             //console.log(this.calendarSize);
