@@ -23,6 +23,7 @@ import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
 import { Segment } from 'ionic-angular/components/segment/segment';
 import { first } from 'rxjs/operator/first';
+import * as L from 'leaflet';
 
 
 @Pipe({ name: 'ObjNgFor', pure: false })
