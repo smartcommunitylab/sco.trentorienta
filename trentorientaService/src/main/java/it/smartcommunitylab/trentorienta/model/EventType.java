@@ -17,12 +17,21 @@ public class EventType {
 
 	private String source; // sorgenti
 
+
 //	@TextIndexed
 	private String title;
 
 //	@TextIndexed
 	private String description;
 //	@TextIndexed
+
+	@TextIndexed
+	private String title;
+
+	@TextIndexed
+	private String description;
+	@TextIndexed
+
 	private String shortAbstract;
 
 	private String category; // temi
@@ -41,6 +50,7 @@ public class EventType {
 	private String address;
 	private String web;
 	private String videoLink;
+
 	
 	/** coordinates. **/
 	private double[] coordinates;
@@ -52,6 +62,8 @@ public class EventType {
 	public void setCoordinates(double[] coordinates) {
 		this.coordinates = coordinates;
 	}
+
+
 
 	public String getVideoLink() {
 		return videoLink;

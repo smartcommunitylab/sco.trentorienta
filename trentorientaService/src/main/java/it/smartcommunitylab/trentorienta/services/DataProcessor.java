@@ -126,8 +126,8 @@ public class DataProcessor {
 
 			evento.setCoordX(new Float(46.070189));
 			evento.setCoordY(new Float(11.120252));
+
 			evento.setCoordinates(new double[] { evento.getCoordX(), evento.getCoordY() });
-			
 			evento.setCreated(dataInizio);
 
 			// String eventFine = (String) ( (HashMap)
@@ -348,6 +348,7 @@ public class DataProcessor {
 			}
 			evento.setCoordX(new Float(46.070189));
 			evento.setCoordY(new Float(11.120252));
+
 			evento.setCoordinates(new double[] { evento.getCoordX(), evento.getCoordY() });
 			
 			evento.setAddress("Comune di Trento");
@@ -449,7 +450,6 @@ public class DataProcessor {
 			evento.setCoordX(new Float(46.070189));
 			evento.setCoordY(new Float(11.120252));
 			evento.setCoordinates(new double[] { evento.getCoordX(), evento.getCoordY() });
-			
 			evento.setCreated(dataInizio);
 
 			// String eventFine = (String) ( (HashMap)
