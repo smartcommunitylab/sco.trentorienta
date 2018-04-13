@@ -24,14 +24,6 @@ public class EventType {
 //	@TextIndexed
 	private String description;
 //	@TextIndexed
-
-	@TextIndexed
-	private String title;
-
-	@TextIndexed
-	private String description;
-	@TextIndexed
-
 	private String shortAbstract;
 
 	private String category; // temi
