@@ -32,10 +32,10 @@ public class DataProcessor {
 	public void getDataPeriodically() {
 		RestTemplate template = new RestTemplate();
 
-		processEventsSource(template);
 		processAvvisiSource(template);
 		processAvvisiOggettiRinvenuti(template);
 		processAvvisiVideoSource3(template);
+		processEventsSource(template);
 
 	}
 

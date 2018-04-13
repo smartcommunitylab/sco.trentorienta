@@ -23,12 +23,16 @@ import io.swagger.annotations.ApiParam;
 import it.smartcommunitylab.trentorienta.model.EventType;
 import it.smartcommunitylab.trentorienta.model.SearchRequest;
 import it.smartcommunitylab.trentorienta.repository.EventTypeRepositoryCustom;
+import it.smartcommunitylab.trentorienta.services.DataProcessor;
 
 @RestController
 public class DataController {
 
 	@Autowired
 	private EventTypeRepositoryCustom repo1;
+	
+	@Autowired
+	private DataProcessor dataProcessor;
 
 	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyyMMddHHmm");
 
@@ -131,5 +135,11 @@ public class DataController {
 			size = 5;
 		return repo1.getSources();
 	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/api/update")
+	public void updateEvent() {
+		dataProcessor.getDataPeriodically();
+	}
+	
 
 }
