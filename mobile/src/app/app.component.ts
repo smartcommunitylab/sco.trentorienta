@@ -1,10 +1,11 @@
 import { Component, ViewChild } from '@angular/core';
-import { Nav, Platform, AlertController } from 'ionic-angular';
+import { Nav, Platform, AlertController, IonicApp } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Globalization } from '@ionic-native/globalization';
 import * as moment from 'moment'
 import { AppConfig } from './app.config';
+import { ScreenOrientation } from '@ionic-native/screen-orientation';
 
 import { HomePage } from '../pages/home/home';
 import { TemiPage } from '../pages/temi/temi';
@@ -16,6 +17,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { QuestionnaireService } from '../services/questionnaire-service';
 import { TermsPage } from '../pages/terms/terms';
 import { ConfigSrv } from '../services/config-service';
+import { MenuController } from 'ionic-angular/components/app/menu-controller';
+import { ToastController } from 'ionic-angular';
+
 
 
 
@@ -31,11 +35,107 @@ export class MyApp {
 
   pages: Array<{ icon: string, title: string, component: any }>;
 
+  private backButtonPressedOnceToExit: boolean = false;
+
+
+
   constructor(private translate: TranslateService, public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen,
     private configSrv: ConfigSrv, public questionnaireService: QuestionnaireService, public globalization: Globalization, public config: AppConfig,
-    public alertCtrl: AlertController) {
+    public alertCtrl: AlertController, private toastCtrl: ToastController, private ionicApp: IonicApp, private menuCtrl: MenuController, private screenOrientation: ScreenOrientation) {
 
     this.initializeApp();
+
+    platform.ready().then(() => {
+
+      this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
+
+      platform.registerBackButtonAction(() => {
+
+
+        let activePortal = this.ionicApp._loadingPortal.getActive() ||
+        this.ionicApp._modalPortal.getActive() ||
+        this.ionicApp._toastPortal.getActive() ||
+        this.ionicApp._overlayPortal.getActive();
+
+        if (this.backButtonPressedOnceToExit) {
+          this.platform.exitApp();
+        } 
+        else if(activePortal)
+        {
+          activePortal.dismiss();
+          return
+        }
+        else if (this.nav.canGoBack()) 
+        {
+          this.nav.pop({});
+        }
+        else if (this.menuCtrl.isOpen()) // Close menu if open
+        { 
+          this.menuCtrl.close();
+          return
+        }
+        else 
+        {
+          this.showToast();
+          this.backButtonPressedOnceToExit = true;
+          setTimeout(() => {
+
+            this.backButtonPressedOnceToExit = false;
+          },3000)
+        }
+
+
+
+
+
+        if (activePortal) {
+          
+      }
+      
+/*
+      let view = this.nav.getActive(); // As none of the above have occurred, its either a page pushed from menu or tab
+    let activeVC = this.nav.getActive(); //get the active view
+   
+    let page = activeVC.instance; //page is the current view's instance i.e the current component I suppose
+*/
+
+
+      
+      
+      }, 100);
+
+
+      /*if (this.keyboard.isOpen()) { // Handles the keyboard if open
+        this.keyboard.close();
+        return;
+    }*/
+
+    
+
+   //activePortal is the active overlay like a modal,toast,etc
+    
+
+    
+             
+
+    /*if (!(page instanceof TabsPage)) { // Check if the current page is pushed from a menu click
+        
+        if (this.nav.canGoBack() || view && view.isOverlay) {
+            this.nav.pop(); //pop if page can go back or if its an overlay over a menu page
+        }             
+        else {
+            this.showAlert();
+        }
+
+        return;
+    }*/
+    
+    /*let tabs = this.app.getActiveNav(); // So it must be a view from a tab. The current tab's nav can be accessed by this.app.getActiveNav();
+    if (!tabs.canGoBack()) {
+        return this.showToast();
+    }
+    return tabs.pop();*/
+    });
 
     translate.addLangs(["it", "en"]);
     // translate.setDefaultLang('it');
@@ -61,7 +161,7 @@ export class MyApp {
       FavoriteEvents: 'Favorite notifications  ',
       Filter: 'Filter',
       FilterCancel: 'Cancel',
-      Time: 'Time: ',
+      Time: 'Schedule: ',
       EventsArea: 'Events in this area',
       Loading: 'Loading',
       lbl_error: 'error',
@@ -81,7 +181,20 @@ export class MyApp {
       pop_up__expired_template: 'The trial version of the app has expired',
       pop_up_not_expired_title: 'Trial version',
       pop_up_not_expired_template: 'This is a trial version expiring on ',
-      search_label: 'Search'
+      search_label: 'Search',
+      exit_app: 'Press again to exit',
+      select_all: 'All',
+      unselect_all: 'None',
+      invert_selection : 'Invert',
+      Distance: 'Distance',
+      video:'Video',
+      Duration:'Duration: ',
+      Districts: 'Districts',
+      from_position: 'from current position',
+      from_district: 'from a district',
+      choose: 'Choose',
+      pullTorefresh: 'Pull to Refresh',
+      refreshing: 'Refreshing...'
 
 
     });
@@ -106,7 +219,7 @@ export class MyApp {
       FavoriteEvents: 'Notifiche preferite  ',
       Filter: 'Filtra',
       FilterCancel: 'Annulla',
-      Time: 'Ora: ',
+      Time: 'Orario: ',
       EventsArea: 'Eventi in questa zona',
       Loading: 'Caricamento',
       lbl_error: 'errore',
@@ -127,7 +240,20 @@ export class MyApp {
       pop_up__expired_template: 'Ci scusiamo ma non è più possibile utilizzare questa versione dell\'applicazione in quanto il periodo di prova è terminata',
       pop_up_not_expired_title: 'Versione di prova',
       pop_up_not_expired_template: 'Questa  è una versione di prova e terminerà il ',
-      search_label: 'Cerca'
+      search_label: 'Cerca',
+      exit_app: 'Premere di nuovo per uscire',
+      select_all: 'Tutti',
+      unselect_all: 'Nessuno',
+      invert_selection : 'Inverti',
+      Distance: 'Distanza',
+      video:'Video', 
+      Duration:'Durata: ',
+      Districts: 'Circoscrizioni',
+      from_position: 'dalla posizione corrente',
+      from_district: 'da una circoscrizione',
+      choose: 'Scegli',
+      pullToRefresh: 'Scorri per Aggiornare',
+      refreshing: 'Aggiornando...'
     });
 
 
@@ -214,7 +340,7 @@ export class MyApp {
     });
   }
 
-  openPage(page) {
+  openPage(page:any) {
     // Reset the content nav to have just this page
     // we wouldn't want the back button to show in this scenario
     if (page.component)
@@ -225,18 +351,34 @@ export class MyApp {
     }
   }
 
-  getSuitableLanguage(language) {
+  getSuitableLanguage(language:string) {
     return language.substring(0, 2).toLowerCase();
     // return availableLanguages.some(x => x.code == language) ? language : defaultLanguage;
   }
 
-  isDateAfterToday(date) {
+  isDateAfterToday(date:Date) {
     return new Date(date.toDateString()) >= new Date(new Date().toDateString());
   }
 
-  getNumberOfDays(date) {
+  getNumberOfDays(date:Date) {
     var oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
     return (Math.round(Math.abs((date.getTime() - new Date(new Date().toDateString()).getTime()) / (oneDay))));
 
   }
+
+  showToast() {
+    let toast = this.toastCtrl.create({
+      message: this.translate.instant('exit_app'),
+      duration: 3000,
+      position: 'bottom'
+    });
+    
+    // toast.onDidDismiss((data, role) => {
+    //   if (role == "close") {
+    //     this.platform.exitApp();
+    //   }
+    // });
+    
+    toast.present();
+    }
 }

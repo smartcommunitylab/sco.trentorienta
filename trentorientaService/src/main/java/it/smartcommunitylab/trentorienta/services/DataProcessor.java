@@ -32,10 +32,10 @@ public class DataProcessor {
 	public void getDataPeriodically() {
 		RestTemplate template = new RestTemplate();
 
-		processEventsSource(template);
 		processAvvisiSource(template);
 		processAvvisiOggettiRinvenuti(template);
 		processAvvisiVideoSource3(template);
+		processEventsSource(template);
 
 	}
 
@@ -127,6 +127,7 @@ public class DataProcessor {
 			evento.setCoordX(new Float(46.070189));
 			evento.setCoordY(new Float(11.120252));
 
+			evento.setCoordinates(new double[] { evento.getCoordX(), evento.getCoordY() });
 			evento.setCreated(dataInizio);
 
 			// String eventFine = (String) ( (HashMap)
@@ -251,6 +252,8 @@ public class DataProcessor {
 				evento.setCoordY(new Float(11.120252));
 			}
 
+			evento.setCoordinates(new double[] { evento.getCoordX(), evento.getCoordY() });
+			
 			// System.out.println("Coordinate trovate:" + evento.getCoordX() +
 			// "," + evento.getCoordY());
 
@@ -345,6 +348,9 @@ public class DataProcessor {
 			}
 			evento.setCoordX(new Float(46.070189));
 			evento.setCoordY(new Float(11.120252));
+
+			evento.setCoordinates(new double[] { evento.getCoordX(), evento.getCoordY() });
+			
 			evento.setAddress("Comune di Trento");
 
 			evento.setCreated(new SimpleDateFormat("YYYMMddHHmm")
@@ -443,7 +449,7 @@ public class DataProcessor {
 
 			evento.setCoordX(new Float(46.070189));
 			evento.setCoordY(new Float(11.120252));
-
+			evento.setCoordinates(new double[] { evento.getCoordX(), evento.getCoordY() });
 			evento.setCreated(dataInizio);
 
 			// String eventFine = (String) ( (HashMap)

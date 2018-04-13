@@ -14,8 +14,8 @@ import { eventType } from '../../app/struct-data';
 
 export class ElementDetailsPage implements OnInit {
     event: eventType;
-    dateEvent: any;
-    createEvent: any;
+    //dateEvent: any;
+    //createEvent: any;
     isFav: boolean = false;
     url: string;
 
@@ -67,9 +67,11 @@ export class ElementDetailsPage implements OnInit {
         this.eventService.getEvent(this.navParams.get('id'))
             .then(event => {
                 loading.dismiss();
+
                 this.event = event;
-                this.dateEvent = moment(this.event.eventStart, 'YYYYMMDDHHmm');
-                this.createEvent = moment(this.event.created, 'YYYYMMDDHHmm').format('DD.MM.YYYY');
+                console.log(this.event); //DEBUGGING
+                this.event.eventoDate = moment(this.event.eventStart, 'YYYYMMDDHHmm');
+                this.event.createdDate = moment(this.event.created, 'YYYYMMDDHHmm').format('DD.MM.YYYY');
                 if (event.address) {
                     this.url = "https://www.google.it/maps/search/?api=1&query=" + event.address;
                 } else {

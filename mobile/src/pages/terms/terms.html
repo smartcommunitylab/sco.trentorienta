@@ -7,10 +7,21 @@
     </ion-navbar>
 </ion-header>
 
-<ion-content class="padding">
-    <div [innerHTML]="termsFile"></div>
-    <div *ngIf="accepting" style="text-align:center;">
-        <div class="button button-calm" (click)="acceptPrivacy()">{{'lbl_accept' | translate}}</div>
-        <div class="button" (click)="refusePrivacy()">{{'lbl_reject' | translate}}</div>
-    </div>
-</ion-content>
+
+    <ion-content class="padding"  *ngIf="accepting">
+        <ion-content scroll="true" style="width:auto; height:90%"> <!--Scrollable Terms and Conditions, <ion-card> tag is optional-->
+            <ion-card>
+                <div [innerHTML]="termsFile"></div>
+            </ion-card>
+        </ion-content>
+        <div style="text-align:center;">
+            <div class="button button-calm" (click)="acceptPrivacy()">{{'lbl_accept' | translate}}</div>
+            <div class="button" (click)="refusePrivacy()">{{'lbl_reject' | translate}}</div>
+        </div>
+    </ion-content>
+    
+    <ion-content class="padding" *ngIf="!accepting"> 
+        <ion-card>
+            <div [innerHTML]="termsFile"></div>
+        </ion-card>
+    </ion-content>

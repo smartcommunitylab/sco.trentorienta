@@ -81,6 +81,10 @@
 						<xsd:element name="tag" type="xsd:string" maxOccurs='unbounded' />
 						<xsd:element name="themes" type="xsd:string"
 							maxOccurs="unbounded" />
+						<xsd:element name="lat" type="xsd:string" minOccurs="0" />
+						<xsd:element name="lon" type="xsd:string" minOccurs="0" />
+						<xsd:element name="radius" type="xsd:string"
+							minOccurs="0" />
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>
@@ -90,7 +94,8 @@
 			<xsd:element name="eventTypeList">
 				<xsd:complexType>
 					<xsd:sequence>
-						<xsd:element name="event" maxOccurs="unbounded" minOccurs="0">
+						<xsd:element name="event" maxOccurs="unbounded"
+							minOccurs="0">
 							<xsd:complexType>
 								<xsd:sequence>
 									<xsd:element name="address" type="xsd:string" />

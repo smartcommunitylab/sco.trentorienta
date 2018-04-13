@@ -21,6 +21,10 @@ import 'rxjs/add/observable/fromPromise';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
+import { Segment } from 'ionic-angular/components/segment/segment';
+import { first } from 'rxjs/operator/first';
+import * as L from 'leaflet';
+
 
 @Pipe({ name: 'ObjNgFor', pure: false })
 export class ObjNgFor implements PipeTransform {
@@ -41,7 +45,7 @@ export abstract class ElementListPage implements OnInit {
     view: string = "lista";
 
     mainEvents: eventType[] = [];
-    calendarEvents = null;
+    calendarEvents: eventType[] = [];
     calendarSize: number = 0;
 
     searching: boolean = false;
@@ -56,10 +60,11 @@ export abstract class ElementListPage implements OnInit {
     data: string[] = [];
     myDate: string;
     currDate: string;
-
     temList: occurenciesType[] = [];
     sorList: occurenciesType[] = [];
 
+
+    isUnique: any;
 
     private searchTerms = new Subject<string>();
     private termsObs: Observable<string>;
@@ -89,7 +94,7 @@ export abstract class ElementListPage implements OnInit {
             },
         ],
         zoom: 12,
-        center: [46.0, 11.1]
+        center: [46.066933, 11.121511] //Trento's cathedral coords
     };
 
     // Fields for managing the form inputs and binding to leaflet zoom/center
@@ -144,16 +149,17 @@ export abstract class ElementListPage implements OnInit {
     }
 
     ionViewWillEnter() {
-        this.getEvents(true);
+        //this.getEvents(true);
+        this.getEventsMap(true);
         this.enabled = true;
     }
 
     doInfinite(infiniteScroll) {
         console.log('Begin async operation');
-        this.getEventsForInfiniteScroll(false, infiniteScroll);
+        this.getEvents(false, infiniteScroll);
     }
 
-    getEventsForInfiniteScroll(reset: boolean, infiniteScroll?: any): void {
+    /*getEventsForInfiniteScroll(reset: boolean, infiniteScroll?: any): void {
         let from = reset ? 0 : this.mainEvents.length;
 
         this.getData(from, from + this.PAGE_SIZE, this.searchValue)
@@ -162,6 +168,8 @@ export abstract class ElementListPage implements OnInit {
                     this.enabled = false;
                 }
                 mainEvents.forEach(e => {
+                    console.log(e) //DEBUGGING
+                    e.eventoDate = moment(e.eventStart, 'YYYYMMDDHHmm').toDate();
                     e.createdDate = moment(e.created, 'YYYYMMDDHHmm').toDate();
                 });
                 this.mainEvents = reset ? mainEvents : this.mainEvents.concat(mainEvents);
@@ -173,43 +181,39 @@ export abstract class ElementListPage implements OnInit {
                     infiniteScroll.complete();
                 }
             });
-    }
+    }*/
 
-    doInfiniteCal(infiniteScroll) {
-        console.log('Begin async operation');
-        this.loadCalendarForinfiniteScroll(infiniteScroll);
-    }
 
-    doInfiniteDate(infiniteScroll, date: string) {
-        console.log('Begin async operation with date' + date);
-        let d = moment(date).format('YYYY.MM.DD');
-        console.log(d);
-        this.loadCalendarForinfiniteScroll(infiniteScroll, d);
-    }
+    /*loadCalendarForinfiniteScroll(infiniteScroll?: any, data?: string): void {
 
-    loadCalendarForinfiniteScroll(infiniteScroll?: any, data?: string): void {
         if (this.calendarEvents == null) {
-            this.calendarEvents = {};
+            this.calendarEvents = [];
         }
+        
+
         let from;
+
         if (data) {
-            if (infiniteScroll == null) {
-                from = 0;
-                this.calendarSize = 0;
-            } else {
-                from = this.calendarSize;
-            }
+            
             this.hasDate = true;
         } else {
             from = this.calendarSize;
             this.hasDate = false;
         }
 
+        if (infiniteScroll == null) {
+            from = 0;
+            this.calendarSize = 0;
+        } else {
+            from = this.calendarSize;
+        }
+
+
         this.getCalData(from, from + this.PAGE_SIZE, data)
             .then(events => {
 
                 if (infiniteScroll == null && data) {
-                    this.calendarEvents = {};
+                    this.calendarEvents = [];
                 }
                 this.calendarSize += events.length;
                 events.forEach(event => {
@@ -233,35 +237,55 @@ export abstract class ElementListPage implements OnInit {
                     infiniteScroll.complete();
                 }
             });
+    }*/
+
+
+
+    doInfiniteCal(infiniteScroll) {
+        console.log('Begin async operation');
+        this.loadCalendar(false,false, infiniteScroll);
     }
 
-    orderMapKeys = function (h) {
-        var keys = [];
-        for (var k in h) {
-            keys.push(k);
-        }
-        return keys.sort();
+    doInfiniteDate(infiniteScroll, date: string) {
+        console.log('Begin async operation with date' + date);
+        let d = moment(date).format('YYYY.MM.DD');
+        console.log(d);
+        this.loadCalendar(false,false, infiniteScroll, d);
     }
+
+    
 
     abstract getData(from: number, to: number, filter: string): Promise<eventType[]>;
 
     abstract getCalData(from: number, to: number, data?: string): Promise<eventType[]>;
 
-    getEvents(reset: boolean, infiniteScroll?: any): void {
-        let from = reset ? 0 : this.mainEvents.length;
 
-        let loading = this.loadingCtrl.create({
-            content: this.translate.instant('lbl_wait') + '...'
-        });
-        loading.present();
+    getEvents(reset: boolean, infiniteScroll?: any): void {
+
+        let from = reset ? 0 : this.mainEvents.length;
+        let loading;
+
+        if (reset)
+        {
+            loading = this.loadingCtrl.create({
+                content: this.translate.instant('lbl_wait') + '...'
+            });
+            loading.present();
+        }
+        
         this.getData(from, from + this.PAGE_SIZE, this.searchValue)
             .then(mainEvents => {
-                loading.dismiss();
+                if (reset)
+                {
+                    loading.dismiss();
+                }
+                
                 if (reset == true && mainEvents.length < this.PAGE_SIZE) {
                     this.enabled = false;
                 }
                 mainEvents.forEach(e => {
                     e.createdDate = moment(e.created, 'YYYYMMDDHHmm').toDate();
+                    e.eventoDate = moment(e.eventStart, 'YYYYMMDD').toDate();
                 });
                 this.mainEvents = reset ? mainEvents : this.mainEvents.concat(mainEvents);
                 this.charged = true;
@@ -275,64 +299,152 @@ export abstract class ElementListPage implements OnInit {
     }
 
     doRefresh(refresher) {
-        console.log('element list refresh', refresher);
+
         setTimeout(() => {
-            this.getEvents(true);
+            if(this.view == "lista")
+            {
+                console.log('element list refresh', refresher);
+                this.getEvents(true);
+            }
             refresher.complete();
         });
 
     }
 
-    loadCalendar(infiniteScroll?: any, data?: string): void {
-        if (this.calendarEvents == null) {
-            this.calendarEvents = {};
+    getEventsMap(reset: boolean, infiniteScroll?: any): void {
+
+        //let from = reset ? 0 : this.mainEvents.length;
+        let loading;
+
+
+        if (reset)
+        {
+            loading = this.loadingCtrl.create({
+                content: this.translate.instant('lbl_wait') + '...'
+            });
+            loading.present();
         }
-        let from;
+
+        this.getData(0, 1000, this.searchValue)
+            .then(mainEvents => {
+                if (reset)
+                {
+                    loading.dismiss();
+                }
+                
+                /*if (reset == true && mainEvents.length < this.PAGE_SIZE) {
+                    this.enabled = false;
+                }*/
+                mainEvents.forEach(e => {
+                    e.createdDate = moment(e.created, 'YYYYMMDDHHmm').toDate();
+                    e.eventoDate = moment(e.eventStart, 'YYYYMMDD').toDate();
+                    //console.log("1  "+e.title);
+                    console.log(e.title);
+                });
+                this.mainEvents = reset ? mainEvents : this.mainEvents.concat(mainEvents);
+     
+                this.charged = true;
+                /*if (infiniteScroll != null) {
+                    if (mainEvents == null || mainEvents.length == 0) {
+                        this.enabled = false;
+                    }
+                    infiniteScroll.complete();
+                }*/
+
+            });
+    }
+
+    
+
+    loadCalendar(firstLoading: boolean, reset:boolean, infiniteScroll?: any, data?: string): void {
+
+        /*if (this.calendarEvents == null) {
+            this.calendarEvents = [];
+        }*/
+        let from, loading;
         if (data) {
             // data = moment(data, "YYYYMMDDHHmm").format("YYYYMMDDHHmm");
-            if (infiniteScroll == null) {
-                from = 0;
-                this.calendarSize = 0;
-            } else {
-                from = this.calendarSize;
-            }
             this.hasDate = true;
         } else {
             from = this.calendarSize;
             this.hasDate = false;
         }
-        let loading = this.loadingCtrl.create({
-            content: this.translate.instant('lbl_wait') + '...'
-        });
-        loading.present();
+
+        if (reset) {
+            from = 0;
+            this.calendarSize = 0;
+            this.calendarEvents = [];
+        } else {
+            from = this.calendarSize;
+        }
+        if(firstLoading || reset)
+        {
+            loading = this.loadingCtrl.create({
+                content: this.translate.instant('lbl_wait') + '...'
+            });
+            loading.present();
+        }
+
         this.getCalData(from, from + this.PAGE_SIZE, data)
             .then(events => {
-                loading.dismiss();
-                if (infiniteScroll == null && data) {
-                    this.calendarEvents = {};
+                if(firstLoading || reset)
+                {
+                    loading.dismiss();
                 }
-                this.calendarSize += events.length;
-                events.forEach(event => {
-                    var date = moment(event.eventStart, "YYYYMMDDHHmm").format("YYYY.MM.DD");
-                    event.eventoDate = moment(event.eventStart, 'YYYYMMDDHHmm').toDate();
-                    event.createdDate = moment(event.created, 'YYYYMMDDHHmm').toDate();
-                    if (this.calendarEvents[date]) {
-                        this.calendarEvents[date].push(event);
-                    } else {
-                        this.calendarEvents[date] = [event];
-                    }
-                });
+
+                /*if (infiniteScroll == null && data) {
+                    this.calendarEvents = [];
+                }*/
+                //console.log(this.calendarEvents.length+ "  "+ events.length);
+                if (events.length < this.PAGE_SIZE) {
+                    infiniteScroll.enable(false);
+                    //infiniteScroll.complete();
+
+                }
+                    this.calendarSize += events.length;
+                    events.forEach(event => {
+                        var date = moment(event.eventStart, "YYYYMMDDHHmm").format("YYYY.MM.DD");
+                        event.eventoDate = moment(event.eventStart, 'YYYYMMDDHHmm').toDate();
+                        event.createdDate = moment(event.created, 'YYYYMMDDHHmm').toDate();
+                        
+                        //console.log(event.id);
+                        //this.isUnique = event.id;
+                        
+
+                            if (this.calendarEvents[date] /*&& this.calendarEvents.findIndex((evento) => evento.id == event.id) == -1*/) {
+                                this.calendarEvents[date].push(event);
+                            } else {
+                                this.calendarEvents[date] = [event];
+                            }
+                        
+
+                        
+                    });
+
+                //if(events[events.length-1].id != this.isUnique)
 
                 // order keys of map by date.
                 this.keys = this.orderMapKeys(this.calendarEvents);
   
-                if (infiniteScroll != null) {
+                if (infiniteScroll != null ) {
                     if (events == null || events.length == 0) {
                         infiniteScroll.enable(false);
                     }
-                    infiniteScroll.complete();
+                    if (infiniteScroll.state == 'loading') {
+                        infiniteScroll.complete();
+                    } 
                 }
             });
+            //console.log(this.calendarSize);
+    }
+
+
+    orderMapKeys = function (h) {
+        var keys = [];
+        for (var k in h) {
+            keys.push(k);
+        }
+        return keys.sort();
     }
 
     distance(lat1: number, lon1: number, lat2: number, lon2: number): number {
@@ -357,6 +469,7 @@ export abstract class ElementListPage implements OnInit {
         this.searching = !this.searching;
         this.enabled = true;
         this.searchValue = "";
+        //this.search(this.searchValue);
         this.searchTerms.next(this.searchValue);
     }
 
@@ -380,11 +493,11 @@ export abstract class ElementListPage implements OnInit {
         this.navCtrl.push(FilterPage);
     }
 
-    removeDate(): void {
+    /*removeDate(): void {
+        
         this.calendarSize = 0;
-        this.calendarEvents = {};
-        this.loadCalendar();
-    }
+        this.calendarEvents = [];
+    }*/
 
     search(filter: string): void {
         this.searchTerms.next(filter);
@@ -392,19 +505,22 @@ export abstract class ElementListPage implements OnInit {
 
     scrolling(date: string) {
         let scrollDate = moment(date).format('YYYY.MM.DD');
-        this.loadCalendar(null, scrollDate);
+        this.loadCalendar(null, false,scrollDate);
     }
 
     ngOnInit(): void {
         this.myDate = new Date().toISOString();
         this.currDate = moment(new Date()).format('YYYY-MM-DD');
-        this.termsObs = this.searchTerms.debounceTime(300)        // wait 300ms after each keystroke before considering the term
-            .distinctUntilChanged();
-
+        this.termsObs = this.searchTerms.asObservable().debounceTime(300)        // wait 300ms after each keystroke before considering the term
+//.distinctUntilChanged();
+//this.loadCalendar(true,true);
         this.termsObs.forEach(v => {
             this.searchValue = v;
             this.enabled = true;
-            this.getEvents(true);
+            //this.getEvents(true);
+            this.getEventsMap(true);
+            
+
         });
         this.storage.set('temChosen', []);
         this.storage.set('sorChosen', []);
@@ -415,6 +531,7 @@ export abstract class ElementListPage implements OnInit {
     // onMapReady: called when leaflet map is drawn.
     // Resolves a bug vith gray maps (when I change segment page...)
     onMapReady(map: L.Map) {
+
         // remove ALL layers
         map.eachLayer(layer => (map.removeLayer(layer)));
 
@@ -423,6 +540,8 @@ export abstract class ElementListPage implements OnInit {
 
         // I create a group of markers, so I can view all markers in the map
         let group = L.featureGroup();
+
+        //this.getEventsMap(true);
 
         let commonPlace = { 0: [this.mainEvents[0]] };
         for (let i = 0; i < this.mainEvents.length; i++) {
@@ -451,6 +570,7 @@ export abstract class ElementListPage implements OnInit {
         for (let key in commonPlace) {
             let event = this.mainEvents[key];
             let marker = L.marker([event.coordX, event.coordY], {
+            //let marker = L.marker([this.optionsSpec.center[0], this.optionsSpec.center[1] ], {
                 icon: L.icon({
                     iconSize: [25, 41],
                     iconAnchor: [13, 41],

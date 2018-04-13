@@ -110,13 +110,13 @@ public class SOAPEndpoint {
 		if (sortForList.intValue() == 1)
 			pageList = repo1.findAllEventType(searchRequest.getThemes().toArray(new String[0]),
 					searchRequest.getSource().toArray(new String[0]), searchRequest.getTag().toArray(new String[0]),
-					fromDate, true, searchRequest.getFilter(),
-					new PageRequest(start.intValue() / size.intValue(), size.intValue()));
+					fromDate, true, searchRequest.getFilter(), searchRequest.getLat(), searchRequest.getLon(),
+					searchRequest.getRadius(), new PageRequest(start.intValue() / size.intValue(), size.intValue()));
 		else
 			pageList = repo1.findAllEventType(searchRequest.getThemes().toArray(new String[0]),
 					searchRequest.getSource().toArray(new String[0]), searchRequest.getTag().toArray(new String[0]),
-					fromDate, false, searchRequest.getFilter(),
-					new PageRequest(start.intValue() / size.intValue(), size.intValue()));
+					fromDate, false, searchRequest.getFilter(), searchRequest.getLat(), searchRequest.getLon(),
+					searchRequest.getRadius(), new PageRequest(start.intValue() / size.intValue(), size.intValue()));
 
 		for (it.smartcommunitylab.trentorienta.model.EventType internalEvt : pageList.getContent()) {
 			list.getEvent().add(getMappedEventForList(internalEvt));

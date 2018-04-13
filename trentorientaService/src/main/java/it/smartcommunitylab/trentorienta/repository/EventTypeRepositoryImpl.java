@@ -20,14 +20,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.geo.Circle;
+import org.springframework.data.geo.Point;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
+import org.springframework.data.mongodb.core.geo.Sphere;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.TextCriteria;
-import org.springframework.data.mongodb.core.query.TextQuery;
 
 import it.smartcommunitylab.trentorienta.model.EventType;
 
@@ -49,7 +50,7 @@ public class EventTypeRepositoryImpl implements EventTypeRepositoryCustom {
 
 	@Override
 	public Page<EventType> findAllEventType(String[] themes, String[] sources, String[] tags, Date fromDate,
-			Boolean sortForList, String filter, Pageable pageRequest) {
+			Boolean sortForList, String filter, String lat, String lon, String radius, Pageable pageRequest) {
 
 		// log 'SearchEvent'
 		log("SearchEvent", "SearchEvent", UUID.randomUUID().toString());
@@ -149,12 +150,13 @@ public class EventTypeRepositoryImpl implements EventTypeRepositoryCustom {
 			query.addCriteria(filterSearch);
 		}
 
-		// if (criteria.size() > 0)
-		// timeCriteria.orOperator(criteria.toArray(new
-		// Criteria[criteria.size()]));
-
-		// if (fromDate != null || criteria.size() > 0)
-		// query.addCriteria(internal);
+		if (lat != null && lon != null && isDouble(lat) && isDouble(lon) && radius != null && isDouble(radius)) {
+			Point pFrom = new Point(Double.parseDouble(lat), Double.parseDouble(lon));
+			Circle circleFrom = new Circle(pFrom, Double.parseDouble(radius) / 6371);
+			Sphere sphereFrom = new Sphere(circleFrom);
+			Criteria zoneCriteria = new Criteria().where("coordinates").within(sphereFrom);
+			query.addCriteria(zoneCriteria);
+		}
 
 		System.out.println(query.toString());
 
@@ -302,6 +304,15 @@ public class EventTypeRepositoryImpl implements EventTypeRepositoryCustom {
 		}
 		return result;
 
+	}
+
+	boolean isDouble(String str) {
+		try {
+			Double.parseDouble(str);
+			return true;
+		} catch (NumberFormatException e) {
+			return false;
+		}
 	}
 
 }

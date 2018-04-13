@@ -36,6 +36,7 @@ export class AppConfig {
             this.http.get('env.json').map( res => res.json() ).catch((error: any):any => {
                 console.log('Configuration file "env.json" could not be read');
                 resolve(true);
+                //return () => {};
                 return Observable.throw(error.json().error || 'Server error');
             }).subscribe( (envResponse) => {
                 this.env = envResponse;

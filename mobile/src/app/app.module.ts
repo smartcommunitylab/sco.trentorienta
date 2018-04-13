@@ -8,6 +8,7 @@ import { IonicStorageModule } from '@ionic/storage';
 import { DynamicComponentModule } from 'angular2-dynamic-component/index';
 import { EventService } from './event-service';
 import { OrderBy } from '../pipes/orderBy.pipe';
+import { ScreenOrientation } from '@ionic-native/screen-orientation';
 
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
@@ -32,9 +33,11 @@ import { AppVersion } from '@ionic-native/app-version';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { TranslateModule } from '@ngx-translate/core';
+import { ModalPage } from '../pages/filter/modal/modal';
 
 
 import { LeafletModule } from '@asymmetrik/angular2-leaflet';
+import { Geolocation } from '@ionic-native/geolocation';
 
 @NgModule({
   declarations: [
@@ -54,6 +57,7 @@ import { LeafletModule } from '@asymmetrik/angular2-leaflet';
     TermsPage,
     ModalContentPage,
     OrderBy,
+    ModalPage
   ],
   imports: [
     BrowserModule,
@@ -79,7 +83,8 @@ import { LeafletModule } from '@asymmetrik/angular2-leaflet';
     SorgentiListPage,
     FilterPage,
     TermsPage,
-    ModalContentPage
+    ModalContentPage,
+    ModalPage
   ],
   providers: [
     StatusBar,
@@ -90,7 +95,9 @@ import { LeafletModule } from '@asymmetrik/angular2-leaflet';
     AppVersion,
     EventService,
     Globalization, { provide: ErrorHandler, useClass: IonicErrorHandler },
-    AppConfig//, { provide: APP_INITIALIZER, useFactory: (config: AppConfig) => () => config.load(), deps: [AppConfig], multi: true }
+    AppConfig,//, { provide: APP_INITIALIZER, useFactory: (config: AppConfig) => () => config.load(), deps: [AppConfig], multi: true }
+    ScreenOrientation,
+    Geolocation,
   ]
 })
 
