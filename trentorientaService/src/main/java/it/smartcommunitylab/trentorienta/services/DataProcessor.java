@@ -23,6 +23,7 @@ import it.smartcommunitylab.trentorienta.model.EventType;
 import it.smartcommunitylab.trentorienta.repository.EventTypeRepository;
 
 @Component
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class DataProcessor {
 
 	@Autowired
@@ -42,10 +43,8 @@ public class DataProcessor {
 	private void processAvvisiSource(RestTemplate template) {
 		// avvisi del Comune di Trento (limitata a 20 eventi
 
-		String nLimit = "20";
-
 		HashMap listComune = template.getForObject(
-				"http://www.comune.trento.it/api/opendata/v1/content/class/avviso/offset/0/limit/1000", HashMap.class);
+				"https://www.comune.trento.it/api/opendata/v1/content/class/avviso/offset/0/limit/1000", HashMap.class);
 
 		ArrayList list1 = (ArrayList) listComune.get("nodes");
 
@@ -53,6 +52,7 @@ public class DataProcessor {
 			Map<String, Object> riga = (Map<String, Object>) list1.get(i);
 
 			String url = (String) riga.get("link");
+			if (url.startsWith("http://")) url = url.replaceFirst("http://", "https://");
 
 			HashMap pagina = template.getForObject(url, HashMap.class);
 
@@ -271,7 +271,7 @@ public class DataProcessor {
 		// save to db
 
 		HashMap listComune = template.getForObject(
-				"http://www.comune.trento.it/api/opendata/v1/content/class/ezflowmedia/offset/0/limit/100",
+				"https://www.comune.trento.it/api/opendata/v1/content/class/ezflowmedia/offset/0/limit/100",
 				HashMap.class);
 
 		ArrayList list = (ArrayList) listComune.get("nodes");
@@ -280,6 +280,8 @@ public class DataProcessor {
 			Map<String, Object> riga = (Map<String, Object>) list.get(i);
 
 			String url = (String) riga.get("link");
+			if (url.startsWith("http://")) url = url.replaceFirst("http://", "https://");
+
 			HashMap pagina = template.getForObject(url, HashMap.class);
 			HashMap fields = (HashMap) pagina.get("fields");
 
@@ -299,7 +301,7 @@ public class DataProcessor {
 				String objectId = String.valueOf(riga.get("objectId"));
 				HashMap video = (HashMap) fields.get("ezflowmedia");
 				if (video.containsKey("id")) {
-					String videoLink = "http://www.comune.trento.it/content/download/" + objectId + "/"
+					String videoLink = "https://www.comune.trento.it/content/download/" + objectId + "/"
 							+ video.get("id") + "/video";
 					evento.setVideoLink(videoLink);
 				}
@@ -365,10 +367,8 @@ public class DataProcessor {
 		// source url:
 		// http://www.comune.trento.it/api/opendata/v1/content/class/avviso_oggetti_rinvenuti/offset/0/limit/100
 
-		String nLimit = "20";
-
 		HashMap listComune = template.getForObject(
-				"http://www.comune.trento.it/api/opendata/v1/content/class/avviso_oggetti_rinvenuti/offset/0/limit/100",
+				"https://www.comune.trento.it/api/opendata/v1/content/class/avviso_oggetti_rinvenuti/offset/0/limit/100",
 				HashMap.class);
 
 		ArrayList list1 = (ArrayList) listComune.get("nodes");
@@ -377,6 +377,7 @@ public class DataProcessor {
 			Map<String, Object> riga = (Map<String, Object>) list1.get(i);
 
 			String url = (String) riga.get("link");
+			if (url.startsWith("http://")) url = url.replaceFirst("http://", "https://");
 
 			HashMap pagina = template.getForObject(url, HashMap.class);
 

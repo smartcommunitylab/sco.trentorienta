@@ -1,19 +1,15 @@
 package it.smartcommunitylab.trentorienta.repository;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
-import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
@@ -39,9 +35,6 @@ public class EventTypeRepositoryImpl implements EventTypeRepositoryCustom {
 	@Autowired
 	private Environment env;
 
-	/** Logging Authorization. **/
-	public static final String LOGGING_AUTH = "Bearer 8dec15f1-3192-4ba0-a4f3-5762fb05243b";
-
 	@Autowired
 	private MongoTemplate template;
 
@@ -52,118 +45,47 @@ public class EventTypeRepositoryImpl implements EventTypeRepositoryCustom {
 	public Page<EventType> findAllEventType(String[] themes, String[] sources, String[] tags, Date fromDate,
 			Boolean sortForList, String filter, String lat, String lon, String radius, Pageable pageRequest) {
 
-		// log 'SearchEvent'
-		log("SearchEvent", "SearchEvent", UUID.randomUUID().toString());
+		 List<Criteria> criteria = new LinkedList<Criteria>();
 
-		// List<Criteria> criteria = new ArrayList<Criteria>();
-
-		List<Criteria> criteriaSource = new ArrayList<Criteria>();
-		List<Criteria> criteriaTheme = new ArrayList<Criteria>();
-		List<Criteria> criteriaTag = new ArrayList<Criteria>();
-
-		Criteria criteriaTh = null;
 		if (themes != null && themes.length > 0) {
-			for (int i = 0; i < themes.length; i++) {
-				criteriaTheme.add(Criteria.where("themes").is(themes[i]));
-			}
-			criteriaTh = new Criteria().orOperator(criteriaTheme.toArray(new Criteria[criteriaTheme.size()]));
-
+			criteria.add(Criteria.where("themes").in((Object[])themes));
 		}
 
-		Criteria criteriaS = null;
 		if (sources != null && sources.length > 0) {
-			for (int i = 0; i < sources.length; i++) {
-				criteriaSource.add(Criteria.where("source").is(sources[i]));
-			}
-			criteriaS = new Criteria().orOperator(criteriaSource.toArray(new Criteria[criteriaSource.size()]));
-
+			criteria.add(Criteria.where("source").in((Object[])sources));
 		}
 
-		Criteria criteriaTa = null;
 		if (tags != null && tags.length > 0) {
-			for (int i = 0; i < tags.length; i++) {
-				if (tags[i].compareTo("null") != 0)
-					criteriaTag.add(Criteria.where("tags").in(tags[i]));
-			}
-			criteriaTa = new Criteria().orOperator(criteriaTag.toArray(new Criteria[criteriaTag.size()]));
-
+			criteria.add(Criteria.where("tags").in((Object[])Arrays.asList(tags).stream().filter(t -> !t.equals("null")).toArray()));
 		}
 
-		Criteria internal = null;
-		if (criteriaTa != null && criteriaS != null && criteriaTh != null)
-			internal = new Criteria().andOperator(criteriaTh, criteriaS, criteriaTa);
-		else if (criteriaTa != null && criteriaS != null)
-			internal = new Criteria().andOperator(criteriaS, criteriaTa);
-		else if (criteriaS != null && criteriaTh != null)
-			internal = new Criteria().andOperator(criteriaS, criteriaTh);
-		else if (criteriaTa != null && criteriaTh != null) {
-			internal = new Criteria().andOperator(criteriaTa, criteriaTh);
-		} else if (criteriaTa != null) {
-			internal = new Criteria().andOperator(criteriaTa);
-		} else if (criteriaS != null) {
-			internal = new Criteria().andOperator(criteriaS);
-		} else if (criteriaTh != null) {
-			internal = new Criteria().andOperator(criteriaTh);
-		}
-
-		/*
-		 * if (fromDate != null) { criteria.add(Criteria.where("toTime").gte (
-		 * Long.parseLong(fromDate) )); }
-		 */
-
-		Query query = new Query();
-
-		Criteria filterSearch = null;
 		if (filter != null && filter != "") {
-			// TextCriteria criteriaTesto =
-			// TextCriteria.forDefaultLanguage().matchingAny(filter);
-			// query = TextQuery.queryText(criteriaTesto).sortByScore();
-			// query.addCriteria(textSearch);
-			filterSearch = new Criteria().orOperator(Criteria.where("source").regex(filter),
+			Criteria filterSearch = new Criteria().orOperator(Criteria.where("source").regex(filter),
 					Criteria.where("title").regex(filter), Criteria.where("description").regex(filter),
 					Criteria.where("shortAbstract").regex(filter), Criteria.where("category").regex(filter));
+			criteria.add(filterSearch);
 
 		}
 
-		Criteria timeCriteria = null;
 		if (fromDate != null) {
-			timeCriteria = new Criteria().andOperator(Criteria.where("toTime").gte(fromDate.getTime()));
-		}
-
-		if (timeCriteria != null && internal != null && filterSearch != null) {
-			Criteria withTime = new Criteria().andOperator(timeCriteria, internal, filterSearch);
-			query.addCriteria(withTime);
-		} else if (timeCriteria != null && internal != null) {
-			Criteria withTimeAndInternal = new Criteria().andOperator(timeCriteria, internal);
-			query.addCriteria(withTimeAndInternal);
-		} else if (timeCriteria != null && filterSearch != null) {
-			Criteria withTimeAndFilter = new Criteria().andOperator(timeCriteria, filterSearch);
-			query.addCriteria(withTimeAndFilter);
-		} else if (internal != null && filterSearch != null) {
-			Criteria internalAndFilter = new Criteria().andOperator(internal, filterSearch);
-			query.addCriteria(internalAndFilter);
-		} else if (timeCriteria != null) {
-			query.addCriteria(timeCriteria);
-		} else if (internal != null) {
-			query.addCriteria(internal);
-		} else if (filterSearch != null) {
-			query.addCriteria(filterSearch);
+			criteria.add(Criteria.where("toTime").gte(fromDate.getTime()));
 		}
 
 		if (lat != null && lon != null && isDouble(lat) && isDouble(lon) && radius != null && isDouble(radius)) {
 			Point pFrom = new Point(Double.parseDouble(lat), Double.parseDouble(lon));
 			Circle circleFrom = new Circle(pFrom, Double.parseDouble(radius) / 6371);
 			Sphere sphereFrom = new Sphere(circleFrom);
-			Criteria zoneCriteria = new Criteria().where("coordinates").within(sphereFrom);
-			query.addCriteria(zoneCriteria);
+			Criteria zoneCriteria = Criteria.where("coordinates").within(sphereFrom);
+			criteria.add(zoneCriteria);
 		}
+		Query query = Query.query(new Criteria().andOperator((Criteria[])criteria.toArray(new Criteria[criteria.size()]))); 
+		
+//		System.out.println(query.toString());
 
-		System.out.println(query.toString());
-
-		if (sortForList) { // == 1
+		if (sortForList == null || sortForList) { // == 1
 			query.with(new Sort(Sort.Direction.DESC, "created"));
 		} else { // ** 0
-			query.with(new Sort(Sort.Direction.ASC, "eventStart"));
+			query.with(new Sort(Sort.Direction.ASC, "created"));
 		}
 
 		Long total = template.count(query, EventType.class);
@@ -172,10 +94,6 @@ public class EventTypeRepositoryImpl implements EventTypeRepositoryCustom {
 		query.limit(pageRequest.getPageSize());
 
 		List<EventType> list = template.find(query, EventType.class);
-		// Date now =
-		// Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant());
-		// in case the startDate is in the past, set it to requested date
-		// contrary to previous logic of setting to current date.
 		list.forEach(evt -> {
 			if (evt.getEventStart() != null) {
 				try {
@@ -242,68 +160,8 @@ public class EventTypeRepositoryImpl implements EventTypeRepositoryCustom {
 
 	@Override
 	public EventType findEvent(String id) {
-
-		// log 'NotificationReadEvent'
-		log("NotificationReadEvent", "NotificationReadEvent", UUID.randomUUID().toString());
-
-		Query query = new Query();
-
-		// query.addCriteria(Criteria.where("id").is(id));
-
-		// System.out.println(query.toString());
-
 		EventType ret = template.findById(id, EventType.class);
-
 		return ret;
-	}
-
-	public void log(String msg, String type, String userId) {
-
-		String logUrl = env.getProperty("log.endpoint");
-
-		String body = "{" + "\"msg\" : \"" + msg + "\"," + "\"type\" : \"" + type + "\","
-				+ "\"appId\": \"TrentoInformer\"," + "\"custom_attr\": " + "{\"appname\": \"TrentoInformer\","
-				+ "\"userid\": \"" + userId + "\"" + "}" + "}";
-
-		try {
-			sendPOST(logUrl, "application/json", "application/json", LOGGING_AUTH, body, true);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-	}
-
-	// HTTP POST request
-	public String sendPOST(String url, String accept, String contentType, String token, String json, boolean secure)
-			throws Exception {
-
-		String result = null;
-		StringRequestEntity requestEntity = new StringRequestEntity(json, contentType, "UTF-8");
-		PostMethod postMethod = new PostMethod(url);
-		postMethod.setRequestEntity(requestEntity);
-
-		if (token != null && !(token.isEmpty())) {
-			postMethod.setRequestHeader("Authorization", token);
-		}
-
-		try {
-			int statusCode = httpClient.executeMethod(postMethod);
-			StringBuffer response = new StringBuffer();
-			if ((statusCode >= 200) && (statusCode < 300)) {
-				BufferedReader in = new BufferedReader(new InputStreamReader(postMethod.getResponseBodyAsStream()));
-				String inputLine;
-				while ((inputLine = in.readLine()) != null) {
-					response.append(inputLine);
-				}
-				in.close();
-				result = response.toString();
-			}
-		} finally {
-			postMethod.releaseConnection();
-		}
-		return result;
-
 	}
 
 	boolean isDouble(String str) {

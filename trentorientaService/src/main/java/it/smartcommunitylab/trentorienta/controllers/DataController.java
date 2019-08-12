@@ -40,8 +40,8 @@ public class DataController {
 	@CrossOrigin(origins = "*")
 	@RequestMapping(method = RequestMethod.GET, value = "/api/events")
 	public @ResponseBody Page<EventType> getAllEvents(
-			@ApiParam(value = "Page number.", required = false) @RequestParam(required = false) Integer start,
-			@ApiParam(value = "Number of events to show in page.", required = false) @RequestParam(required = false) Integer size,
+			@ApiParam(value = "Page number.", required = false) @RequestParam(required = false, defaultValue = "0") Integer start,
+			@ApiParam(value = "Number of events to show in page.", required = false, defaultValue = "15") @RequestParam(required = false) Integer size,
 			@ApiParam(value = "Array source for e.g. (Avvisi del Comune di Trento,Eventi del Comune di Trento).", required = false) @RequestParam(required = false) String[] source,
 			@ApiParam(value = "Array tags for e.g. (Economia e diritto,Sport).", required = false) @RequestParam(required = false) String[] tag,
 			@ApiParam(value = "Array themes for e.g. (Formazione, Economia e diritto).", required = false) @RequestParam(required = false) String[] themes,
@@ -52,18 +52,11 @@ public class DataController {
 			@ApiParam(value = "Filter text", required = false) @RequestParam(required = false) String lon,
 			@ApiParam(value = "Filter text", required = false) @RequestParam(required = false) String radius)
 			throws ParseException {
-		if (start == null)
-			start = 0;
-		if (size == null)
-			size = 15;
 		Date fromDate = StringUtils.isEmpty(fromDateStr) ? null : DATE_FORMAT.parse(fromDateStr);
-		if (sortForList == null)
-			sortForList = 1;
-		if (sortForList == 1)
-			return repo1.findAllEventType(themes, source, tag, fromDate, true, filter, lat, lon, radius,
-					new PageRequest(start / size, size));
-		else
-			return repo1.findAllEventType(themes, source, tag, fromDate, false, filter, lat, lon, radius,
+		
+		Boolean sortForListB = sortForList == null ? null : sortForList == 1 ? true : false;
+		
+			return repo1.findAllEventType(themes, source, tag, fromDate, sortForListB, filter, lat, lon, radius,
 					new PageRequest(start / size, size));
 	}
 
@@ -78,14 +71,10 @@ public class DataController {
 
 		Date fromDate = StringUtils.isEmpty(params.getFromDate()) ? null : DATE_FORMAT.parse(params.getFromDate());
 
-		int sortForList = params.getSortForList() == null ? 1 : params.getSortForList();
+		Boolean sortForList = params.getSortForList() == null ? null : params.getSortForList() == 1 ? true : false;
 
-		if (sortForList == 1)
-			return repo1.findAllEventType(params.getThemes(), params.getSource(), params.getTag(), fromDate, true,
-					params.getFilter(), params.getLat(), params.getLon(), params.getRadius(), new PageRequest(start / size, size));
-		else
-			return repo1.findAllEventType(params.getThemes(), params.getSource(), params.getTag(), fromDate, false,
-					params.getFilter(), params.getLat(), params.getLon(), params.getRadius(), new PageRequest(start / size, size));
+		return repo1.findAllEventType(params.getThemes(), params.getSource(), params.getTag(), fromDate, sortForList,
+				params.getFilter(), params.getLat(), params.getLon(), params.getRadius(), new PageRequest(start / size, size));
 	}
 
 	@ApiOperation(value = "getEvent", nickname = "getEvent", produces = "application/xml, application/json")
