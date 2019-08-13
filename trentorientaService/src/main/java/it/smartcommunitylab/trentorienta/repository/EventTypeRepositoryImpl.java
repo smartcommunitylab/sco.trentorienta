@@ -60,9 +60,13 @@ public class EventTypeRepositoryImpl implements EventTypeRepositoryCustom {
 		}
 
 		if (filter != null && filter != "") {
-			Criteria filterSearch = new Criteria().orOperator(Criteria.where("source").regex(filter),
-					Criteria.where("title").regex(filter), Criteria.where("description").regex(filter),
-					Criteria.where("shortAbstract").regex(filter), Criteria.where("category").regex(filter));
+			filter = filter.toLowerCase();
+			Criteria filterSearch = new Criteria().orOperator(
+					Criteria.where("source").regex(filter, "i"),
+					Criteria.where("title").regex(filter, "i"), 
+					Criteria.where("description").regex(filter, "i"),
+					Criteria.where("shortAbstract").regex(filter, "i"), 
+					Criteria.where("category").regex(filter, "i"));
 			criteria.add(filterSearch);
 
 		}
