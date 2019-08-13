@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
@@ -40,12 +41,16 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <scope>runtime</scope>
-            <optional>true</optional>
-        </dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<scope>runtime</scope>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.ws</groupId>
+			<artifactId>spring-ws-core</artifactId>
+		</dependency>
 
 		<!-- SWAGGER -->
 		<dependency>
@@ -98,11 +103,11 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
-			<!-- maven-jaxb2-plugin -->
+			<!-- tag::wsdl[] -->
 			<plugin>
 				<groupId>org.jvnet.jaxb2.maven2</groupId>
 				<artifactId>maven-jaxb2-plugin</artifactId>
-				<version>${maven-jaxb2-plugin.version}</version>
+				 <version>0.13.1</version>
 				<executions>
 					<execution>
 						<goals>
@@ -111,12 +116,16 @@
 					</execution>
 				</executions>
 				<configuration>
-					<schemaDirectory>${project.basedir}/src/main/resources/wsdl</schemaDirectory>
-					<schemaIncludes>
-						<include>*.wsdl</include>
-					</schemaIncludes>
+					<schemaLanguage>WSDL</schemaLanguage>
+					<generatePackage>it.smartcommunitylab.trentorienta.funerali</generatePackage>
+					<schemas>
+						<schema>
+							<url>https://webapps.comune.trento.it/funerarioSrv/services/SrvFunerario?wsdl</url>
+						</schema>
+					</schemas>
 				</configuration>
 			</plugin>
+			<!-- end::wsdl[] -->
 		</plugins>
 	</build>
 

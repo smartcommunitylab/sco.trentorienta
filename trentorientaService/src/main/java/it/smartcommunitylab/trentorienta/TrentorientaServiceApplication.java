@@ -7,25 +7,16 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.web.servlet.ServletRegistrationBean;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.index.GeospatialIndex;
-import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-import org.springframework.ws.config.annotation.EnableWs;
-import org.springframework.ws.transport.http.MessageDispatcherServlet;
-import org.springframework.ws.wsdl.wsdl11.SimpleWsdl11Definition;
-import org.springframework.ws.wsdl.wsdl11.Wsdl11Definition;
 
 import com.mongodb.MongoClient;
 
@@ -38,10 +29,8 @@ import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
-@Configuration
 @EnableSwagger2
 @EnableScheduling
-@EnableWs
 public class TrentorientaServiceApplication {
 
 	public static void main(String[] args) {
@@ -61,7 +50,7 @@ public class TrentorientaServiceApplication {
 	}
 
 	@Bean
-	public Docket newsApi() {
+	public Docket api() {
 		return new Docket(DocumentationType.SWAGGER_2).select()
 				.apis(RequestHandlerSelectors.basePackage("it.smartcommunitylab.trentorienta.controllers")).build()
 				.apiInfo(apiInfo());
@@ -97,22 +86,6 @@ public class TrentorientaServiceApplication {
 
 		}
 
-	}
-
-	@Bean
-	public ServletRegistrationBean messageDispatcherServlet(ApplicationContext applicationContext) {
-		MessageDispatcherServlet servlet = new MessageDispatcherServlet();
-		servlet.setApplicationContext(applicationContext);
-
-		return new ServletRegistrationBean(servlet, "/soapservice/*");
-	}
-
-	@Bean(name = "service")
-	public Wsdl11Definition defaultWsdl11Definition() {
-		SimpleWsdl11Definition wsdl11Definition = new SimpleWsdl11Definition();
-		wsdl11Definition.setWsdl(new ClassPathResource("/wsdl/trentorienta.wsdl"));
-
-		return wsdl11Definition;
 	}
 
 }
