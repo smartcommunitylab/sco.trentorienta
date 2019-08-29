@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -15,6 +16,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import it.smartcommunitylab.trentorienta.funerali.Defunto;
 import it.smartcommunitylab.trentorienta.funerali.Funerale;
+import it.smartcommunitylab.trentorienta.model.FuneraleDTO;
 import it.smartcommunitylab.trentorienta.services.FuneraliService;
 
 @RunWith(SpringRunner.class)
@@ -27,7 +29,8 @@ public class TrentorientaFuneraleServiceTests {
 	
 	@Test
 	public void callFunerale() throws Exception {
-		List<Funerale> list = service.getFunerale(Instant.now());
+		List<FuneraleDTO> list = service.getFunerale(Instant.now()).stream().map(f -> new FuneraleDTO(f)).collect(Collectors.toList());
+		list.forEach(f -> System.err.println(f));
 		assertNotNull(list);
 		assertNotEquals(0, list.size());
 	}
