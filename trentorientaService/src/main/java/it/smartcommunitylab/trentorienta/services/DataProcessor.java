@@ -7,13 +7,11 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -26,6 +24,8 @@ import it.smartcommunitylab.trentorienta.repository.EventTypeRepository;
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class DataProcessor {
 
+	private static final Logger logger = LoggerFactory.getLogger(DataProcessor.class);
+	
 	@Autowired
 	private EventTypeRepository repoEvent;
 
@@ -40,10 +40,10 @@ public class DataProcessor {
 
 	}
 
-	private void processAvvisiSource(RestTemplate template) {
+	private void processAvvisiSource(RestTemplate t) {
 		// avvisi del Comune di Trento (limitata a 20 eventi
 
-		HashMap listComune = template.getForObject(
+		HashMap listComune = callRepeat(t,
 				"https://www.comune.trento.it/api/opendata/v1/content/class/avviso/offset/0/limit/1000", HashMap.class);
 
 		ArrayList list1 = (ArrayList) listComune.get("nodes");
@@ -54,7 +54,7 @@ public class DataProcessor {
 			String url = (String) riga.get("link");
 			if (url.startsWith("http://")) url = url.replaceFirst("http://", "https://");
 
-			HashMap pagina = template.getForObject(url, HashMap.class);
+			HashMap pagina = callRepeat(t, url, HashMap.class);
 
 			HashMap fields = (HashMap) pagina.get("fields");
 
@@ -142,7 +142,7 @@ public class DataProcessor {
 		}
 	}
 
-	private void processEventsSource(RestTemplate template) {
+	private void processEventsSource(RestTemplate t) {
 		// call
 		// https://os.smartcommunitylab.it/comuneintasca-multi/events/TrentoInTasca
 		// transform data
@@ -153,7 +153,7 @@ public class DataProcessor {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<Map<String, Object>> request = new HttpEntity<>(input, headers);
-		ArrayList list = template.postForObject(
+		ArrayList list = t.postForObject(
 				"https://os.smartcommunitylab.it/comuneintasca-multi/events/TrentoInTasca", request, ArrayList.class);
 
 		// ArrayList list = template.postForObject(
@@ -264,13 +264,13 @@ public class DataProcessor {
 		}
 	}
 
-	private void processAvvisiVideoSource3(RestTemplate template) {
+	private void processAvvisiVideoSource3(RestTemplate t) {
 		// call
 		// http://www.comune.trento.it/api/opendata/v1/content/class/ezflowmedia/offset/0/limit/100
 		// transform data
 		// save to db
 
-		HashMap listComune = template.getForObject(
+		HashMap listComune = callRepeat(t, 
 				"https://www.comune.trento.it/api/opendata/v1/content/class/ezflowmedia/offset/0/limit/100",
 				HashMap.class);
 
@@ -282,7 +282,7 @@ public class DataProcessor {
 			String url = (String) riga.get("link");
 			if (url.startsWith("http://")) url = url.replaceFirst("http://", "https://");
 
-			HashMap pagina = template.getForObject(url, HashMap.class);
+			HashMap pagina = callRepeat(t, url, HashMap.class);
 			HashMap fields = (HashMap) pagina.get("fields");
 
 			EventType evento = new EventType();
@@ -363,11 +363,11 @@ public class DataProcessor {
 		}
 	}
 
-	private void processAvvisiOggettiRinvenuti(RestTemplate template) {
+	private void processAvvisiOggettiRinvenuti(RestTemplate t) {
 		// source url:
 		// http://www.comune.trento.it/api/opendata/v1/content/class/avviso_oggetti_rinvenuti/offset/0/limit/100
 
-		HashMap listComune = template.getForObject(
+		HashMap listComune = callRepeat(t, 
 				"https://www.comune.trento.it/api/opendata/v1/content/class/avviso_oggetti_rinvenuti/offset/0/limit/100",
 				HashMap.class);
 
@@ -379,7 +379,7 @@ public class DataProcessor {
 			String url = (String) riga.get("link");
 			if (url.startsWith("http://")) url = url.replaceFirst("http://", "https://");
 
-			HashMap pagina = template.getForObject(url, HashMap.class);
+			HashMap pagina = callRepeat(t, url, HashMap.class);
 
 			HashMap fields = (HashMap) pagina.get("fields");
 
@@ -472,4 +472,17 @@ public class DataProcessor {
 //	 dataProcessor.getDataPeriodically();
 //	 }
 
+	
+	private static <T> T callRepeat(RestTemplate restTemplate, String url, Class<T> cls) {
+		try {
+			return restTemplate.getForObject(url, cls);
+		} catch (Exception e) {
+			logger.warn("error retriving url {}, retryung", url);
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e1) {
+			}
+			return restTemplate.getForObject(url, cls);
+		}
+	}
 }
