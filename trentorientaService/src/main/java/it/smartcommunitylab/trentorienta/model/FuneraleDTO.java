@@ -66,10 +66,10 @@ public class FuneraleDTO {
 		super();
 		setNome(funerale.getNome());
 		setDataMorte(funerale.getDataMorte());
+		setDataFunerale(funerale.getDataFunerale());
+		setOraFunerale(funerale.getOraFunerale());
 		if (funerale.getLuogoFunerale() != null && funerale.getLuogoFunerale().startsWith("TRENTO -  - ")) {
 			setComune("TRENTO");
-			setDataFunerale(funerale.getDataFunerale());
-			setOraFunerale(funerale.getOraFunerale());
 			setLuogoFunerale(funerale.getLuogoFunerale().replace("TRENTO -  - ", ""));
 		} else {
 			String[] arr = funerale.getLuogoFunerale().split("-  -");
