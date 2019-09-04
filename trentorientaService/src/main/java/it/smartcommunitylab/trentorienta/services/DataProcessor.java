@@ -136,6 +136,11 @@ public class DataProcessor {
 			// Date((long) Integer.parseInt(eventFine)*1000));
 			// evento.setToTime(Long.parseLong(toTime));
 
+			if (fields.containsKey("file")) {
+				String file = (String) ((HashMap) fields.get("file")).get("value");
+				evento.setFile(file);
+			}
+			
 			evento.setAddress("Comune di Trento");
 
 			repoEvent.save(evento);

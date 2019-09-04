@@ -42,7 +42,7 @@ public class EventType {
 	private String address;
 	private String web;
 	private String videoLink;
-
+	private String file;
 	
 	/** coordinates. **/
 	private double[] coordinates;
@@ -236,4 +236,13 @@ public class EventType {
 		this.shortAbstract = shortAbstract;
 	}
 
+	public String getFile() {
+		return file;
+	}
+
+	public void setFile(String file) {
+		this.file = file;
+	}
+
+	
 }
