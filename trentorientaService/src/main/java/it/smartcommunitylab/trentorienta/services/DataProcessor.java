@@ -29,6 +29,8 @@ public class DataProcessor {
 	@Autowired
 	private EventTypeRepository repoEvent;
 
+	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("YYYMMddHHmm");
+	
 	@Scheduled(initialDelay = 0, fixedRate = 60 * 60 * 1000)
 	public void getDataPeriodically() {
 		RestTemplate template = new RestTemplate();
@@ -105,9 +107,9 @@ public class DataProcessor {
 				}
 			}
 
+			// event date in seconds epochs
 			String eventDate = (String) ((HashMap) fields.get("data")).get("value");
-			String dataInizio = new SimpleDateFormat("YYYMMddHHmm")
-					.format(new Date((long) Integer.parseInt(eventDate) * 1000));
+			String dataInizio = DATE_FORMAT.format(new Date(Long.parseLong(eventDate + "000")));
 			// evento.setEventDate(dataInizio);
 
 			// evento.setEventStart( new
@@ -121,20 +123,11 @@ public class DataProcessor {
 
 			evento.setTags(tags);
 
-			// System.out.println( ( (HashMap) fields.get("gps") ).get("value")
-			// );
-
 			evento.setCoordX(new Float(46.070189));
 			evento.setCoordY(new Float(11.120252));
 
 			evento.setCoordinates(new double[] { evento.getCoordX(), evento.getCoordY() });
 			evento.setCreated(dataInizio);
-
-			// String eventFine = (String) ( (HashMap)
-			// fields.get("data_archiviazione") ).get("value");
-			// String toTime = new SimpleDateFormat("YYYMMddHHmm").format(new
-			// Date((long) Integer.parseInt(eventFine)*1000));
-			// evento.setToTime(Long.parseLong(toTime));
 
 			if (fields.containsKey("file")) {
 				String file = (String) ((HashMap) fields.get("file")).get("value");
@@ -161,11 +154,6 @@ public class DataProcessor {
 		ArrayList list = t.postForObject(
 				"https://os.smartcommunitylab.it/comuneintasca-multi/events/TrentoInTasca", request, ArrayList.class);
 
-		// ArrayList list = template.postForObject(
-		// "https://os.smartcommunitylab.it/comuneintasca-multi/events/TrentoInTasca",
-		// input, ArrayList.class);
-
-		// System.out.println("*** Numero eventi trovati: " + list.size());
 
 		for (int i = 0; i < list.size(); i++) {
 			Map<String, Object> riga = (Map<String, Object>) list.get(i);
@@ -216,12 +204,12 @@ public class DataProcessor {
 			// evento.setEventStart(periodo);
 			evento.setEventTiming(durata);
 
-			evento.setEventStart(new SimpleDateFormat("YYYMMddHHmm")
-					.format(new Date(Long.valueOf(riga.get("fromTime").toString()))));
+			evento.setEventStart(DATE_FORMAT.format(new Date(Long.valueOf(riga.get("fromTime").toString()))));
+			
 			evento.setToTime(Long.valueOf(riga.get("toTime").toString()));
 
 			evento.setCreated(
-					new SimpleDateFormat("YYYMMddHHmm").format(Long.valueOf(riga.get("lastModified").toString())));
+					DATE_FORMAT.format(Long.valueOf(riga.get("lastModified").toString())));
 
 			// Ottengo le coordinate dell'evento
 			// https://os.smartcommunitylab.it/core.geocoder/spring/address?address=
@@ -248,8 +236,6 @@ public class DataProcessor {
 				String coord = (String) ((LinkedHashMap) ((ArrayList) ((LinkedHashMap) list1.get("response"))
 						.get("docs")).get(0)).get("coordinate");
 
-				// System.out.println("Corodinate dal sito: " + coord);
-
 				evento.setCoordX(Float.parseFloat(coord.split(",")[0]));
 				evento.setCoordY(Float.parseFloat(coord.split(",")[1]));
 			} catch (Exception e) {
@@ -259,11 +245,6 @@ public class DataProcessor {
 
 			evento.setCoordinates(new double[] { evento.getCoordX(), evento.getCoordY() });
 			
-			// System.out.println("Coordinate trovate:" + evento.getCoordX() +
-			// "," + evento.getCoordY());
-
-			// System.out.println ("************* title = " + titolo);
-
 			repoEvent.save(evento);
 
 		}
@@ -360,8 +341,8 @@ public class DataProcessor {
 			
 			evento.setAddress("Comune di Trento");
 
-			evento.setCreated(new SimpleDateFormat("YYYMMddHHmm")
-					.format(new Date((long) Integer.parseInt(riga.get("dateModified").toString()) * 1000)));
+			evento.setCreated(DATE_FORMAT
+					.format(new Date(Long.parseLong(riga.get("dateModified").toString() + "000"))));
 
 			repoEvent.save(evento);
 
@@ -437,15 +418,7 @@ public class DataProcessor {
 			}
 
 			String eventDate = (String) ((HashMap) fields.get("data")).get("value");
-			String dataInizio = new SimpleDateFormat("YYYMMddHHmm")
-					.format(new Date((long) Integer.parseInt(eventDate) * 1000));
-			// evento.setEventDate(dataInizio);
-
-			// evento.setEventStart( new
-			// SimpleDateFormat("dd/MM/YYYY").format(new Date((long)
-			// Integer.parseInt(eventDate) * 1000)));
-			//
-			// evento.setEventTiming("");
+			String dataInizio = DATE_FORMAT.format(new Date(Long.parseLong(eventDate + "000")));
 
 			ArrayList tags = new ArrayList();
 			tags.add(categoria);
@@ -460,22 +433,11 @@ public class DataProcessor {
 			evento.setCoordinates(new double[] { evento.getCoordX(), evento.getCoordY() });
 			evento.setCreated(dataInizio);
 
-			// String eventFine = (String) ( (HashMap)
-			// fields.get("data_archiviazione") ).get("value");
-			// String toTime = new SimpleDateFormat("YYYMMddHHmm").format(new
-			// Date((long) Integer.parseInt(eventFine)*1000));
-			// evento.setToTime(Long.parseLong(toTime));
-
 			evento.setAddress("Comune di Trento");
 
 			repoEvent.save(evento);
 		}
 	}
-
-//	 public static void main(String args[]) {
-//	 DataProcessor dataProcessor = new DataProcessor();
-//	 dataProcessor.getDataPeriodically();
-//	 }
 
 	
 	private static <T> T callRepeat(RestTemplate restTemplate, String url, Class<T> cls) {
