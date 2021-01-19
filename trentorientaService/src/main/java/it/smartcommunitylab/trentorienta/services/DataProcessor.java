@@ -29,7 +29,7 @@ public class DataProcessor {
 	@Autowired
 	private EventTypeRepository repoEvent;
 
-	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("YYYMMddHHmm");
+	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyyMMddHHmm");
 	
 	@Scheduled(initialDelay = 0, fixedRate = 60 * 60 * 1000)
 	public void getDataPeriodically() {
@@ -139,7 +139,7 @@ public class DataProcessor {
 			repoEvent.save(evento);
 		}
 	}
-
+	
 	private void processEventsSource(RestTemplate t) {
 		// call
 		// https://os.smartcommunitylab.it/comuneintasca-multi/events/TrentoInTasca
