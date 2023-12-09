@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions targetNamespace="http://funerario" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://funerario" xmlns:intf="http://funerario" xmlns:tns1="http://db.comune.trento.it" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<!--WSDL created by Apache Axis version: 1.4
+Built on Apr 22, 2006 (06:55:48 PDT)-->
+ <wsdl:types>
+  <schema elementFormDefault="qualified" targetNamespace="http://funerario" xmlns="http://www.w3.org/2001/XMLSchema">
+   <import namespace="http://db.comune.trento.it"/>
+   <element name="getFunerale">
+    <complexType>
+     <sequence>
+      <element name="data" type="xsd:dateTime"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="getFuneraleResponse">
+    <complexType>
+     <sequence>
+      <element maxOccurs="unbounded" name="getFuneraleReturn" type="impl:Funerale"/>
+     </sequence>
+    </complexType>
+   </element>
+   <complexType name="Funerale">
+    <sequence>
+     <element name="data_funerale" nillable="true" type="xsd:string"/>
+     <element name="data_morte" nillable="true" type="xsd:string"/>
+     <element name="luogo_funerale" nillable="true" type="xsd:string"/>
+     <element name="nome" nillable="true" type="xsd:string"/>
+     <element name="ora_funerale" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+   <element name="fault" type="tns1:DBException"/>
+   <element name="getDefunto">
+    <complexType>
+     <sequence>
+      <element name="nominativo" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="getDefuntoResponse">
+    <complexType>
+     <sequence>
+      <element maxOccurs="unbounded" name="getDefuntoReturn" type="impl:Defunto"/>
+     </sequence>
+    </complexType>
+   </element>
+   <complexType name="Defunto">
+    <sequence>
+     <element name="cimitero" nillable="true" type="xsd:string"/>
+     <element name="data_morte" nillable="true" type="xsd:string"/>
+     <element name="id_catasto" nillable="true" type="xsd:string"/>
+     <element name="map_angle" nillable="true" type="xsd:string"/>
+     <element name="mapext" nillable="true" type="xsd:string"/>
+     <element name="nome" nillable="true" type="xsd:string"/>
+     <element name="sepoltura_data" nillable="true" type="xsd:string"/>
+     <element name="sepoltura_luogo" nillable="true" type="xsd:string"/>
+     <element name="sepoltura_ora" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+   <element name="getFuneraleDay">
+    <complexType>
+     <sequence>
+      <element name="data" type="xsd:dateTime"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="getFuneraleDayResponse">
+    <complexType>
+     <sequence>
+      <element maxOccurs="unbounded" name="getFuneraleDayReturn" type="impl:Funerale"/>
+     </sequence>
+    </complexType>
+   </element>
+  </schema>
+  <schema elementFormDefault="qualified" targetNamespace="http://db.comune.trento.it" xmlns="http://www.w3.org/2001/XMLSchema">
+   <import namespace="http://funerario"/>
+   <complexType name="DBException">
+    <sequence/>
+   </complexType>
+  </schema>
+ </wsdl:types>
+
+   <wsdl:message name="getFuneraleDayRequest">
+
+      <wsdl:part element="impl:getFuneraleDay" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="getFuneraleDayResponse">
+
+      <wsdl:part element="impl:getFuneraleDayResponse" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="getDefuntoResponse">
+
+      <wsdl:part element="impl:getDefuntoResponse" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="getDefuntoRequest">
+
+      <wsdl:part element="impl:getDefunto" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="getFuneraleRequest">
+
+      <wsdl:part element="impl:getFunerale" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="DBException">
+
+      <wsdl:part element="impl:fault" name="fault">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="getFuneraleResponse">
+
+      <wsdl:part element="impl:getFuneraleResponse" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:portType name="SrvFunerario">
+
+      <wsdl:operation name="getFunerale">
+
+         <wsdl:input message="impl:getFuneraleRequest" name="getFuneraleRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:getFuneraleResponse" name="getFuneraleResponse">
+
+       </wsdl:output>
+
+         <wsdl:fault message="impl:DBException" name="DBException">
+
+       </wsdl:fault>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="getDefunto">
+
+         <wsdl:input message="impl:getDefuntoRequest" name="getDefuntoRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:getDefuntoResponse" name="getDefuntoResponse">
+
+       </wsdl:output>
+
+         <wsdl:fault message="impl:DBException" name="DBException">
+
+       </wsdl:fault>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="getFuneraleDay">
+
+         <wsdl:input message="impl:getFuneraleDayRequest" name="getFuneraleDayRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:getFuneraleDayResponse" name="getFuneraleDayResponse">
+
+       </wsdl:output>
+
+         <wsdl:fault message="impl:DBException" name="DBException">
+
+       </wsdl:fault>
+
+      </wsdl:operation>
+
+   </wsdl:portType>
+
+   <wsdl:binding name="SrvFunerarioSoapBinding" type="impl:SrvFunerario">
+
+      <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+      <wsdl:operation name="getFunerale">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="getFuneraleRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="getFuneraleResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+         <wsdl:fault name="DBException">
+
+            <wsdlsoap:fault name="DBException" use="literal"/>
+
+         </wsdl:fault>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="getDefunto">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="getDefuntoRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="getDefuntoResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+         <wsdl:fault name="DBException">
+
+            <wsdlsoap:fault name="DBException" use="literal"/>
+
+         </wsdl:fault>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="getFuneraleDay">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="getFuneraleDayRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="getFuneraleDayResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+         <wsdl:fault name="DBException">
+
+            <wsdlsoap:fault name="DBException" use="literal"/>
+
+         </wsdl:fault>
+
+      </wsdl:operation>
+
+   </wsdl:binding>
+
+   <wsdl:service name="SrvFunerarioService">
+
+      <wsdl:port binding="impl:SrvFunerarioSoapBinding" name="SrvFunerario">
+
+         <wsdlsoap:address location="https://webapps.comune.trento.it/funerarioSrv/services/SrvFunerario"/>
+
+      </wsdl:port>
+
+   </wsdl:service>
+
+</wsdl:definitions>

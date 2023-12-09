@@ -1,8 +1,0 @@
-{
-  "name": "trentorienta",
-  "app_id": "trentorienta",
-  "type": "ionic-angular",
-  "integrations": {
-    "cordova": {}
-  }
-}
