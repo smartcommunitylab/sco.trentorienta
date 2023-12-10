@@ -10,7 +10,7 @@ java -Dserver.contextPath=/trentorienta -Dserver.port=7016 -jar target/trentorie
 
 Build image
 ``
-docker build -t smartcommunitylab/trentorienta Dockerfile .
+docker build -t smartcommunitylab/trentorienta .
 ``
 
 Run image
